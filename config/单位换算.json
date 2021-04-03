@@ -1,0 +1,27 @@
+{
+  "s":{
+    "factorA":1.0,
+    "factorB":0.0,
+    "iSOLabel":"s",
+    "label":"s"
+  },
+  "kg":{
+    "factorA":1.0,
+    "factorB":0.0,
+    "iSOLabel":"kg",
+    "label":"kg"
+  },
+  "m":{
+    "factorA":1.0,
+    "factorB":0.0,
+    "iSOLabel":"m",
+    "label":"m"
+  },
+  "km":{
+    "factorA":1000.0,
+    "factorB":0.0,
+    "iSOLabel":"m",
+    "label":"km"
+  }
+}
+

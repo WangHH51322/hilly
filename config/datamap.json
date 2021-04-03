@@ -1,0 +1,145 @@
+{
+	"hillyProject":{
+		"siteInfo":{
+			"siteKeyMileage":{
+				"unit":"km",
+				"name":"关键点里程",
+				"value":"[0.0,106.8,153.3,174.4,248.1,269.9,353.0,402.4,480.6,533.1,604.4]"
+			},
+			"siteKeyName":{
+				"unit":"",
+				"name":"关键点名称",
+				"value":"[\"测试保留\",\"芒市站\",\"龙陵站\",\"2#高点\",\"保山站\",\"16#阀室\",\"20#阀室\",\"弥渡站\",\"27#阀室\",\"29#阀室\",\"禄丰站\"]"
+			},
+			"siteKeyAltitude":{
+				"unit":"m",
+				"name":"关键点高程",
+				"value":"[0.0,883,1854,2183,1688,1861,1451,1770,2401,1832,1644]"
+			}
+		},
+		"medium":{
+			"mediumDensity": {
+				"unit": "kg/m3",
+				"name": "密度",
+				"value": "0.0"
+			},
+			"mediumName": {
+				"unit": "",
+				"name": "流体名称",
+				"value": "流动介质"
+			},
+			"mediumTemperature": {
+				"unit": "K",
+				"name": "温度",
+				"value": "0.0"
+			},
+			"mediumViscosity": {
+				"unit": "mPa.s",
+				"name": "粘度",
+				"value": "0.0"
+			}
+		},
+		"mediumList":{
+			"unit": "",
+            "name": "流动介质列表",
+			"value": [
+                {
+                    "mediumDensity": {
+                        "unit": "kg/m3",
+                        "name": "密度",
+                        "value": "840.00"
+                    },
+                    "mediumName": {
+                        "unit": "",
+                        "name": "流体名称",
+                        "value": "水"
+                    },
+                    "mediumTemperature": {
+                        "unit": "K",
+                        "name": "温度",
+                        "value": "293.00"
+                    },
+                    "mediumViscosity": {
+                        "unit": "mPa.s",
+                        "name": "粘度",
+                        "value": "1.00"
+                    }
+                }
+			]
+		},
+		"variableParameter":{
+			"totalTime":{
+				"unit":"h",
+				"name":"总模拟时长",
+				"value":"150.00"
+			}
+		},
+		"pig":{
+			"pigDiameter": {
+				"unit": "m",
+				"name": "清管器直径",
+				"value": "0.0"
+			},
+			"pigMass": {
+				"unit": "kg",
+				"name": "清管器质量",
+				"value": "0.0"
+			},
+			"pigArea": {
+				"unit": "m^2",
+				"name": "清管器截面积",
+				"value": "0.0"
+			},
+			"pigName": {
+				"unit": "",
+				"name": "清管器名称",
+				"value": "清管器"
+			}
+		},
+		"pigList": {
+            "unit": "",
+            "name": "清管器列表",
+            "value": [
+                {
+                    "pigDiameter": {
+                        "unit": "m",
+                        "name": "清管器直径",
+                        "value": "0.7"
+                    },
+                    "pigMass": {
+                        "unit": "kg",
+                        "name": "清管器质量",
+                        "value": "700.00"
+                    },
+                    "pigArea": {
+                        "unit": "m^2",
+                        "name": "清管器截面积",
+                        "value": "0.50"
+                    },
+                    "pigName": {
+                        "unit": "",
+                        "name": "清管器名称",
+                        "value": "清管器1"
+                    }
+                }
+            ]
+        },
+		"pipe":{
+			"pipeThickness":{
+				"unit":"m",
+				"name":"壁厚",
+				"value":"0.0172"
+			},
+			"pipeOutDiameter":{
+				"unit":"m",
+				"name":"外径",
+				"value":"0.813"
+			},
+			"pipeRoughness":{
+				"unit":"m",
+				"name":"绝对粗糙度",
+				"value":"0.00010"
+			}
+		}
+	}
+}
