@@ -1,6 +1,6 @@
 package cn.edu.cup.hilly.dataSource.controller;
 
-import cn.edu.cup.hilly.dataSource.Service.RoleService;
+import cn.edu.cup.hilly.dataSource.service.RoleService;
 import cn.edu.cup.hilly.dataSource.model.Role;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;

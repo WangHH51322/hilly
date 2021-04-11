@@ -1,4 +1,4 @@
-package cn.edu.cup.hilly.dataSource.Service;
+package cn.edu.cup.hilly.dataSource.service;
 
 import cn.edu.cup.hilly.dataSource.mapper.RoleMapper;
 import cn.edu.cup.hilly.dataSource.model.Role;

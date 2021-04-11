@@ -1,13 +1,15 @@
-package cn.edu.cup.hilly.dataSource.controller;
+package cn.edu.cup.hilly.dataSource.controller.mongodb;
 
 import cn.edu.cup.base.CommonProvider;
 import cn.edu.cup.hilly.calculate.hilly.large.Project;
-import cn.edu.cup.hilly.dataSource.Service.mongo.HillyService;
+import cn.edu.cup.hilly.dataSource.service.mongo.HillyService;
 import cn.edu.cup.hilly.dataSource.model.mongo.DataMap;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
 import cn.edu.cup.hilly.dataSource.model.mongo.Pipe.Pipe;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.Medium;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
+import cn.edu.cup.hilly.dataSource.model.mongo.outPut.DPL;
+import cn.edu.cup.hilly.dataSource.model.mongo.outPut.PgHis;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.Pig;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigList;
 import cn.edu.cup.hilly.dataSource.model.mongo.siteInfo.SiteInfo;
@@ -16,6 +18,7 @@ import cn.edu.cup.hilly.dataSource.utils.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +28,8 @@ public class HillyController {
 
     @Autowired
     HillyService hillyService;
+    @Autowired
+    Project project;
 
     /**
      * 查询全部的项目数据信息
@@ -236,16 +241,19 @@ public class HillyController {
      */
     @GetMapping("/run")
     public RespBean run(@RequestParam("id") String id) {
-        Project project = new Project();
         Hilly hilly = hillyService.getHillyById(id);
         Map<String, Object> dataMap = DataMap.getDataMap(hilly);
 
         CommonProvider commonProvider = new CommonProvider();
         commonProvider.setDataMap(dataMap);
         commonProvider.startDataRequirementProcess(project);
-
         project.run();
-        return RespBean.ok("计算成功");
+        List<PgHis> pg_his = project.getPg_his();
+        List<DPL> dpl = project.getDpl();
+        List<Object> list = new ArrayList<>();
+        list.add(pg_his);
+        list.add(dpl);
+        return RespBean.ok("计算成功",list);
     }
 
 }

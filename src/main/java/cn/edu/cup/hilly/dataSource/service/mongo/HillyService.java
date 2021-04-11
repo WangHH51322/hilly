@@ -1,4 +1,4 @@
-package cn.edu.cup.hilly.dataSource.Service.mongo;
+package cn.edu.cup.hilly.dataSource.service.mongo;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.HillyDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;

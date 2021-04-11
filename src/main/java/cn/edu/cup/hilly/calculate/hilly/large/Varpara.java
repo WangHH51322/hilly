@@ -3,8 +3,9 @@ package cn.edu.cup.hilly.calculate.hilly.large;
 
 import cn.edu.cup.base.IOElement;
 import cn.edu.cup.base.InputField;
+import lombok.ToString;
 
-
+@ToString
 @IOElement(name = "variableParameter")
 public class Varpara {
 
@@ -111,6 +112,7 @@ public class Varpara {
     double[] Hfk_jj;
 
     double[][] dPL;             //局部摩阻
+    double[][] dPL2;             //局部摩阻
 
     double[][] lg_f;
     double[][] lp_b;
@@ -242,6 +244,7 @@ public class Varpara {
         this.Hf_j = new double[k];              //局部阻力
 
         this.dPL=new double[(int)T*12+2+1][1802];;       //全局压力
+        this.dPL2=new double[(int)(T*12+2+1)/4 + 1][1802];;       //全局压力
         this.lg_f = new double[i][k];   //各段分层流实时长度
         this.lp_b = new double[i][k];   //气泡流和气团流实时长度，下坡段部分
         this.lp_bU = new double[i][k];  //气泡流和气团流实时长度，上坡段部分

@@ -3,19 +3,30 @@ package cn.edu.cup.hilly.calculate.hilly.large;
 import Jama.Matrix;
 import cn.edu.cup.base.IOElement;
 import cn.edu.cup.base.InputField;
+import cn.edu.cup.hilly.dataSource.model.mongo.outPut.DPL;
 import cn.edu.cup.hilly.dataSource.model.mongo.outPut.PgHis;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.TempTest;
+import cn.edu.cup.hilly.dataSource.service.mongo.ResultDPLService;
+import cn.edu.cup.hilly.dataSource.service.mongo.TempTestSer;
+import cn.edu.cup.hilly.dataSource.utils.SizeChange;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Math.*;
 
+@Service
 @IOElement(name = "hillyProject")
-public class Project {
+public class Project extends Thread implements Serializable {
     Conpara conPara;
 
     @InputField(name = "variableParameter", unit = "")
-    Varpara varPara;
+    static Varpara varPara;
 
     @InputField(name = "pipe", unit = "")
     Pipeline pipeLine;
@@ -27,7 +38,74 @@ public class Project {
     List<Oil> oils;
 
     @InputField(name = "pigList", unit = "")
-    List<Pig> pigs;
+    static List<Pig> pigs;
+
+    private String projectId;
+    public String getProjectId() {
+        return projectId;
+    }
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    /**
+     * Temp Data
+     */
+    @Autowired
+    TempTestSer tempService;
+    @Autowired
+    ResultDPLService resultDPLService;
+    /**
+     * 线程暂停
+     */
+    private static boolean pause = false;
+    private static boolean release = false;
+    private static Object lock = new Object();
+
+    /**
+     * 调用该方法实现线程的暂停
+     */
+    public static Varpara pauseThread(){
+        pause = true;
+        return varPara;
+    }
+    /**
+     * 释放此进程
+     */
+    public static void releaseThread(){
+        pause = false;
+        synchronized (lock){
+            lock.notify();
+        }
+        release = true;
+    }
+    /**
+     * 将release参数恢复为false
+     */
+    public static void recoverThread(){
+        release = false;
+    }
+    /**
+     * 调用该方法实现恢复线程的运行
+     */
+    public static void resumeThread(){
+        pause = false;
+        synchronized (lock){
+            lock.notify();
+        }
+    }
+    /**
+     * 这个方法只能在run 方法中实现，不然会阻塞主线程，导致页面无响应
+     */
+    void onPause() {
+        synchronized (lock) {
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private List<PgHis> Pg_his;
     public List<PgHis> getPg_his() {
@@ -35,6 +113,14 @@ public class Project {
     }
     public void setPg_his(List<PgHis> pg_his) {
         Pg_his = pg_his;
+    }
+
+    private List<DPL> dpl;
+    public List<DPL> getDpl() {
+        return dpl;
+    }
+    public void setDpl(List<DPL> dpl) {
+        this.dpl = dpl;
     }
 
     public void run() {
@@ -149,23 +235,17 @@ public class Project {
                                 varPara.line_lll[num2][b] = lz[num2-num][b];
                                 varPara.line_ddd[num2][b] = lz[num2-num][b+4];
                             }
-
                         }
                     }
-
                     break;
                 } else if (lz[num0][1] == 1000 * station.getStationL()[num] || lz[num0][2] == 1000 * station.getStationL()[num] || lz[num0][3] == 1000 * station.getStationL()[num]) {//插入点与原点重合
                     System.out.println("里程高程插入异常！");
                 }
-
-
             }
         }
 
         varPara.line_lll[45][2]=271000;
         varPara.line_ddd[45][2]=1800;
-
-
 
         System.out.println("里程数组：");
         for (int ii=0;ii<varPara.line_lll.length;ii++){
@@ -183,16 +263,6 @@ public class Project {
             }
             System.out.println();
         }
-
-
-
-
-
-//        varPara.line_d=line(pipeLine.getH());       //一维数组转化为三点高程数组，一行代表1个V型
-//        varPara.line_l=line(pipeLine.getL());
-        //for (int a=9;a< 21;a++){          ////////////控制地形里程在100-122km  i==13  Q=0.281944
-        //for (int a=10;a< 31;a++){          ////////////控制地形里程在100-203km  i==22  Q=0.281944
-        //////////////for (int a=40;a< 61;a++){          ////////////控制地形里程在248-414km  i==25  Q=850
         for (int a=60;a< 71;a++){          ////////////控制地形里程在395-640km  i==64  Q=1660
         //for (int a=61;a< 108;a++){          ////////////控制地形里程在397-608km   i=48  Q=0.483333
             System.out.print("第"+(a-59)+"管段"+"\t");
@@ -207,8 +277,6 @@ public class Project {
             }
             System.out.println();
         }
-        //varPara.line_d[1][1]=varPara.line_d[1][1]-603.1529;//固定402.4的高程值
-
 
         flagFP = varPara.line_l[1][1]+500;
         System.out.println("varPara.line_d[1][1]="+varPara.line_d[1][1]);
@@ -243,19 +311,11 @@ public class Project {
             System.out.println("lgk["+jjj+"]="+varPara.lgk[jjj]);
         }
 
-
-
-
-
-
         varPara.waterHeadLocation[0]=varPara.line_l[1][1];   //水头初始位置等于首个下坡段低点
 
         System.out.println("总模拟长度："+(varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/1000+"km");
-        //System.out.println("初始的水头位置："+waterHeadLocation[0]/1000+"km");
-
 
         cal_l0();//计算各管段的气段尾部估计位置，也计算了满管流动的水力坡降
-
 
         varPara.Time[0] = t_all;       //时步与时间的整合对应
 
@@ -264,396 +324,269 @@ public class Project {
 
         start1 = System.currentTimeMillis();        //开始计算的时间标记
 
-        for(int kk=1; kk<varPara.kt+1; kk++){           //时间循环，从第一个u型管低点开始，到水头遇终点结束。
-
-            //计算水头位置
-
-
-            for (i=1;i<=n;i++)      //每当水头越过高点则n加一，i为当前计算段的编号
-            {
-
-
-                //计算本时步的所有管段的初次压缩
-
-//                if (varPara.h2k[i] < 300 && varPara.ssr[i][0]!=1)            //20201105加入后半个判定条件，让破碎结束后不再运行，前半个条件是预设的破碎开始情况
-//                {
-//                    YaSuo(i,varPara.lgk[i],varPara.Pgk[i],varPara.Hgk[i],varPara.slopeU[i][0],
-//                            varPara.slopeD[i][0], varPara.uk[i], varPara.h1k[i], varPara.h2k[i],varPara.backPressure[i],
-//                            varPara.dMg_in[i]-varPara.dMg_out[i]);
-//                    varPara.MGk[i]=varPara.MGk[i]+varPara.dMg_in[i];//在破碎未开始的时间，更新气段质量,主要是上游流下的气体
-//                    //计算当前压力下的气体密度
-//                    varPara.Dengk[i]= 1.205 /1.01e5*varPara.Pgk[i];
-//                }
-
-
-                //破碎的计算，运行得到一个时步的破碎结果,返回修正后的Lg、Pg、Hg的值
-
-                if (varPara.ssr[i][0] != 1) {     //20201105加入后半个判定条件，让破碎结束后不再运行，前半个条件是预设的破碎开始情况
-
-                    if (varPara.Pgk[i] < 5e6){
-                        YaSuo(i, varPara.lgk[i], varPara.Pgk[i], varPara.Hgk[i], varPara.slopeU[i][0],
-                                varPara.slopeD[i][0], varPara.uk[i], varPara.h1k[i], varPara.h2k[i], varPara.backPressure[i],
-                                varPara.dMg_in[i] - varPara.dMg_out[i]-AddMg[i]);
-                    }else {
-                        varPara.h2k[i] = varPara.h2_his[i][(kk) / 300 - 1] + conPara.Ql / conPara.A;
-                    }
-
-
-                    varPara.Dengk[i] = 1.205 / 1.01e5 * varPara.Pgk[i];
-                    try {
-                        dtPosui(kk, i, varPara.l0[i], varPara.line_l[i][1], varPara.line_d[i][1], varPara.line_l[i][2], varPara.line_d[i][2],
-                                conPara.Ql, conPara.D, conPara.A, 1.205,varPara.MGk[i]-AddMg[i] , varPara.Pgk[i], varPara.lgk[i],
-                                varPara.Dengk[i], varPara.Hgk[i], varPara.MM, varPara.Pgk, varPara.lgk, varPara.Dengk, varPara.Hgk,
-                                oil.density, 1e-6);//
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-//                    }else{
-//                        ssr=0;
-//                    }
-
-
+        /**
+         * 循环开始
+         */
+        System.out.println("开始循环!!!");
+        super.run();
+        int kk = 0;
+        int count = varPara.kt + 1;
+        while(true){
+            while (pause){
+                onPause();
+            }
+            if (release) {
+                break;
+            }
+            try {
+                kk ++;
+                if (kk == count) {
+                    break;
                 }
-
-
-                //varPara.lfk[i]=varPara.lgk[i];//认为各段的气段长度等价于分层流长度
-                //varPara.lpk[i]=((varPara.line_d[i][1]-varPara.line_d[i][2])/varPara.slopeD[i][0]-varPara.lgk[i]+0.1)+varPara.h2k[i]/varPara.slopeU[i][0];//泡状流长度等于水头长度减去分层流长度，在没考虑气团聚集时;或者等于上下坡的液柱高度所对应的长度
-                //varPara.lpk[i]=h1k[i]/slopeD[i][0]+h2k[i]/slopeU[i][0];//泡状流长度等于水头长度减去分层流长度，在没考虑气团聚集时;或者等于上下坡的液柱高度所对应的长度
-                //计算单位管长下的分层流（只有下坡有分层流）压降，带重位压差
-                varPara.Hfk_f[i] = dpf_cal(-varPara.slopeD[i][0], varPara.Hgk[i], conPara.D, oil.density, 1.205, conPara.Ql / conPara.A, varPara.f_l[i], 0.0143, varPara.Sl[i]);
-                //计算单位管长下的下坡段分层流压降，带重位压差
-                varPara.Hfk_b[i] = dPb_cal(conPara.A, -varPara.slopeD[i][0], varPara.Hgbk[i], conPara.D, oil.density, 1.205, 0.001* oil.getViscosity(), conPara.Ql / conPara.A, conPara.Ql / conPara.A, conPara.Ql / conPara.A, 0.0001);
-                varPara.Hfk_dU[i] = dPd_cal(varPara.slopeU[i][0], varPara.Hgbk[i], conPara.Ql, conPara.A, conPara.D, oil.density, conPara.Ql / conPara.A, conPara.Ql / conPara.A, 0.0001);
-                //计算单位管长下的上坡段分层流压降，带重位压差
-                varPara.Hfk_bU[i] = dPbU_cal(conPara.A, varPara.slopeU[i][0], varPara.Hgbk[i], conPara.D, oil.density, 1.205, 0.001* oil.getViscosity(), conPara.Ql / conPara.A, conPara.Ql / conPara.A, conPara.Ql / conPara.A, 0.0001);
-                //某管段在当前时刻的总压降
-                varPara.Hfk[i] = dP_cal(varPara.vll[i], varPara.vll[i], varPara.Hgbk[i], 3, conPara.A, oil.getDensity(), 1.205, varPara.Hfk_b[i], varPara.Hfk_bU[i], varPara.Hfk_f[i], varPara.lg_f[i][kk / 300], varPara.lp_b[i][kk / 300], varPara.lp_bU[i][kk / 300])[3];
-                varPara.Hfk_jj[i] = dP_cal(varPara.vll[i], varPara.vll[i], varPara.Hgbk[i], 3, conPara.A, oil.getDensity(), 1.205, varPara.Hfk_b[i], varPara.Hfk_bU[i], varPara.Hfk_f[i], varPara.lg_f[i][kk / 300], varPara.lp_b[i][kk / 300], varPara.lp_bU[i][kk / 300])[2];
-                //记录参数，背压向上游传递，气量向下游传递
-
-//                if (kk==487738&&i==n){
-//                    for (int jjj=9;jjj<9+1;jjj++){
-//                        System.out.println("PgK["+jjj+"]="+varPara.Pgk[jjj]);
-//                        System.out.println("lgK["+jjj+"]="+varPara.lgk[jjj]);
-//                        System.out.println("MgK["+jjj+"]="+varPara.MGk[jjj]);
-//                        System.out.println("dgK["+jjj+"]="+varPara.Dengk[jjj]);
-//                        System.out.println("dmgout["+jjj+"]="+varPara.dMg_out[jjj]);
-//                        System.out.println("dmgin["+jjj+"]="+varPara.dMg_in[jjj]);
-//                        System.out.println("slopeD["+jjj+"]="+varPara.slopeD[jjj][0]);
-//                        System.out.println("slopeU["+jjj+"]="+varPara.slopeU[jjj][0]);
-//                        System.out.println("vll["+jjj+"]="+varPara.vll[jjj]);
-//                        System.out.println("Hgk["+jjj+"]="+varPara.Hgk[jjj]);
-//
-//                    }
-//                }
-
-
-//                double []eValve=new double[1001];
-//                eValve[i]=valve.getValveD();
-                FlowConversion(kk, i);
-                //paiqi(i,varPara.Pgk,300000,eValve,varPara.h1k,varPara.h2k,varPara.lgk,varPara.Hgk,varPara.line_d,varPara.line_l);
-
-                if (varPara.ssr[i][0] == 1) {
-                    varPara.Pgk[i] = varPara.Pg_his[i][(kk) / 300 - 1];
-//                        varPara.lgk[i] = 0.1;                //气体长度为零
-                    varPara.lgk[i] = varPara.lg_his[i][(kk) / 300 - 1];
-                    varPara.h1k[i] = varPara.line_d[i][1] - varPara.line_d[i][2];
-
-                    varPara.h2k[i] = varPara.h2_his[i][(kk) / 300 - 1] + conPara.Ql / conPara.A;
-                    varPara.dMg_out[i] = 0.00;            //净流出为零
-                    varPara.MGk[i] = varPara.M_his[i][(kk) / 300 - 1];                         //气体质量为零
-                    //气体质量为零
-
-
-                }
-                if (i > 1 && varPara.ssr[i][0] == 0) {
-                    varPara.backPressure[i - 1] = varPara.Pgk[i];         //开始封闭后才有这个关系，要考虑明渠流动的时间
-                    varPara.dMg_in[i] = varPara.dMg_out[i - 1];           //上游段的净流出等于下游段的净流入
-                }
-
-
-                //判定过高点后，加一个运行的管段。
-                if (varPara.h2k[n] > (varPara.line_d[n][3] - varPara.line_d[n][2])) {//水头进入下一个管段
-
-
-                    for (i = 1; i <= n; i++) {
-
-                        varPara.h2k[i] = varPara.line_d[i][3] - varPara.line_d[i][2];
-                    }
-
-                    if (pp == 0) {
-                        if (n < varPara.i - 1) {
-                            System.out.println("水头在第" + 0.2 * kk / 3600.0 + "h到达第" + (n) + "个U型管高点");
-                            //pp++;
-                            n++;
-                        } else if (n == varPara.i - 1) {
-                            System.out.println("水头在第" + 0.2 * kk / 3600.0 + "h到达第" + (n) + "个U型管高点");
-                            //System.out.println("水头在第" + 0.2*kk/3600.0 + "h到达第"+ (n) + "个U型管高点");
-                            pp++;
+                    for (i = 1; i <= n; i++) {//每当水头越过高点则n加一，i为当前计算段的编号
+                        //破碎的计算，运行得到一个时步的破碎结果,返回修正后的Lg、Pg、Hg的值
+                        if (varPara.ssr[i][0] != 1) {     //20201105加入后半个判定条件，让破碎结束后不再运行，前半个条件是预设的破碎开始情况
+                            if (varPara.Pgk[i] < 5e6) {
+                                YaSuo(i, varPara.lgk[i], varPara.Pgk[i], varPara.Hgk[i], varPara.slopeU[i][0],
+                                        varPara.slopeD[i][0], varPara.uk[i], varPara.h1k[i], varPara.h2k[i], varPara.backPressure[i],
+                                        varPara.dMg_in[i] - varPara.dMg_out[i] - AddMg[i]);
+                            } else {
+                                varPara.h2k[i] = varPara.h2_his[i][(kk) / 300 - 1] + conPara.Ql / conPara.A;
+                            }
+                            varPara.Dengk[i] = 1.205 / 1.01e5 * varPara.Pgk[i];
+                            try {
+                                dtPosui(kk, i, varPara.l0[i], varPara.line_l[i][1], varPara.line_d[i][1], varPara.line_l[i][2], varPara.line_d[i][2],
+                                        conPara.Ql, conPara.D, conPara.A, 1.205, varPara.MGk[i] - AddMg[i], varPara.Pgk[i], varPara.lgk[i],
+                                        varPara.Dengk[i], varPara.Hgk[i], varPara.MM, varPara.Pgk, varPara.lgk, varPara.Dengk, varPara.Hgk,
+                                        oil.density, 1e-6);//
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
+                        //计算单位管长下的分层流（只有下坡有分层流）压降，带重位压差
+                        varPara.Hfk_f[i] = dpf_cal(-varPara.slopeD[i][0], varPara.Hgk[i], conPara.D, oil.density, 1.205, conPara.Ql / conPara.A, varPara.f_l[i], 0.0143, varPara.Sl[i]);
+                        //计算单位管长下的下坡段分层流压降，带重位压差
+                        varPara.Hfk_b[i] = dPb_cal(conPara.A, -varPara.slopeD[i][0], varPara.Hgbk[i], conPara.D, oil.density, 1.205, 0.001 * oil.getViscosity(), conPara.Ql / conPara.A, conPara.Ql / conPara.A, conPara.Ql / conPara.A, 0.0001);
+                        varPara.Hfk_dU[i] = dPd_cal(varPara.slopeU[i][0], varPara.Hgbk[i], conPara.Ql, conPara.A, conPara.D, oil.density, conPara.Ql / conPara.A, conPara.Ql / conPara.A, 0.0001);
+                        //计算单位管长下的上坡段分层流压降，带重位压差
+                        varPara.Hfk_bU[i] = dPbU_cal(conPara.A, varPara.slopeU[i][0], varPara.Hgbk[i], conPara.D, oil.density, 1.205, 0.001 * oil.getViscosity(), conPara.Ql / conPara.A, conPara.Ql / conPara.A, conPara.Ql / conPara.A, 0.0001);
+                        //某管段在当前时刻的总压降
+                        varPara.Hfk[i] = dP_cal(varPara.vll[i], varPara.vll[i], varPara.Hgbk[i], 3, conPara.A, oil.getDensity(), 1.205, varPara.Hfk_b[i], varPara.Hfk_bU[i], varPara.Hfk_f[i], varPara.lg_f[i][kk / 300], varPara.lp_b[i][kk / 300], varPara.lp_bU[i][kk / 300])[3];
+                        varPara.Hfk_jj[i] = dP_cal(varPara.vll[i], varPara.vll[i], varPara.Hgbk[i], 3, conPara.A, oil.getDensity(), 1.205, varPara.Hfk_b[i], varPara.Hfk_bU[i], varPara.Hfk_f[i], varPara.lg_f[i][kk / 300], varPara.lp_b[i][kk / 300], varPara.lp_bU[i][kk / 300])[2];
+                        //记录参数，背压向上游传递，气量向下游传递
+                        FlowConversion(kk, i);
 
+                        if (varPara.ssr[i][0] == 1) {
+                            varPara.Pgk[i] = varPara.Pg_his[i][(kk) / 300 - 1];
+                            varPara.lgk[i] = varPara.lg_his[i][(kk) / 300 - 1];
+                            varPara.h1k[i] = varPara.line_d[i][1] - varPara.line_d[i][2];
 
-//                    if (n<varPara.i-1){
-//                        System.out.println("水头在第" + 0.2*kk/3600.0 + "h到达第"+ (n) + "个U型管高点");
-//                        //pp++;
-//                        n++;
-//                    }else if (n==varPara.i-1){
-//                        //System.out.println("水头在第" + 0.2*kk/3600.0 + "h到达第"+ (n) + "个U型管高点");
-//                    }
-
-//                    pp++;//越过高点后明渠流的时间记录
-//                    if (pp >(int)Math.rint(varPara.t2[n+1]/dt))//到达第n个高点且在前n-1段循环计算了kn个时步后
-//                    {
-//                        t_all = t_all+ pp*dt;
-//                        double dd=varPara.waterHeadLocation[kk];
-//                        kk=kk+pp;
-//                        varPara.waterHeadLocation[kk]=dd + varPara.l[n][2] - varPara.l[n][1];
-//                        if (n<4)
-//                            n++;
-//                        pp=0;
-//
-//
-//                    }
-                }
-
-
-                if (i == n) tt++;
-                if (tt > 299) {
-                    rr++;
-                    varPara.Time[rr] = varPara.Time[rr - 1] + varPara.deltaT * 300;
-                    Save_his(i, n, rr);
-
-
-                    //Hf[i]是第i段在某时刻的总压降，所以累加后即为
-                    for (int kkk = 1; kkk < varPara.i; kkk++) {
-                        //Hf[rr]=Hfk[kkk]+Hf[rr];
-                        ssr = varPara.Hfk[kkk] + ssr;
-
-                        //Hf[rr]=Hfk[kkk];
-                        ssr1 = varPara.Hfk_bb[kkk] + ssr1;
-                        ssr2 = varPara.Hfk_ff[kkk] + ssr2;
-                        ssr3 = varPara.Hfk_jj[kkk] + ssr3;
-
-                        if (n > 1 && varPara.ssr[kkk][0] == 1) {
-                            varPara.lp_b[kkk][rr] = varPara.line_l[kkk][2] - varPara.line_l[kkk][1];             //当前段破碎结束后，下坡段全按气泡流计算
-                            varPara.lp_bU[kkk][rr] = varPara.line_l[kkk][3] - varPara.line_l[kkk][2];             //当前段破碎结束后，上坡段全按气泡流计算
-                            varPara.lg_f[kkk][rr] = 0;                                  //当前段破碎结束后，全按气泡流计算，分层流长度为零
-                        } else if (varPara.ssr[kkk][1] == 1) {                               //水头到达高点后
-                            varPara.lp_b[kkk][rr] = varPara.line_l[kkk][2] - varPara.line_l[kkk][1] - varPara.lgk[kkk];
-                            varPara.lp_bU[kkk][rr] = varPara.line_l[kkk][3] - varPara.line_l[kkk][2];
-                            varPara.lg_f[kkk][rr] = varPara.lgk[kkk];
+                            varPara.h2k[i] = varPara.h2_his[i][(kk) / 300 - 1] + conPara.Ql / conPara.A;
+                            varPara.dMg_out[i] = 0.00;            //净流出为零
+                            varPara.MGk[i] = varPara.M_his[i][(kk) / 300 - 1];                         //气体质量为零
                         }
-                    }
-                    varPara.Hf[rr] = ssr;
-                    varPara.Hf_b[rr] = ssr1;
-                    varPara.Hf_f[rr] = ssr2;
-                    varPara.Hf_j[rr] = ssr3;
-
-                    ssr = 0;
-                    ssr1 = 0;
-                    ssr2 = 0;
-                    ssr3 = 0;
-                    tt = 0;
-
-                    if (varPara.waterHeadLocation[rr - 1] < varPara.line_l[n][2] && varPara.waterHeadLocation[rr - 1] != 0.0)                       //到达某段低点前
-                    {
-                        varPara.waterHeadLocation[rr] = varPara.waterHeadLocation[rr - 1] + dt * varPara.vll[n] * 300;        //用明渠流流速计算水头位置
-                        varPara.lg_f[n][rr] = varPara.lg_f[n][rr - 1] + dt * varPara.vll[n] * 300;        //用明渠流流速计算分层流长度
-                        varPara.lp_b[n][rr] = 0;        //水头抵达低点前，下坡段气团气泡流长度为零
-                        varPara.lp_bU[n][rr] = 0;       //水头抵达低点前，上坡段气团气泡流长度为零
-                    } else if (varPara.waterHeadLocation[rr - 1] > varPara.line_l[n][2] && varPara.waterHeadLocation[rr - 1] <= varPara.line_l[n][3]) {     //低点到首段翻越点之间
-                        varPara.waterHeadLocation[rr] = varPara.line_l[n][2] + varPara.h2k[n] / varPara.slopeU[n][0];                      //用压缩模型的上坡段液位高度计算水头位置
-                        //wL=varPara.waterHeadLocation[rr];
-                        varPara.lg_f[n][rr] = varPara.lgk[n];         //开始压缩后，等于压缩期间的实时长度
-                        varPara.lp_b[n][rr] = varPara.line_l[n][2] - varPara.line_l[n][1] - varPara.lgk[n];        //下坡段气团气泡流长度等于下坡段分层流以外的长度
-                        varPara.lp_bU[n][rr] = varPara.h2k[n] / varPara.slopeU[n][0];                         //上坡段水头处的长度
-                    }
-                    if (varPara.waterHeadLocation[rr-1] >= varPara.line_l[varPara.i-1][3]-100){
-                        varPara.waterHeadLocation[rr] = varPara.line_l[varPara.i-1][3];
-                        System.out.println("ces");
-                    }
-
-
-                    varPara.allLine[1][rr]=varPara.waterHeadLocation[rr];       //水头位置
-                    varPara.allLine[2][rr]=getZ(varPara.line_l, varPara.line_d,varPara.waterHeadLocation[rr]);      //水头位置所处点高程
-
-                    //varPara.allLine[2][rr]=getFlowPattern(getI(varPara.line_l, varPara.waterHeadLocation[rr]),varPara.waterHeadLocation[rr],varPara.pigL[rr/5]);       //当前点流型1为分层流，0为满管流，2为气泡流，3为段塞或气泡流
-                    varPara.allLine[3][rr]=getI(varPara.line_l, varPara.waterHeadLocation[rr]);       //当前点流型
-
-
-
-
-
-                    //varPara.lf[rr]=varPara.lf[rr-1]+lgk[rr];//累计分层流段长度，作为后续压降计算参数使用
-                    //varPara.lp[rr]=varPara.waterHeadLocation[rr]-varPara.lf[rr];//累计气泡流段长度，作为后续压降计算参数使用
-
-                    //varPara.waterHeadLocation[rr]=varPara.l[n][2] + varPara.h2k[n]/slopeU[n][0];
-
-                }
-
-
-                if (i == n) ff++;
-                if (ff > 1499) {
-                    varPara.num++;
-
-                    varPara.lg_fff[1][0] = 0;
-                    for (int cc = 1; cc <= n; cc++) {
-                        varPara.lg_fff[cc][varPara.num] = varPara.lg_f[cc][varPara.num * 5];
-                    }
-                    varPara.waterL[varPara.num] = varPara.waterHeadLocation[varPara.num * 5];
-
-                    dpL(n, varPara.T, varPara.num, varPara.deltaX, varPara.waterL, varPara.Hfk_b, varPara.Hfk_bU, varPara.Hfk_f, varPara.lg_fff,varPara.vll);
-                    ff = 0;
-
-                    //清管器投放
-                    if (varPara.waterL[varPara.num] >423470 && varPara.pigflag==0  ){//水头流动至距首站后20km
-                        if (flagpigT==0)
-                        {
-                            flagpigT=varPara.num;
-                            System.out.println("清管器在"+flagpigT/12.0+"h," + "从"+403470+"m处投放");
+                        if (i > 1 && varPara.ssr[i][0] == 0) {
+                            varPara.backPressure[i - 1] = varPara.Pgk[i];         //开始封闭后才有这个关系，要考虑明渠流动的时间
+                            varPara.dMg_in[i] = varPara.dMg_out[i - 1];           //上游段的净流出等于下游段的净流入
                         }
+                        //判定过高点后，加一个运行的管段。
+                        if (varPara.h2k[n] > (varPara.line_d[n][3] - varPara.line_d[n][2])) {//水头进入下一个管段
 
-                        varPara.pigV[0]=conPara.Ql/conPara.A;      //初始速度设为1
-                        varPara.pigL[0]=403470;  //初始位置设为250.35km
+                            for (i = 1; i <= n; i++) {
+
+                                varPara.h2k[i] = varPara.line_d[i][3] - varPara.line_d[i][2];
+                            }
+                            if (pp == 0) {
+                                if (n < varPara.i - 1) {
+                                    System.out.println("水头在第" + 0.2 * kk / 3600.0 + "h到达第" + (n) + "个U型管高点");
+//                                    TempTest temp = new TempTest();
+//                                    temp.setLocation("the" + n + "pipe");
+//                                    temp.setHis(varPara.Pg_his);
+//                                    tempService.add(temp);
+                                    n++;
+                                } else if (n == varPara.i - 1) {
+                                    System.out.println("水头在第" + 0.2 * kk / 3600.0 + "h到达第" + (n) + "个U型管高点");
+                                    pp++;
+                                }
+                            }
+                        }
+                        if (i == n) tt++;
+                        if (tt > 299) {
+                            rr++;
+                            varPara.Time[rr] = varPara.Time[rr - 1] + varPara.deltaT * 300;
 
 
-                        //double []dPLLL=varPara.dPL[varPara.num];//传递当前时步的压力值，进行插值
-                        double []dPLLL=chazhi(varPara.dPL[varPara.num],499);//传递当前时步的压力值，进行插值
+                            Save_his(i, n, rr);
 
-                            //未分上下坡，夹角不对
-                            //getHb等，高程不对
-                            //压力的单位！！！
-                            varPara.pigNum++;
-                            //Ha
-                            Ha = dPLLL[(int)(varPara.pigL[varPara.pigNum-1]-LLt)-1];
-                            //Hb
-                            Hb = dPLLL[(int)(varPara.pigL[varPara.pigNum-1]-LLt)];
+                            //Hf[i]是第i段在某时刻的总压降，所以累加后即为
+                            for (int kkk = 1; kkk < varPara.i; kkk++) {
+                                ssr = varPara.Hfk[kkk] + ssr;
+                                ssr1 = varPara.Hfk_bb[kkk] + ssr1;
+                                ssr2 = varPara.Hfk_ff[kkk] + ssr2;
+                                ssr3 = varPara.Hfk_jj[kkk] + ssr3;
+                                if (n > 1 && varPara.ssr[kkk][0] == 1) {
+                                    varPara.lp_b[kkk][rr] = varPara.line_l[kkk][2] - varPara.line_l[kkk][1];             //当前段破碎结束后，下坡段全按气泡流计算
+                                    varPara.lp_bU[kkk][rr] = varPara.line_l[kkk][3] - varPara.line_l[kkk][2];             //当前段破碎结束后，上坡段全按气泡流计算
+                                    varPara.lg_f[kkk][rr] = 0;                                  //当前段破碎结束后，全按气泡流计算，分层流长度为零
+                                } else if (varPara.ssr[kkk][1] == 1) {                               //水头到达高点后
+                                    varPara.lp_b[kkk][rr] = varPara.line_l[kkk][2] - varPara.line_l[kkk][1] - varPara.lgk[kkk];
+                                    varPara.lp_bU[kkk][rr] = varPara.line_l[kkk][3] - varPara.line_l[kkk][2];
+                                    varPara.lg_f[kkk][rr] = varPara.lgk[kkk];
+                                }
+                            }
+                            varPara.Hf[rr] = ssr;
+                            varPara.Hf_b[rr] = ssr1;
+                            varPara.Hf_f[rr] = ssr2;
+                            varPara.Hf_j[rr] = ssr3;
 
-                            //
-                            varPara.pigV[varPara.pigNum]=shuntai(Ha,Hb,varPara.pigV[varPara.pigNum-1],varPara.pigL[varPara.pigNum-1]
-                            ,varPara.pigL[varPara.pigNum-1]+500,varPara.getPgk()[i],3000,varPara.pigL[0],getPhi(varPara.line_l,varPara.line_d,varPara.pigL[varPara.pigNum-1]))[2];
+                            ssr = 0;
+                            ssr1 = 0;
+                            ssr2 = 0;
+                            ssr3 = 0;
+                            tt = 0;
 
-                            varPara.pigL[varPara.pigNum]= varPara.pigL[varPara.pigNum-1]+0.5*(varPara.pigV[varPara.pigNum-1]+varPara.pigV[varPara.pigNum])*300;
-                            varPara.pigZ[varPara.pigNum]= getZ(varPara.line_l,varPara.line_d,varPara.pigL[varPara.pigNum]);
-                            if (varPara.pigL[varPara.pigNum]>605930)
+                            if (varPara.waterHeadLocation[rr - 1] < varPara.line_l[n][2] && varPara.waterHeadLocation[rr - 1] != 0.0)                       //到达某段低点前
                             {
-                                varPara.pigflag=1;
-                                System.out.println("清管器在"+(varPara.pigNum+flagpigT)/12.0+"h," + "从"+605930+"m处回收");
+                                varPara.waterHeadLocation[rr] = varPara.waterHeadLocation[rr - 1] + dt * varPara.vll[n] * 300;        //用明渠流流速计算水头位置
+                                varPara.lg_f[n][rr] = varPara.lg_f[n][rr - 1] + dt * varPara.vll[n] * 300;        //用明渠流流速计算分层流长度
+                                varPara.lp_b[n][rr] = 0;        //水头抵达低点前，下坡段气团气泡流长度为零
+                                varPara.lp_bU[n][rr] = 0;       //水头抵达低点前，上坡段气团气泡流长度为零
+                            } else if (varPara.waterHeadLocation[rr - 1] > varPara.line_l[n][2] && varPara.waterHeadLocation[rr - 1] <= varPara.line_l[n][3]) {     //低点到首段翻越点之间
+                                varPara.waterHeadLocation[rr] = varPara.line_l[n][2] + varPara.h2k[n] / varPara.slopeU[n][0];                      //用压缩模型的上坡段液位高度计算水头位置
+                                //wL=varPara.waterHeadLocation[rr];
+                                varPara.lg_f[n][rr] = varPara.lgk[n];         //开始压缩后，等于压缩期间的实时长度
+                                varPara.lp_b[n][rr] = varPara.line_l[n][2] - varPara.line_l[n][1] - varPara.lgk[n];        //下坡段气团气泡流长度等于下坡段分层流以外的长度
+                                varPara.lp_bU[n][rr] = varPara.h2k[n] / varPara.slopeU[n][0];                         //上坡段水头处的长度
+                            }
+                            if (varPara.waterHeadLocation[rr - 1] >= varPara.line_l[varPara.i - 1][3] - 100) {
+                                varPara.waterHeadLocation[rr] = varPara.line_l[varPara.i - 1][3];
+                                System.out.println("ces");
+                            }
+
+                            varPara.allLine[1][rr] = varPara.waterHeadLocation[rr];       //水头位置
+                            varPara.allLine[2][rr] = getZ(varPara.line_l, varPara.line_d, varPara.waterHeadLocation[rr]);      //水头位置所处点高程
+                            varPara.allLine[3][rr] = getI(varPara.line_l, varPara.waterHeadLocation[rr]);       //当前点流型
+
+                            /**
+                             * OutPut:1min
+                             */
+
+                        }
+
+                        if (i == n) ff++;
+                        if (ff > 1499) {
+                            varPara.num++;
+
+                            varPara.lg_fff[1][0] = 0;
+                            for (int cc = 1; cc <= n; cc++) {
+                                varPara.lg_fff[cc][varPara.num] = varPara.lg_f[cc][varPara.num * 5];
+                            }
+                            varPara.waterL[varPara.num] = varPara.waterHeadLocation[varPara.num * 5];
+
+                            dpL(n, varPara.T, varPara.num, varPara.deltaX, varPara.waterL, varPara.Hfk_b, varPara.Hfk_bU, varPara.Hfk_f, varPara.lg_fff, varPara.vll);
+                            /**
+                             * 存储dpl
+                             */
+//                            int countCount = 0;
+//                            for (int j = 0; j < varPara.dPL.length; j+=4) {
+//                                for (int k = 0; k < varPara.dPL[j].length; k++) {
+//                                    varPara.dPL2[countCount][k] = varPara.dPL[j][k];
+//                                }
+//                                countCount ++;
+//                            }
+//                            ResultDPL resultDPL = new ResultDPL();
+//                            resultDPL.setProjectId(this.projectId);
+//                            resultDPL.setDPL(varPara.dPL2);
+//                            resultDPLService.update(resultDPL);
+                            SizeChange sizeChange = new SizeChange(varPara.dPL);
+                            Map<Integer, double[]> dPLAfterChange = sizeChange.DPLAfterChange();
+                            System.out.println(dPLAfterChange);
+                            ResultDPL resultDPL = new ResultDPL();
+                            resultDPL.setProjectId(this.projectId);
+                            resultDPL.setDPLMap(dPLAfterChange);
+                            resultDPLService.updateMap(resultDPL);
+
+                            ff = 0;
+                            //清管器投放
+                            if (varPara.waterL[varPara.num] > 423470 && varPara.pigflag == 0) {//水头流动至距首站后20km
+                                if (flagpigT == 0) {
+                                    flagpigT = varPara.num;
+                                    System.out.println("清管器在" + flagpigT / 12.0 + "h," + "从" + 403470 + "m处投放");
+                                }
+
+                                varPara.pigV[0] = conPara.Ql / conPara.A;      //初始速度设为1
+                                varPara.pigL[0] = 403470;  //初始位置设为250.35km
+
+                                double[] dPLLL = chazhi(varPara.dPL[varPara.num], 499);//传递当前时步的压力值，进行插值
+
+                                varPara.pigNum++;
+                                //Ha
+                                Ha = dPLLL[(int) (varPara.pigL[varPara.pigNum - 1] - LLt) - 1];
+                                //Hb
+                                Hb = dPLLL[(int) (varPara.pigL[varPara.pigNum - 1] - LLt)];
+
+                                varPara.pigV[varPara.pigNum] = shuntai(Ha, Hb, varPara.pigV[varPara.pigNum - 1], varPara.pigL[varPara.pigNum - 1]
+                                        , varPara.pigL[varPara.pigNum - 1] + 500, varPara.getPgk()[i], 3000, varPara.pigL[0], getPhi(varPara.line_l, varPara.line_d, varPara.pigL[varPara.pigNum - 1]))[2];
+
+                                varPara.pigL[varPara.pigNum] = varPara.pigL[varPara.pigNum - 1] + 0.5 * (varPara.pigV[varPara.pigNum - 1] + varPara.pigV[varPara.pigNum]) * 300;
+                                varPara.pigZ[varPara.pigNum] = getZ(varPara.line_l, varPara.line_d, varPara.pigL[varPara.pigNum]);
+                                if (varPara.pigL[varPara.pigNum] > 605930) {
+                                    varPara.pigflag = 1;
+                                    System.out.println("清管器在" + (varPara.pigNum + flagpigT) / 12.0 + "h," + "从" + 605930 + "m处回收");
+                                }
+                            }
+
+                            for (int rrr = 1; rrr <= n; rrr++) {
+                                if (varPara.MGk[rrr] > 5.0 && varPara.pigL[varPara.pigNum] < varPara.line_l[rrr][1] && varPara.pigL[varPara.pigNum] > varPara.line_l[rrr][1] - 5000) {//当积气段气体质量剩余，且清管器位于积气段10km内时
+                                    AddMg[rrr] = varPara.Dengk[rrr] * varPara.deltaT * (varPara.pigV[varPara.pigNum] - conPara.Ql / conPara.A) * varPara.Hgk[rrr] * conPara.A;       //添加清管器赶气的附加破碎质量流量
+                                    //System.out.println("测试00001");
+                                }
                             }
 
 
+                            //全线流型计算
+                            for (int kkk = varPara.num; kkk < (int) varPara.T * 12 + 1; kkk++)//时间循环
+                            {
 
-                    }
-
-
-                    for (int rrr=1;rrr<=n;rrr++){
-                        if (varPara.MGk[rrr]>5.0 && varPara.pigL[varPara.pigNum]<varPara.line_l[rrr][1] && varPara.pigL[varPara.pigNum]>varPara.line_l[rrr][1]-5000){//当积气段气体质量剩余，且清管器位于积气段10km内时
-                            AddMg[rrr]=varPara.Dengk[rrr]*varPara.deltaT*(varPara.pigV[varPara.pigNum]- conPara.Ql/conPara.A)*varPara.Hgk[rrr]*conPara.A;       //添加清管器赶气的附加破碎质量流量
-                            //System.out.println("测试00001");
+                                flagFP = varPara.line_l[1][1] + 500;
+                                for (int xNum = 1; flagFP < varPara.waterL[kkk]; xNum++) {
+                                    varPara.allLineFP[kkk][xNum] = getFlowPattern(getI(varPara.line_l, flagFP), flagFP, varPara.pigL[0], varPara.pigL[varPara.pigNum], flagpigT);       //当前点流型1为分层流，0为满管流，2为气泡流，3为段塞或气泡流
+                                  flagFP = flagFP + 500;
+                                }
+                            }
                         }
-//                        else if (varPara.pigL[varPara.pigNum]<varPara.line_l[rrr][1] && varPara.pigL[varPara.pigNum]>varPara.line_l[rrr][1]-10000){//当清管器路过后，清管器上游改为纯液相
-//
-//                        }
-                    }
+                        //在时步300s一次更新压力和流型，只改变破碎压力，可能会导致失稳
+                        if (i == n) ttt++;
+                        if (ttt > 299) {
 
-
-                    //全线流型计算
-                    for (int kkk=varPara.num;kkk<(int)varPara.T*12+1;kkk++)//时间循环
-                    {
-
-                        flagFP = varPara.line_l[1][1]+500;
-                        for (int xNum = 1; flagFP < varPara.waterL[kkk]; xNum++) {
-                            //varPara.allLine[0][rr]=varPara.waterHeadLocation[rr];       //水头位置
-                            //varPara.allLine[1][rr]=getZ(varPara.line_l, varPara.line_d,varPara.waterHeadLocation[rr]);      //水头位置所处点高程
-
-                            varPara.allLineFP[kkk][xNum] = getFlowPattern(getI(varPara.line_l, flagFP), flagFP, varPara.pigL[0],varPara.pigL[varPara.pigNum], flagpigT);       //当前点流型1为分层流，0为满管流，2为气泡流，3为段塞或气泡流
-
-
-//                            if (kk>118800&&kk<129800){
-//                                System.out.println("varPara.pigL[0]"+varPara.pigL[0]);
-//                                System.out.println("varPara.pigL[kkk - flagpigT]"+varPara.pigL[kkk - flagpigT]);
-//                                System.out.println("flagpigT"+flagpigT);
-//                                System.out.println("kkk"+kkk);
-//                            }
-                            //System.out.println("varPara.allLineFP[" + kkk + "][" + xNum + "]=" + varPara.allLineFP[kkk][xNum]);
-                            flagFP = flagFP + 500;
-                            //varPara.allLine[3][rr]=getI(varPara.line_l, varPara.waterHeadLocation[rr]);       //当前点流型
-
-                            //varPara.allLineFP[varPara.num][xNum]=getFlowPattern(getI(varPara.line_l, varPara.waterHeadLocation[rr]),varPara.waterHeadLocation[rr],varPara.pigL[varPara.num]);;
-
+                            AddMg_his[i][rr] = AddMg[i];
+                            ttt = 0;
                         }
+                        /**
+                         * broken:save data here
+                         */
                     }
+                /**
+                 * outPut data
+                 */
 
-
-                }
-
-
-
-                //在时步300s一次更新压力和流型，只改变破碎压力，可能会导致失稳
-                if (i == n) ttt++;
-                if (ttt > 299) {
-
-                    AddMg_his[i][rr] = AddMg[i];
-                    ttt=0;
-                }
-            }
-
-//            if (n==5){
-//                break;
-//            }
-
-
-            //System.out.println("水头位置："+waterHeadLocation[kk]/1000+"km");
-            if ((varPara.ssr[1][0]==1 && varPara.ssr[2][0]==1 && varPara.ssr[3][0]==1 && varPara.ssr[varPara.i-1][0]==1)){
-                System.out.println("结束!");
+                    if ((varPara.ssr[1][0] == 1 && varPara.ssr[2][0] == 1 && varPara.ssr[3][0] == 1 && varPara.ssr[varPara.i - 1][0] == 1)) {
+                        System.out.println("结束!");
+//                        TempTest temp = new TempTest();
+//                        temp.setLocation("the" + n + "pipe");
+//                        temp.setHis(varPara.Pg_his);
+//                        tempService.add(temp);
+                        break;
+                    }
+//                }
+            }catch (Exception e){
+                e.printStackTrace();
                 break;
-
             }
-
         }
-
 
         end1 = System.currentTimeMillis();
         System.out.println("计算时间 start time:" + start1+ "; end time:" + end1+ "; Run Time:" + (end1 - start1) + "(ms)");
-
-        this.Pg_his = PgHis.getPgHis(varPara.Pg_his);
-
-//        try {
-//            Output.OutToTXT1(varPara.Pg_his,"Pg_his");
-//            Output.OutToTXT1(varPara.HFB,"HFB");
-//            Output.OutToTXT1(varPara.HFBU,"HFBU");
-//            Output.OutToTXT1(varPara.HFF,"HFF");
-//            Output.OutToTXTL(varPara.dPL,"dPL");
-//            Output.OutToTXTFP(varPara.allLineFP,"allLineFP");
-//            Output.OutToTXT1(varPara.lg_f,"lg_f");
-//            Output.OutToTXT1(varPara.lp_b,"lp_b");
-//            Output.OutToTXT1(varPara.lp_bU,"lp_bU");
-//            Output.OutToTXT1(varPara.lg_his,"lg_his");
-//            Output.OutToTXT1(varPara.dMg_out_his,"dMg_out_his");
-//            Output.OutToTXT1(AddMg_his,"AddMg_his");
-//            Output.OutToTXT1(varPara.backPressure_his,"backPressure_his");
-//            Output.OutToTXT1(varPara.h2_his,"h2_his");
-//
-//            Output.OutToTXT1(varPara.M_his,"M_his");
-//            Output.OutToTXT1(varPara.allLine,"allLine");
-//            Output.OutToTXT1(varPara.Deng_his,"Deng_his");
-//            Output.OutToTXT(varPara.waterHeadLocation,"waterHeadLocation");
-//            Output.OutToTXTLLL(varPara.pigL,"pigL",flagpigT);
-//            Output.OutToTXTLLL(varPara.pigV,"pigV",flagpigT);
-//            Output.OutToTXTLLL(varPara.pigZ,"pigZ",flagpigT);
-//            Output.OutToTXT(varPara.Hf,"Hf");
-//            Output.OutToTXT(varPara.Hf_b,"Hf_b");
-//            Output.OutToTXT(varPara.Hf_f,"Hf_f");
-//            Output.OutToTXT(varPara.Hf_j,"Hf_j");
-//            Output.OutToTXT(varPara.Time,"Time");
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
 
         end3 = System.currentTimeMillis();
         System.out.println("TXT输出时间 start time:" + end1+ "; end time:" + end3+ "; Run Time:" + (end3 - end1) + "(ms)");
@@ -773,11 +706,6 @@ public class Project {
             varPara.HFBU[i][k] = varPara.Hfk_bU[i];
 
         }
-
-
-
-
-
     }
     public  void cal_l0() {
         Oil oil = oils.get(0);
@@ -862,12 +790,6 @@ public class Project {
             sita1=Math.abs(sita);
         else
             sita1=Math.PI/2-Math.abs(sita);
-
-        //tao_i=fi*dg*Math.pow(q/A/hl,2)/2;                       //相间剪切应力
-        //b=1-2*hl+Math.pow(hl,1.0/3)-Math.pow(hg,1.0/3);         //分层流液膜所对应的半圆心角
-        //b=b*Math.pow(3*Math.PI/2,1.0/3);
-        //b=Math.PI*hl+b+0.002;
-        //si=d*sin(b);                //相界面的湿周
         Resl=q*d/A/nd;              //液相雷诺数，不是没有密度，而是用密度将动力粘度转换成了运动粘度，nd为粘度，远大于2100，直接用（4.36）的二式
 
         //3、判定是否破碎*****是否会完全破碎
@@ -895,14 +817,7 @@ public class Project {
 
             if (timeStepNum%300==0){
                 if (nums==kkk)
-//                System.out.println("未破碎！i="+kkk);
                   nums++;
-//                //System.out.println("We="+we);
-//                //System.out.println("Wec="+wec);
-//                //System.out.println("vlf="+vlf);
-//                //System.out.println("Glf="+Glf);
-//                //System.out.println("hl="+hl);
-//                System.out.println("当前时步："+timeStepNum);
             }
         }else{
 

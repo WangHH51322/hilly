@@ -2,17 +2,18 @@ package cn.edu.cup.hilly;
 
 import cn.edu.cup.base.CommonProvider;
 import cn.edu.cup.hilly.calculate.hilly.large.Project;
-import cn.edu.cup.hilly.dataSource.Service.mongo.HillyProjectService;
-import cn.edu.cup.hilly.dataSource.Service.mongo.HillyService;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.TempTest;
+import cn.edu.cup.hilly.dataSource.service.mongo.HillyProjectService;
+import cn.edu.cup.hilly.dataSource.service.mongo.HillyService;
 import cn.edu.cup.hilly.dataSource.model.mongo.DataMap;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
 import cn.edu.cup.hilly.dataSource.model.mongo.project.HillyProject;
+import cn.edu.cup.hilly.dataSource.service.mongo.TempTestSer;
+//import cn.edu.cup.hilly.dataSource.service.mongo.TempTestService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @SpringBootTest
@@ -22,6 +23,8 @@ class HillyApplicationTests {
     HillyService hillyService;
     @Autowired
     HillyProjectService hillyProjectService;
+    @Autowired
+    TempTestSer tempTestService;
 
     @Test
     void contextLoads() {
@@ -50,5 +53,15 @@ class HillyApplicationTests {
         project.run();
         //获取数据
         System.out.println(project.getPg_his());
+        System.out.println(project.getDpl());
+    }
+
+    @Test
+    void test02() {
+        TempTest tempTest = new TempTest();
+        tempTest.setLocation("第二段U型管");
+        double[][] arr = new double[3][3];
+        tempTest.setHis(arr);
+        tempTestService.add(tempTest);
     }
 }
