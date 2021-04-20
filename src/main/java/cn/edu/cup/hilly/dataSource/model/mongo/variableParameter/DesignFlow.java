@@ -1,22 +1,21 @@
-package cn.edu.cup.hilly.dataSource.model.mongo.valveList;
+package cn.edu.cup.hilly.dataSource.model.mongo.variableParameter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
 @Data
 @AllArgsConstructor
-public class ValveStartTime {
+public class DesignFlow {
 
     private String name;
     private String unit;
     private String value;
 
-    public ValveStartTime() {
-        this.name = "启动时间";
-        this.unit = "s";
+    public DesignFlow() {
+        this.name = "设计投产流量";
+        this.unit = "m3/h";
         this.value = "";
     }
 }

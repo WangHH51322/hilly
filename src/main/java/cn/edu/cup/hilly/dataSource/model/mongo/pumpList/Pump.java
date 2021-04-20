@@ -17,6 +17,7 @@ public class Pump {
     private Rev rev;
     private StartTime startTime;
     private PumpType pumpType;
+    private PumpState pumpState;
 
     public Pump() {
         this.pumpId = new PumpId();
@@ -26,5 +27,7 @@ public class Pump {
         this.w = new W();
         this.rev = new Rev();
         this.startTime = new StartTime();
+        this.pumpType = new PumpType();
+        this.pumpState = new PumpState();
     }
 }

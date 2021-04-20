@@ -10,15 +10,17 @@ import lombok.ToString;
 @AllArgsConstructor
 public class VariableParameter {
 
-    private Sections sections;
-    private SimulationSteps simulationSteps;
-    private TimeStep timeStep;
+//    private Sections sections;
+//    private SimulationSteps simulationSteps;
+//    private TimeStep timeStep;
     private TotalTime totalTime;
+    private DesignFlow designFlow;
 
     public VariableParameter() {
-        this.sections = new Sections();
-        this.simulationSteps = new SimulationSteps();
-        this.timeStep = new TimeStep();
+//        this.sections = new Sections();
+//        this.simulationSteps = new SimulationSteps();
+//        this.timeStep = new TimeStep();
         this.totalTime = new TotalTime();
+        this.designFlow = new DesignFlow();
     }
 }

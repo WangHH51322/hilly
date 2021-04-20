@@ -7,15 +7,15 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class StartTime {
+public class PumpState {
 
     private String name;
     private String unit;
     private String value;
 
-    public StartTime() {
-        this.name = "启泵时长";
-        this.unit = "s";
+    public PumpState() {
+        this.name = "泵状态";
+        this.unit = "";
         this.value = "";
     }
 }

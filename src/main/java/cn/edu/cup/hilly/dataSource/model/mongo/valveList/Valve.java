@@ -2,7 +2,6 @@ package cn.edu.cup.hilly.dataSource.model.mongo.valveList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
@@ -10,22 +9,22 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Valve {
     private ValveId valveId;
-    private ValveDiameter valveDiameter;
-    private ValveOpen valveOpen;
-    private ValveStartTime valveStartTime;
+    private ValveD valveD;
+    private ValveK valveK;
+    private ValveT valveT;
     private ValveName valveName;
     private ValveType valveType;
-    private ValveLocation valveLocation;
-    private ValveCoefficient valveCoefficient;
+    private ValveS valveS;
+    private ValveC valveC;
 
     public Valve() {
         this.valveId = new ValveId();
-        this.valveDiameter = new ValveDiameter();
-        this.valveOpen = new ValveOpen();
-        this.valveStartTime = new ValveStartTime();
+        this.valveD = new ValveD();
+        this.valveK = new ValveK();
+        this.valveT = new ValveT();
         this.valveName = new ValveName();
         this.valveType = new ValveType();
-        this.valveLocation = new ValveLocation();
-        this.valveCoefficient = new ValveCoefficient();
+        this.valveS = new ValveS();
+        this.valveC = new ValveC();
     }
 }

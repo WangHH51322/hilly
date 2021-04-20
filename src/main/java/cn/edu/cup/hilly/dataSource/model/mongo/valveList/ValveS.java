@@ -8,14 +8,14 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class ValveOpen {
+public class ValveS {
 
     private String name;
     private String unit;
     private String value;
 
-    public ValveOpen() {
-        this.name = "阀门开度";
+    public ValveS() {
+        this.name = "阀门位置";
         this.unit = "m";
         this.value = "";
     }

@@ -1,4 +1,4 @@
-package cn.edu.cup.hilly.dataSource.model.mongo.mediumList;
+package cn.edu.cup.hilly.dataSource.model.mongo.stationList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,14 +10,16 @@ import java.util.List;
 @ToString
 @Data
 @AllArgsConstructor
-public class MediumList {
+public class StationList {
+
     private String name;
     private String unit;
-    private List<Medium> value;
-    public MediumList() {
-        this.name = "流体介质列表";
+    private List<Station> value;
+
+    public StationList() {
+        this.name = "站点列表";
         this.unit = "";
         this.value = new ArrayList<>();
-//        value.add(new Medium());
+        value.add(new Station());
     }
 }

@@ -1,4 +1,4 @@
-package cn.edu.cup.hilly.dataSource.model.mongo.pumpList;
+package cn.edu.cup.hilly.dataSource.model.mongo.stationList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,15 +7,15 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class StartTime {
+public class StationL {
 
     private String name;
     private String unit;
     private String value;
 
-    public StartTime() {
-        this.name = "启泵时长";
-        this.unit = "s";
+    public StationL() {
+        this.name = "站点里程";
+        this.unit = "m";
         this.value = "";
     }
 }

@@ -8,15 +8,15 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class ValveDiameter {
+public class ValveT {
 
     private String name;
     private String unit;
     private String value;
 
-    public ValveDiameter() {
-        this.name = "阀门直径";
-        this.unit = "m";
+    public ValveT() {
+        this.name = "启动时间";
+        this.unit = "s";
         this.value = "";
     }
 }
