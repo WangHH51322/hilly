@@ -2,21 +2,20 @@ package cn.edu.cup.hilly.dataSource.model.mongo.pumpList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
 @Data
 @AllArgsConstructor
-public class PumpSpeed {
+public class StartTime {
 
     private String name;
     private String unit;
     private String value;
 
-    public PumpSpeed() {
-        this.name = "离心泵转速";
-        this.unit = "r/min";
+    public StartTime() {
+        this.name = "启泵时间";
+        this.unit = "s";
         this.value = "";
     }
 }

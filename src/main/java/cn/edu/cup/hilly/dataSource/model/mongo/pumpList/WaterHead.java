@@ -8,15 +8,15 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class PumpFlow {
+public class WaterHead {
 
     private String name;
     private String unit;
     private String value;
 
-    public PumpFlow() {
-        this.name = "离心泵流量";
-        this.unit = "m3/h";
+    public WaterHead() {
+        this.name = "离心泵扬程";
+        this.unit = "m";
         this.value = "";
     }
 }

@@ -23,6 +23,7 @@ public class HillyProjectController {
      */
     @GetMapping("/getAll")
     public RespBean getAll() {
+        System.out.println("执行了查询方法");
         try {
             List<HillyProject> all = hillyProjectService.getAll();
             return RespBean.ok("查询成功",all);

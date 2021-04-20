@@ -8,15 +8,15 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class PumpPower {
+public class FlowRate {
 
     private String name;
     private String unit;
     private String value;
 
-    public PumpPower() {
-        this.name = "离心泵功率";
-        this.unit = "KW";
+    public FlowRate() {
+        this.name = "离心泵流量";
+        this.unit = "m3/h";
         this.value = "";
     }
 }

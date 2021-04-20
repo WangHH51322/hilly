@@ -6,7 +6,6 @@ import cn.edu.cup.base.InputField;
 import cn.edu.cup.hilly.dataSource.model.mongo.outPut.DPL;
 import cn.edu.cup.hilly.dataSource.model.mongo.outPut.PgHis;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
-import cn.edu.cup.hilly.dataSource.model.mongo.result.TempTest;
 import cn.edu.cup.hilly.dataSource.service.mongo.ResultDPLService;
 import cn.edu.cup.hilly.dataSource.service.mongo.TempTestSer;
 import cn.edu.cup.hilly.dataSource.utils.SizeChange;
@@ -20,13 +19,12 @@ import java.util.Map;
 
 import static java.lang.Math.*;
 
-@Service
 @IOElement(name = "hillyProject")
 public class Project extends Thread implements Serializable {
     Conpara conPara;
 
     @InputField(name = "variableParameter", unit = "")
-    static Varpara varPara;
+    Varpara varPara;
 
     @InputField(name = "pipe", unit = "")
     Pipeline pipeLine;
@@ -48,26 +46,30 @@ public class Project extends Thread implements Serializable {
         this.projectId = projectId;
     }
 
-    /**
-     * Temp Data
-     */
-    @Autowired
-    TempTestSer tempService;
-    @Autowired
-    ResultDPLService resultDPLService;
+    private Map<Integer, double[]> dPL;
+    public Map<Integer, double[]> getDPL() {
+        return dPL;
+    }
+    public void setDPL(Map<Integer, double[]> dPL) {
+        this.dPL = dPL;
+    }
+
     /**
      * 线程暂停
      */
     private static boolean pause = false;
+    public boolean isLocked() {
+        return pause;
+    }
     private static boolean release = false;
     private static Object lock = new Object();
 
     /**
      * 调用该方法实现线程的暂停
      */
-    public static Varpara pauseThread(){
+    public static void pauseThread(){
         pause = true;
-        return varPara;
+        //return varPara;
     }
     /**
      * 释放此进程
@@ -124,6 +126,7 @@ public class Project extends Thread implements Serializable {
     }
 
     public void run() {
+//        super.run();
 
         Oil oil = oils.get(0);
 
@@ -328,15 +331,14 @@ public class Project extends Thread implements Serializable {
          * 循环开始
          */
         System.out.println("开始循环!!!");
-        super.run();
         int kk = 0;
         int count = varPara.kt + 1;
-        while(true){
+        loop:while(true){
             while (pause){
                 onPause();
             }
-            if (release) {
-                break;
+            while (release) {
+                break loop;
             }
             try {
                 kk ++;
@@ -399,10 +401,6 @@ public class Project extends Thread implements Serializable {
                             if (pp == 0) {
                                 if (n < varPara.i - 1) {
                                     System.out.println("水头在第" + 0.2 * kk / 3600.0 + "h到达第" + (n) + "个U型管高点");
-//                                    TempTest temp = new TempTest();
-//                                    temp.setLocation("the" + n + "pipe");
-//                                    temp.setHis(varPara.Pg_his);
-//                                    tempService.add(temp);
                                     n++;
                                 } else if (n == varPara.i - 1) {
                                     System.out.println("水头在第" + 0.2 * kk / 3600.0 + "h到达第" + (n) + "个U型管高点");
@@ -462,15 +460,9 @@ public class Project extends Thread implements Serializable {
                                 varPara.waterHeadLocation[rr] = varPara.line_l[varPara.i - 1][3];
                                 System.out.println("ces");
                             }
-
                             varPara.allLine[1][rr] = varPara.waterHeadLocation[rr];       //水头位置
                             varPara.allLine[2][rr] = getZ(varPara.line_l, varPara.line_d, varPara.waterHeadLocation[rr]);      //水头位置所处点高程
                             varPara.allLine[3][rr] = getI(varPara.line_l, varPara.waterHeadLocation[rr]);       //当前点流型
-
-                            /**
-                             * OutPut:1min
-                             */
-
                         }
 
                         if (i == n) ff++;
@@ -487,24 +479,10 @@ public class Project extends Thread implements Serializable {
                             /**
                              * 存储dpl
                              */
-//                            int countCount = 0;
-//                            for (int j = 0; j < varPara.dPL.length; j+=4) {
-//                                for (int k = 0; k < varPara.dPL[j].length; k++) {
-//                                    varPara.dPL2[countCount][k] = varPara.dPL[j][k];
-//                                }
-//                                countCount ++;
-//                            }
-//                            ResultDPL resultDPL = new ResultDPL();
-//                            resultDPL.setProjectId(this.projectId);
-//                            resultDPL.setDPL(varPara.dPL2);
-//                            resultDPLService.update(resultDPL);
                             SizeChange sizeChange = new SizeChange(varPara.dPL);
                             Map<Integer, double[]> dPLAfterChange = sizeChange.DPLAfterChange();
                             System.out.println(dPLAfterChange);
-                            ResultDPL resultDPL = new ResultDPL();
-                            resultDPL.setProjectId(this.projectId);
-                            resultDPL.setDPLMap(dPLAfterChange);
-                            resultDPLService.updateMap(resultDPL);
+                            setDPL(dPLAfterChange);
 
                             ff = 0;
                             //清管器投放
@@ -562,20 +540,9 @@ public class Project extends Thread implements Serializable {
                             AddMg_his[i][rr] = AddMg[i];
                             ttt = 0;
                         }
-                        /**
-                         * broken:save data here
-                         */
                     }
-                /**
-                 * outPut data
-                 */
-
                     if ((varPara.ssr[1][0] == 1 && varPara.ssr[2][0] == 1 && varPara.ssr[3][0] == 1 && varPara.ssr[varPara.i - 1][0] == 1)) {
                         System.out.println("结束!");
-//                        TempTest temp = new TempTest();
-//                        temp.setLocation("the" + n + "pipe");
-//                        temp.setHis(varPara.Pg_his);
-//                        tempService.add(temp);
                         break;
                     }
 //                }
@@ -584,6 +551,9 @@ public class Project extends Thread implements Serializable {
                 break;
             }
         }
+
+
+
 
         end1 = System.currentTimeMillis();
         System.out.println("计算时间 start time:" + start1+ "; end time:" + end1+ "; Run Time:" + (end1 - start1) + "(ms)");

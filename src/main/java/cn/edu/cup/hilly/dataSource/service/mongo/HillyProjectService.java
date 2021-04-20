@@ -45,7 +45,6 @@ public class HillyProjectService {
         hillyProject.setHillyId(_id);   //给hillyProject对象的hillyId属性赋值
         HillyProject save = hillyProjectDao.save(hillyProject);
         return save;
-
     }
 
     public long update(HillyProject hillyProject) {

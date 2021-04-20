@@ -2,7 +2,6 @@ package cn.edu.cup.hilly.dataSource.model.mongo.pumpList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
@@ -12,17 +11,20 @@ public class Pump {
 
     private PumpId pumpId;
     private PumpName pumpName;
-    private PumpFlow pumpFlow;
-    private PumpHead pumpHead;
-    private PumpPower pumpPower;
-    private PumpSpeed pumpSpeed;
+    private FlowRate flowRate;
+    private WaterHead waterHead;
+    private W w;
+    private Rev rev;
+    private StartTime startTime;
+    private PumpType pumpType;
 
     public Pump() {
         this.pumpId = new PumpId();
         this.pumpName = new PumpName();
-        this.pumpFlow = new PumpFlow();
-        this.pumpHead = new PumpHead();
-        this.pumpPower = new PumpPower();
-        this.pumpSpeed = new PumpSpeed();
+        this.flowRate = new FlowRate();
+        this.waterHead = new WaterHead();
+        this.w = new W();
+        this.rev = new Rev();
+        this.startTime = new StartTime();
     }
 }

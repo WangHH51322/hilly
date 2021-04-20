@@ -28,8 +28,6 @@ public class HillyController {
 
     @Autowired
     HillyService hillyService;
-    @Autowired
-    Project project;
 
     /**
      * 查询全部的项目数据信息
@@ -241,6 +239,7 @@ public class HillyController {
      */
     @GetMapping("/run")
     public RespBean run(@RequestParam("id") String id) {
+        Project project = new Project();
         Hilly hilly = hillyService.getHillyById(id);
         Map<String, Object> dataMap = DataMap.getDataMap(hilly);
 
@@ -255,5 +254,4 @@ public class HillyController {
         list.add(dpl);
         return RespBean.ok("计算成功",list);
     }
-
 }

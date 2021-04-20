@@ -1,21 +1,22 @@
-package cn.edu.cup.hilly.dataSource.model.mongo.Pipe;
+package cn.edu.cup.hilly.dataSource.model.mongo.pumpList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
 @Data
 @AllArgsConstructor
-public class PipeLength {
+public class W {
 
     private String name;
     private String unit;
     private String value;
 
-    public PipeLength() {
-        this.name = "管长";
-        this.unit = "m";
+    public W() {
+        this.name = "离心泵功率";
+        this.unit = "KW";
         this.value = "";
     }
 }

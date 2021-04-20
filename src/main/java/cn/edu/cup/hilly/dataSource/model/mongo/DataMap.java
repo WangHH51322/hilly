@@ -28,7 +28,6 @@ public class DataMap {
          * 移除hilly对象中不需要的"name"字段
          * "_id"字段可能需要保留,用于保存计算的数据时,去数据库寻找对应的document
          */
-//        jsonObject.remove("_id");
         jsonObject.remove("name");
         /**
          * 新建Map<String,Object>,并将项目名称projectName作为key,hilly对象中其余的属性值作为value
