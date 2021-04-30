@@ -16,6 +16,6 @@ public class DesignFlow {
     public DesignFlow() {
         this.name = "设计投产流量";
         this.unit = "m3/h";
-        this.value = "";
+        this.value = "0.0";
     }
 }

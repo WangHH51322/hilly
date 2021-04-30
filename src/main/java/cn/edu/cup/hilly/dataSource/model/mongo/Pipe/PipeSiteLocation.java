@@ -17,6 +17,6 @@ public class PipeSiteLocation {
     public PipeSiteLocation() {
         this.name = "站点位置";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

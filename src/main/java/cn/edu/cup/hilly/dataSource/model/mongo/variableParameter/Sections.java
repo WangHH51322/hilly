@@ -17,6 +17,6 @@ public class Sections {
     public Sections() {
         this.name = "大落差段数";
         this.unit = "";
-        this.value = "";
+        this.value = "0";
     }
 }

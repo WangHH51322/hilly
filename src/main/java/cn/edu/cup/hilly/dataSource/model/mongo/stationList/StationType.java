@@ -16,6 +16,6 @@ public class StationType {
     public StationType() {
         this.name = "站点类型";
         this.unit = "m";
-        this.value = "";
+        this.value = "0";
     }
 }

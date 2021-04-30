@@ -17,6 +17,6 @@ public class PipeMileage {
     public PipeMileage() {
         this.name = "里程";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

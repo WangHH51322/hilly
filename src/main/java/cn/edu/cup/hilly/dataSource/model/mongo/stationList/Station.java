@@ -8,6 +8,7 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 public class Station {
+    private StationId stationId;
     private StationName stationName;
     private StationType stationType;
     private StationPumps stationPumps;
@@ -16,6 +17,7 @@ public class Station {
     private StationZ stationZ;
 
     public Station() {
+        this.stationId = new StationId();
         this.stationName = new StationName();
         this.stationType = new StationType();
         this.stationPumps = new StationPumps();

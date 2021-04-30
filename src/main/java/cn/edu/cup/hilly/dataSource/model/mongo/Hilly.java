@@ -9,6 +9,7 @@ import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigList;
 import cn.edu.cup.hilly.dataSource.model.mongo.pumpList.Pump;
 import cn.edu.cup.hilly.dataSource.model.mongo.pumpList.PumpList;
 import cn.edu.cup.hilly.dataSource.model.mongo.siteInfo.SiteInfo;
+import cn.edu.cup.hilly.dataSource.model.mongo.stationList.Station;
 import cn.edu.cup.hilly.dataSource.model.mongo.stationList.StationList;
 import cn.edu.cup.hilly.dataSource.model.mongo.valveList.Valve;
 import cn.edu.cup.hilly.dataSource.model.mongo.valveList.ValveList;
@@ -28,6 +29,7 @@ public class Hilly {
 
     @Id
     private String _id;
+
     private String name;
     private InterInfo interInfo;
     private Medium medium;
@@ -41,6 +43,7 @@ public class Hilly {
     private Valve valve;
     private ValveList valveList;
     private VariableParameter variableParameter;
+    private Station station;
     private StationList stationList;
 
     public Hilly() {
@@ -56,6 +59,7 @@ public class Hilly {
         this.valve = new Valve();
         this.valveList = new ValveList();
         this.variableParameter = new VariableParameter();
+        this.station = new Station();
         this.stationList = new StationList();
     }
 }

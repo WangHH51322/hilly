@@ -17,6 +17,6 @@ public class MediumTemperature {
     public MediumTemperature() {
         this.name = "流体介质温度";
         this.unit = "K";
-        this.value = "";
+        this.value = "0.0";
     }
 }

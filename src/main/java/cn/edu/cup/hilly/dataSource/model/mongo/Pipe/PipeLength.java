@@ -16,6 +16,6 @@ public class PipeLength {
     public PipeLength() {
         this.name = "管长";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

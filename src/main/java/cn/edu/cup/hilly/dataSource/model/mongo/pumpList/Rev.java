@@ -17,6 +17,6 @@ public class Rev {
     public Rev() {
         this.name = "离心泵转速";
         this.unit = "r/min";
-        this.value = "";
+        this.value = "0.0";
     }
 }

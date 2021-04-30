@@ -17,6 +17,6 @@ public class PumpName {
     public PumpName() {
         this.name = "离心泵名称";
         this.unit = "";
-        this.value = "";
+        this.value = "demo字符串";
     }
 }

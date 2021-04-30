@@ -17,7 +17,7 @@ public class SiteKeyMileage {
     public SiteKeyMileage() {
         this.name = "关键点里程";
         this.unit = "km";
-        this.value = "";
+        this.value = "0.0";
     }
 
 }

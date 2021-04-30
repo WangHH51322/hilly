@@ -17,6 +17,6 @@ public class ValveName {
     public ValveName() {
         this.name = "阀门名称";
         this.unit = "";
-        this.value = "";
+        this.value = "demo字符串";
     }
 }

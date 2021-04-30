@@ -17,6 +17,6 @@ public class PipeStartAltitude {
     public PipeStartAltitude() {
         this.name = "起始计算点位置_高程";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

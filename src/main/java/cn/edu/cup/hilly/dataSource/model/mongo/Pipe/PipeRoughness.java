@@ -17,6 +17,6 @@ public class PipeRoughness {
     public PipeRoughness() {
         this.name = "绝对粗糙度";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

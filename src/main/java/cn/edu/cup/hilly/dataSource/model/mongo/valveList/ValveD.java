@@ -17,6 +17,6 @@ public class ValveD {
     public ValveD() {
         this.name = "阀门直径";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

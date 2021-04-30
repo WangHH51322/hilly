@@ -16,6 +16,6 @@ public class StationL {
     public StationL() {
         this.name = "站点里程";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

@@ -17,7 +17,7 @@ public class SiteKeyName {
     public SiteKeyName() {
         this.name = "关键点名称";
         this.unit = "";
-        this.value = "";
+        this.value = "demo字符串";
     }
 
 }

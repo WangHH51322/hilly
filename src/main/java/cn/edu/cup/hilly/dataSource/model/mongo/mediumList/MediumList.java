@@ -18,6 +18,6 @@ public class MediumList {
         this.name = "流体介质列表";
         this.unit = "";
         this.value = new ArrayList<>();
-//        value.add(new Medium());
+        value.add(new Medium());
     }
 }

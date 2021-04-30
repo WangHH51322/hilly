@@ -17,6 +17,6 @@ public class MediumDensity {
     public MediumDensity() {
         this.name = "流体介质密度";
         this.unit = "kg/m³";
-        this.value = "";
+        this.value = "0.0";
     }
 }

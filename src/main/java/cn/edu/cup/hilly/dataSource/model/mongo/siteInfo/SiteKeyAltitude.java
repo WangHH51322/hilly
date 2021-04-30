@@ -17,6 +17,6 @@ public class SiteKeyAltitude {
     public SiteKeyAltitude() {
         this.name = "关键点高程";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

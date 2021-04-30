@@ -17,6 +17,6 @@ public class ValveT {
     public ValveT() {
         this.name = "启动时间";
         this.unit = "s";
-        this.value = "";
+        this.value = "0.0";
     }
 }

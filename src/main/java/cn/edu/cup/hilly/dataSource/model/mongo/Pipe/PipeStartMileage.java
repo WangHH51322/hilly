@@ -17,6 +17,6 @@ public class PipeStartMileage {
     public PipeStartMileage() {
         this.name = "起始计算点位置_里程";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

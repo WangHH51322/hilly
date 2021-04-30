@@ -17,6 +17,6 @@ public class MediumName {
     public MediumName() {
         this.name = "流体介质名称";
         this.unit = "";
-        this.value = "";
+        this.value = "demo字符串";
     }
 }

@@ -17,6 +17,6 @@ public class ValveS {
     public ValveS() {
         this.name = "阀门位置";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

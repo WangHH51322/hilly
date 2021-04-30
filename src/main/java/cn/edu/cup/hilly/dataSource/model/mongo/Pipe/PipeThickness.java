@@ -17,6 +17,6 @@ public class PipeThickness {
     public PipeThickness() {
         this.name = "壁厚";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

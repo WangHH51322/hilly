@@ -17,6 +17,6 @@ public class PipeAltitude {
     public PipeAltitude() {
         this.name = "高程";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

@@ -17,6 +17,6 @@ public class TotalTime {
     public TotalTime() {
         this.name = "总模拟时长";
         this.unit = "h";
-        this.value = "";
+        this.value = "0.0";
     }
 }

@@ -17,7 +17,7 @@ public class GeneralInfo {
     public GeneralInfo() {
         this.name = "普通提示";
         this.unit = "";
-        this.value = "";
+        this.value = "demo字符串";
     }
 
 }

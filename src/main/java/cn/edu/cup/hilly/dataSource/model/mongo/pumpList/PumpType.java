@@ -16,6 +16,6 @@ public class PumpType {
     public PumpType() {
         this.name = "泵类型";
         this.unit = "";
-        this.value = "";
+        this.value = "demo字符串";
     }
 }

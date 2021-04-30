@@ -17,6 +17,6 @@ public class PipeOutDiameter {
     public PipeOutDiameter() {
         this.name = "外径";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

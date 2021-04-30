@@ -17,6 +17,6 @@ public class MediumViscosity {
     public MediumViscosity() {
         this.name = "流体介质粘度";
         this.unit = "mPa.s";
-        this.value = "";
+        this.value = "0.0";
     }
 }

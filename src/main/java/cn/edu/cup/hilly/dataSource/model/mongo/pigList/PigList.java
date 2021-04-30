@@ -20,6 +20,6 @@ public class PigList {
         this.name = "清管器列表";
         this.unit = "";
         this.value = new ArrayList<>();
-//        value.add(new Pig());
+        value.add(new Pig());
     }
 }

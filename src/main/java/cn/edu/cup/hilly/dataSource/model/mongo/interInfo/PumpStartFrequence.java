@@ -17,6 +17,6 @@ public class PumpStartFrequence {
     public PumpStartFrequence() {
         this.name = "启泵频率";
         this.unit = "";
-        this.value = "";
+        this.value = "0.0";
     }
 }

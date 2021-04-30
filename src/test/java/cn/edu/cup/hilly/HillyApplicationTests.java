@@ -64,4 +64,18 @@ class HillyApplicationTests {
         tempTest.setHis(arr);
         tempTestService.add(tempTest);
     }
-}
+
+    @Test
+    void test03() {
+        String s = "[1,2,3,4]";
+        s = s.replace("[","");
+        s = s.replace("]","");
+        String[] ss = s.split(",");
+        int[] ii = new int[ss.length];
+        for (int i = 0; i < ii.length; i++) {
+            ii[i] = Integer.parseInt(ss[i]);
+            System.out.println(ii[i]);
+        }
+        System.out.println(ss.length);
+    }
+ }

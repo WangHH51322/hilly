@@ -17,6 +17,6 @@ public class WarnInfo {
     public WarnInfo() {
         this.name = "警告提示";
         this.unit = "";
-        this.value = "";
+        this.value = "demo字符串";
     }
 }

@@ -16,6 +16,6 @@ public class StationZ {
     public StationZ() {
         this.name = "站点高程";
         this.unit = "m";
-        this.value = "";
+        this.value = "0.0";
     }
 }

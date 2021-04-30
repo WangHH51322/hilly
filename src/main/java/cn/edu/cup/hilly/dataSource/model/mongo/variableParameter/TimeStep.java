@@ -17,6 +17,6 @@ public class TimeStep {
     public TimeStep() {
         this.name = "时间步长";
         this.unit = "s";
-        this.value = "";
+        this.value = "0.0";
     }
 }

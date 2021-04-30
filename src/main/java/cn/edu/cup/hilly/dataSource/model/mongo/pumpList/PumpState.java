@@ -16,6 +16,6 @@ public class PumpState {
     public PumpState() {
         this.name = "泵状态";
         this.unit = "";
-        this.value = "";
+        this.value = "0";
     }
 }

@@ -2,7 +2,6 @@ package cn.edu.cup.hilly.dataSource.model.mongo.pumpList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
@@ -17,6 +16,6 @@ public class FlowRate {
     public FlowRate() {
         this.name = "离心泵流量";
         this.unit = "m3/h";
-        this.value = "";
+        this.value = "[0.0,1.0,2.0,3.0]";
     }
 }

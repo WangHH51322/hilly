@@ -17,6 +17,6 @@ public class PigHeadDistance {
     public PigHeadDistance() {
         this.name = "投放前清管器与水头距离";
         this.unit = "km";
-        this.value = "";
+        this.value = "0.0";
     }
 }

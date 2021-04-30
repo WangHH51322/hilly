@@ -17,6 +17,6 @@ public class ValveC {
     public ValveC() {
         this.name = "阀门系数";
         this.unit = "";
-        this.value = "";
+        this.value = "0.0";
     }
 }

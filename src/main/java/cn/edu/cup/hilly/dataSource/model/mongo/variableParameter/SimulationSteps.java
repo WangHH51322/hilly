@@ -17,6 +17,6 @@ public class SimulationSteps {
     public SimulationSteps() {
         this.name = "模拟步数";
         this.unit = "";
-        this.value = "";
+        this.value = "0";
     }
 }

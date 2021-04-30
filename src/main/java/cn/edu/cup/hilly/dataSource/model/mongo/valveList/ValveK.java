@@ -16,7 +16,7 @@ public class ValveK {
 
     public ValveK() {
         this.name = "阀门开度";
-        this.unit = "m";
-        this.value = "";
+        this.unit = "";
+        this.value = "0.0";
     }
 }

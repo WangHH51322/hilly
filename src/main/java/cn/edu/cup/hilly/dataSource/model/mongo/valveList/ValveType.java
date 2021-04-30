@@ -17,6 +17,6 @@ public class ValveType {
     public ValveType() {
         this.name = "阀门类型";
         this.unit = "";
-        this.value = "";
+        this.value = "0";
     }
 }
