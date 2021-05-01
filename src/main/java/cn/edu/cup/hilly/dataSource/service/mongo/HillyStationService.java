@@ -2,6 +2,8 @@ package cn.edu.cup.hilly.dataSource.service.mongo;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.HillyDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
+import cn.edu.cup.hilly.dataSource.model.mongo.pumpList.Pump;
+import cn.edu.cup.hilly.dataSource.model.mongo.pumpList.PumpId;
 import cn.edu.cup.hilly.dataSource.model.mongo.stationList.*;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,10 +68,10 @@ public class HillyStationService {
         for (Station station1 : stations) {
             String value = station1.getStationId().getValue();
             if (value.equals(stationId)) {
-                station1.setStationName(station.getStationName());
-                station1.setStationType(station.getStationType());
-                station1.setStationL(station.getStationL());
-                station1.setStationZ(station.getStationZ());
+                station.setStationValves(station1.getStationValves());
+                station.setStationPumps(station1.getStationPumps());
+                stations.remove(station1);
+                stations.add(station);
                 break;
             }
         }
@@ -79,6 +81,133 @@ public class HillyStationService {
          */
         return extracted(id, stationList);
     }
+
+    /**
+     * 获取站内泵列表
+     * @param hid
+     * @param id
+     * @return
+     */
+    public List<Pump> sPGetAll(String hid, String id) {
+        Station station = getById(hid, id);
+        List<Pump> pumps = station.getStationPumps().getValue();
+        return pumps;
+    }
+
+    /**
+     * 添加单个站内泵
+     * @param hid
+     * @param id
+     * @param pump
+     * @return
+     */
+    public long sPInsert(String hid, String id, Pump pump) {
+        /**
+         * 首先将pump添加至station中
+         */
+        pump.setPumpId(new PumpId());
+        List<Pump> pumps = sPGetAll(hid, id);
+        pumps.add(pump);
+        /**
+         * 更新stationList中的station
+         */
+        StationList stationList = getAll(hid);
+        List<Station> stations = stationList.getValue();
+        for (int i = 0; i < stations.size(); i++) {
+            Station station = stations.get(i);
+            String stationId = station.getStationId().getValue();
+            if (stationId.equals(id)) {
+                station.getStationPumps().setValue(pumps);
+                stations.set(i,station);
+                break;
+            }
+        }
+        stationList.setValue(stations);
+        /**
+         * 更新stationList
+         */
+        return extracted(hid, stationList);
+    }
+
+    /**
+     * 更新站内泵
+     * @param hid
+     * @param id
+     * @param pump
+     * @return
+     */
+    public long sPUpdate(String hid, String id, Pump pump) {
+        /**
+         * 删去原有的pump
+         */
+        List<Pump> pumps = sPGetAll(hid, id);
+        for (Pump pump1 : pumps) {
+            if (pump1.getPumpId().getValue().equals(pump.getPumpId().getValue())) {
+                pumps.remove(pump1);
+                break;
+            }
+        }
+        return sPInsert(hid,id,pump);
+    }
+
+    /**
+     * 删去一个站内pump
+     * @param hid
+     * @param id
+     * @param pid
+     * @return
+     */
+    public long sPDelete(String hid, String id, String pid) {
+        /**
+         * 删除pump
+         */
+        List<Pump> pumps = sPGetAll(hid, id);
+        for (Pump pump1 : pumps) {
+            if (pump1.getPumpId().getValue().equals(pid)) {
+                pumps.remove(pump1);
+                break;
+            }
+        }
+        /**
+         * 更新stationList
+         */
+        StationList stationList = getAll(hid);
+        List<Station> stations = stationList.getValue();
+        for (int i = 0; i < stations.size(); i++) {
+            Station station = stations.get(i);
+            String stationId = station.getStationId().getValue();
+            if (stationId.equals(id)) {
+                station.getStationPumps().setValue(pumps);
+                stations.set(i,station);
+                break;
+            }
+        }
+        stationList.setValue(stations);
+        /**
+         * 更新stationList
+         */
+        return extracted(hid, stationList);
+    }
+
+    /**
+     * 删除一个站
+     */
+    public long delete(String hid, String id) {
+        /**
+         * 首先删去对应的station
+         */
+        Station station = getById(hid, id);
+        StationList stationList = getAll(hid);
+        List<Station> value = stationList.getValue();
+        value.remove(station);
+        stationList.setValue(value);
+        /**
+         * 更新stationList
+         */
+        return extracted(hid, stationList);
+    }
+
+
 
     /**
      * 抽取代码块
