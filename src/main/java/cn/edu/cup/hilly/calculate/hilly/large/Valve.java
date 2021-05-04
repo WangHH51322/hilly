@@ -3,21 +3,21 @@ package cn.edu.cup.hilly.calculate.hilly.large;
 import cn.edu.cup.base.IOElement;
 import cn.edu.cup.base.InputField;
 
-@IOElement(name = "阀门")
+@IOElement(name = "valve")
 public class Valve  {
-    @InputField(name = "阀门名称", unit = "m")
-    private String valvename;
-    @InputField(name = "直径", unit = "m")
+    @InputField(name = "valveName", unit = "m")
+    private String valveName;
+    @InputField(name = "valveD", unit = "m")
     private double valveD;
-    @InputField(name = "开度", unit = "")
+    @InputField(name = "valveK", unit = "")
     private double valveK;
-    @InputField(name = "阀门系数", unit = "")
+    @InputField(name = "valveC", unit = "")
     private double valveC;
-    @InputField(name = "启动时间", unit = "s")
+    @InputField(name = "valveT", unit = "s")
     private double valveT;
-    @InputField(name = "阀门位置", unit = "m")
+    @InputField(name = "valveS", unit = "m")
     private double valveS;
-    @InputField(name = "阀门类型", unit = "")
+    @InputField(name = "valveType", unit = "")
     private double valveType;
 
     public double getValveD() {
@@ -66,6 +66,14 @@ public class Valve  {
 
     public void setValveType(double valveType) {
         this.valveType = valveType;
+    }
+
+    public String getValveName() {
+        return valveName;
+    }
+
+    public void setValveName(String valveName) {
+        this.valveName = valveName;
     }
 }
 

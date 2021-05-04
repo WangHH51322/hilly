@@ -3,24 +3,52 @@ package cn.edu.cup.hilly.calculate.hilly.large;
 import cn.edu.cup.base.IOElement;
 import cn.edu.cup.base.InputField;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@IOElement(name = "站点列表")
+@IOElement(name = "station")
 public class Stations {
-    @InputField(name = "站点名称", unit = "")
+    @InputField(name = "stationName", unit = "")   //站点名称
     private String stationName;
-    @InputField(name = "站点位置", unit = "m")
+    @InputField(name = "stationL", unit = "m")      //站点里程
     private double stationL;
-    @InputField(name = "站点类型", unit = "")
-    private double stationType;
-    @InputField(name = "站点泵", unit = "")
-    private List<Pump> pumps = new ArrayList<>();
-    @InputField(name = "站点阀", unit = "")
-    private List<Valve> valves = new ArrayList<>();
+    @InputField(name = "stationZ", unit = "m")       //站点高程
+    private double stationZ;
+    @InputField(name = "stationType", unit = "")     //站点种类，泵站为1、排气点2、阀室3
+    private int stationType;
+    @InputField(name = "stationPumps", unit = "")     //泵列表
+    private List<Pump> pumps;
+    @InputField(name = "stationValves", unit = "")    //阀列表
+    private List<Valve> valves;
 
 
 
+
+    public List<Pump> getPumps() {
+        return pumps;
+    }
+
+
+    public double getStationZ() {
+        return stationZ;
+    }
+
+    public void setStationZ(double stationZ) {
+        this.stationZ = stationZ;
+    }
+
+
+
+    public void setPumps(List<Pump> pumps) {
+        this.pumps = pumps;
+    }
+
+    public List<Valve> getValves() {
+        return valves;
+    }
+
+    public void setValves(List<Valve> valves) {
+        this.valves = valves;
+    }
 
     public String getStationName() {
         return stationName;
@@ -42,7 +70,7 @@ public class Stations {
         return stationType;
     }
 
-    public void setStationType(double stationType) {
+    public void setStationType(int stationType) {
         this.stationType = stationType;
     }
 

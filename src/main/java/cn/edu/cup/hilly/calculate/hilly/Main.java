@@ -1,4 +1,4 @@
-package cn.edu.cup.hilly.calculate.hilly.main;
+package cn.edu.cup.hilly.calculate.hilly;
 
 import cn.edu.cup.base.CommonProvider;
 import cn.edu.cup.hilly.calculate.hilly.large.Project;

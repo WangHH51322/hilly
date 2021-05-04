@@ -16,6 +16,6 @@ public class StartTime {
     public StartTime() {
         this.name = "启泵时长";
         this.unit = "s";
-        this.value = "0.0";
+        this.value = "0";
     }
 }

@@ -12,6 +12,9 @@ public class Pipeline {
     private double thinkness;
     @InputField(name = "pipeRoughness", unit = "m")
     private double roughness;
+    @InputField(name = "maxPressure", unit = "MPa")
+    private double maxPressure;
+
 
     public Pipeline() {
     }
@@ -41,5 +44,11 @@ public class Pipeline {
         this.roughness = roughness;
     }
 
+    public double getMaxPressure() {
+        return maxPressure;
+    }
 
+    public void setMaxPressure(double maxPressure) {
+        this.maxPressure = maxPressure;
+    }
 }

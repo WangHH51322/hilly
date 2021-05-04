@@ -5,12 +5,14 @@ import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigList;
 import cn.edu.cup.hilly.dataSource.model.mongo.pumpList.Pump;
 import cn.edu.cup.hilly.dataSource.model.mongo.stationList.Station;
 import cn.edu.cup.hilly.dataSource.model.mongo.stationList.StationList;
+import cn.edu.cup.hilly.dataSource.model.mongo.stationList.StationPumps;
+import cn.edu.cup.hilly.dataSource.model.mongo.stationList.StationValves;
+import cn.edu.cup.hilly.dataSource.model.mongo.valveList.Valve;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyStationService;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * @author wong
@@ -103,8 +105,8 @@ public class HillyStationController {
     @GetMapping("/stationPumps/getAll")
     public RespBean sPGetAll(@RequestParam("hid") String hid,@RequestParam("id") String id) {
         try {
-            List<Pump> pumps = stationService.sPGetAll(hid, id);
-            return RespBean.ok("查询成功",pumps);
+            StationPumps stationPumps = stationService.sPGetAllPumps(hid, id);
+            return RespBean.ok("查询成功",stationPumps);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getClass().getName());
         }
@@ -170,6 +172,77 @@ public class HillyStationController {
         }
     }
 
+    /**
+     * 根据项目id和站点id获取全部的站内阀列表
+     * @param id
+     * @return
+     */
+    @GetMapping("/stationValves/getAll")
+    public RespBean sVGetAll(@RequestParam("hid") String hid,@RequestParam("id") String id) {
+        try {
+            StationValves stationValves = stationService.sVGetAll(hid, id);
+            return RespBean.ok("查询成功",stationValves);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getClass().getName());
+        }
+    }
+    /**
+     * 根据项目id,站点id向站内阀列表中添加单个valve
+     * @param id
+     * @param hid
+     * @param valve
+     * @return
+     */
+    @PostMapping("/stationValves/insert")
+    public RespBean sVInsert(@RequestParam("hid") String hid,@RequestParam("id") String id,@RequestBody Valve valve) {
+        try {
+            long sVInsert = stationService.sVInsert(hid, id, valve);
+            if (sVInsert == 1) {
+                return RespBean.ok("添加成功");
+            }
+            return RespBean.error("未添加数据");
+        } catch (Exception e) {
+            return RespBean.error("添加失败",e.getClass().getName());
+        }
+    }
+    /**
+     * 根据项目id和站点id,valve更新旧valve
+     * @param id
+     * @param hid
+     * @param valve
+     * @return
+     */
+    @PutMapping("/stationValves/update")
+    public RespBean sVUpdate(@RequestParam("hid") String hid,@RequestParam("id") String id,@RequestBody Valve valve) {
+        try {
+            long update = stationService.sVUpdate(hid,id,valve);
+            if (update == 1) {
+                return RespBean.ok("更新成功");
+            }
+            return RespBean.error("未更新数据");
+        } catch (Exception e) {
+            return RespBean.error("更新出错",e.getClass().getName());
+        }
+    }
+    /**
+     * 根据项目id和站点id,以及valve的id删除valve
+     * @param hid
+     * @param id
+     * @param vid
+     * @return
+     */
+    @DeleteMapping("/stationValves/delete")
+    public RespBean sVDelete(@RequestParam("hid") String hid,@RequestParam("id") String id,@RequestParam("vid") String vid) {
+        try {
+            long delete = stationService.sVDelete(hid, id, vid);
+            if (delete == 1) {
+                return RespBean.ok("删除成功");
+            }
+            return RespBean.error("未删除数据");
+        } catch (Exception e) {
+            return RespBean.error("删除出错",e.getClass().getName());
+        }
+    }
 
     @DeleteMapping("/delete")
     public RespBean delete(@RequestParam("hid") String hid,@RequestParam("id") String id) {

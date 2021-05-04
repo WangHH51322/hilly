@@ -4,20 +4,20 @@ package cn.edu.cup.hilly.calculate.hilly.large;
 import cn.edu.cup.base.IOElement;
 import cn.edu.cup.base.InputField;
 
-@IOElement(name = "交互信息")
+@IOElement(name = "message")
 public class Messages {
-    @InputField(name = "启泵时间", unit = "s")
+    @InputField(name = "startPumpOrderTime", unit = "s")
     double startPumpTime;
-    @InputField(name = "启泵频率", unit = "")
+    @InputField(name = "startPumpOrderRev", unit = "")
     double startPumpRev;
-    @InputField(name = "投放前清管器与水头距离", unit = "km")
+    @InputField(name = "startPumpOrderDis", unit = "km")
     double startPigDistance;
 
-    @InputField(name = "错误提示", unit = "")
+    @InputField(name = "errorTips", unit = "")
     String error;
-    @InputField(name = "警告提示", unit = "")
+    @InputField(name = "warnTips", unit = "")
     String warn;
-    @InputField(name = "普通提示", unit = "")
+    @InputField(name = "infoTips", unit = "")
     String info;
 
     public double getStartPumpTime() {

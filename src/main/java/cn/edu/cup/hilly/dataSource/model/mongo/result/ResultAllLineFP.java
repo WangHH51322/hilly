@@ -8,17 +8,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
 
+/**
+ * @author CodeChap
+ * @date 2021-05-04- 19:12
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class ResultDPL {
-
+public class ResultAllLineFP {
     @Id
     private String _id;
     private Integer segments;
     private Double singleLength;
-//    private String projectId;
-    private double[][] dPL;
-    private Map<Integer, double[]> dPLMap;
+    private double[][] aLineFP;
+    private Map<Integer, double[]> aLineFPMap;
 }

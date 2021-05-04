@@ -12,13 +12,12 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class ResultDPL {
+public class ResultLgHis {
 
     @Id
     private String _id;
     private Integer segments;
     private Double singleLength;
-//    private String projectId;
-    private double[][] dPL;
-    private Map<Integer, double[]> dPLMap;
+    private double[][] lgHis;
+    private Map<Integer, double[]> lgHisMap;
 }

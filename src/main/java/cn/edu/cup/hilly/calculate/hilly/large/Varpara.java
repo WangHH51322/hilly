@@ -3,28 +3,35 @@ package cn.edu.cup.hilly.calculate.hilly.large;
 
 import cn.edu.cup.base.IOElement;
 import cn.edu.cup.base.InputField;
-import lombok.ToString;
 
-@ToString
+import java.util.ArrayList;
+import java.util.List;
+
+
 @IOElement(name = "variableParameter")
 public class Varpara {
 
-    //@InputField(name = "时间步长", unit = "s")
     double deltaT=0.2;     //压缩时间步长0.2s
 
     @InputField(name = "totalTime", unit = "h")
     double T;           //模拟总时长，h
 
+    @InputField(name = "designFlow", unit = "m3/h")
+    double Qh;           //设计投产流量，m3/h
+
+
     double deltaX = 500;    //其他流动时的空间步长1000m
     double hl;    //
 
+    int i;                 //大落差段数,实际段数加一，再加上固定点数，因为数组从零开始，需要与高程、里程数组配合
 
-    int i=12;                 //大落差段数,实际段数加一，再加上固定点数，因为数组从零开始，需要与高程、里程数组配合
-
-    //@InputField(name = "模拟步数", unit = "")
     int k=0;            //模拟时长，300002*0.2=60000s=16.6h
 
     int kk = 1;            //k的备份
+    int kkstop = 1;            //停输时刻的备份
+    int rrstop = 1;            //停输时刻的备份
+    int numstop = 1;            //停输时刻的备份
+    int stopT = 1;            //停输时步数
     int ii = 1;            //i的备份
 
 
@@ -36,6 +43,7 @@ public class Varpara {
     double[][] Deng_his;     //气体密度  历史数据
     double[][] lg_his;     //气段长度  历史数据
     double[][] h2_his;     //上坡液位  历史数据
+    double[][] h1_his;     //下坡液位  历史数据
 
     double[][] dMg_out_his;      //净流出  历史数据
     double[][] dMg_in_his;      //净流入气体质量  历史数据
@@ -112,7 +120,7 @@ public class Varpara {
     double[] Hfk_jj;
 
     double[][] dPL;             //局部摩阻
-    double[][] dPL2;             //局部摩阻
+    double checkP=0;             //监测超压的标记
 
     double[][] lg_f;
     double[][] lp_b;
@@ -127,14 +135,30 @@ public class Varpara {
     int flag0;        //
     double ipj;        //
 
+    int startPumpFlag=0;        //启泵的标志
+    int stopPumpFlag=0;        //停泵的标志
+    int startPumpFlag1=0;        //调整变频泵的标志
+    double PumpRev=0.4;        //调整变频泵的标志,起始变频泵转速
+    double [][]a;
+    double []Hss;
+    double []Hpump;
+    double []stationLLL;
 
-
+    double []Hd;
     //清管器相关参数
     double []pigV;//清管器速度
     double []pigL;//清管器位置
     double []pigZ;//清管器位置对应高程
     double [][]allLine;//全线参数储存输出
     double [][]allLineFP;//全线流型随时间变化曲线
+
+    double [][] allLineStaticP;//全线静压
+
+    //double [] stationListL;//站点列表里程
+    //double [] stationListZ;//站点列表高程
+
+    List stationListL = new ArrayList();
+    List stationListZ = new ArrayList();
 
 
     //泵相关
@@ -149,10 +173,7 @@ public class Varpara {
 
     public void setArr(){
 
-        this.Hs=50*9.81*1000;//初始值为首站进站压力
-
         this.k = (int)(T*5*3600/300)+1002;      //300步一输出的存储序号
-
         this.kt = (int) Math.rint(T* 3600 / deltaT);            //模拟总时步的计算
 
         this.pigV = new double[getK()];
@@ -160,12 +181,22 @@ public class Varpara {
         this.pigZ = new double[getK()];
         this.allLine = new double[5][getK()];
         this.allLineFP = new double[(int)T*12+2+1][1802];
+        this.allLineStaticP = new double[(int)T*12+2+1][1802];
+        this.Hss=new double[100];
+        this.Hs=50*9.81*1000;//初始值为首站进站压力
+        this.a= new double[100][3];
+        this.Hpump=new double[100];
+        this.Hd=new double[100];
+        this.stationLLL=new double[100];
+
+
 
         this.Y= new double[6][getK() + 1];          //矩阵计算历史数据存储
         this.Pg_his = new double[getI()][getK()];     //气体压力  历史数据
         this.Deng_his = new double[getI()][getK()];     //气体密度  历史数据
         this.lg_his = new double[getI()][getK()];     //气段长度  历史数据
         this.h2_his = new double[getI()][getK()];     //上坡液位  历史数据
+        this.h1_his = new double[getI()][getK()];     //上坡液位  历史数据
 
         this.dMg_out_his = new double[i][k];      //净流出  历史数据
         this.dMg_in_his = new double[i][k];      //净流入气体质量  历史数据
@@ -203,8 +234,8 @@ public class Varpara {
         this.slopeD = new double[i][1];      //下坡段的气体质量，，??排气后
         this.line_l = new double[i][4];      //里程
         this.line_d = new double[i][4];      //高程
-        this.line_ddd = new double[114][4];      //总高程
-        this.line_lll = new double[114][4];      //总里程
+        this.line_ddd = new double[200][4];      //总高程
+        this.line_lll = new double[200][4];      //总里程
         this.slopeU = new double[i][1];      //下坡段的气体质量，，??排气后
 
         this.waterHeadLocation = new double[k];     //水头位置,在不同时刻水头所到达的位置，用里程表示，单位m
@@ -220,8 +251,6 @@ public class Varpara {
 
         this.backPressure = new double[i + 1]; //各管段的背压
         this.pre_back = new double[i + 1];     //破碎前的背压
-
-
 
         this.f_i = new double[i];         //相间摩阻系数
         this.f_l = new double[i];         //液壁摩阻系数
@@ -244,7 +273,6 @@ public class Varpara {
         this.Hf_j = new double[k];              //局部阻力
 
         this.dPL=new double[(int)T*12+2+1][1802];;       //全局压力
-        this.dPL2=new double[(int)(T*12+2+1)/4 + 1][1802];;       //全局压力
         this.lg_f = new double[i][k];   //各段分层流实时长度
         this.lp_b = new double[i][k];   //气泡流和气团流实时长度，下坡段部分
         this.lp_bU = new double[i][k];  //气泡流和气团流实时长度，上坡段部分

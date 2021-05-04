@@ -6,13 +6,15 @@ import java.io.IOException;
 
 public class Output {
 
+    private static final String OUT_PUT_PATH = "C:\\Users\\WangHH\\Desktop\\output";
+
     public static void OutToTXT(double[] arr,String fileName) throws IOException {
-        File file=new File("C:\\Users\\WangHH\\Desktop\\output");
+        File file=new File(OUT_PUT_PATH);
         if(!file.exists()){//如果文件夹不存在
             file.mkdir();//创建文件夹
         }
 
-        File file1 = new File("C:\\Users\\WangHH\\Desktop\\output\\"+ fileName +".txt");
+        File file1 = new File(OUT_PUT_PATH+ fileName +".txt");
         FileWriter out1 = new FileWriter(file1);        //文件写入流
         for(int yy=0;yy<arr.length;yy++){
             //out1.write(yy + "\t");
@@ -25,12 +27,12 @@ public class Output {
     }
 
     public static void OutToTXTLLL(double[] arr,String fileName,double Tpig) throws IOException {
-        File file=new File("C:\\Users\\WangHH\\Desktop\\output");
+        File file=new File(OUT_PUT_PATH);
         if(!file.exists()){//如果文件夹不存在
             file.mkdir();//创建文件夹
         }
 
-        File file1 = new File("C:\\Users\\WangHH\\Desktop\\output\\"+ fileName +".txt");
+        File file1 = new File(OUT_PUT_PATH +"\\"+ fileName +".txt");
         FileWriter out1 = new FileWriter(file1);        //文件写入流
         for(int yy=0;yy<arr.length;yy++){
             //out1.write(yy + "\t");
@@ -40,13 +42,48 @@ public class Output {
         }
         out1.close();
     }
-    public static void OutToTXT1(double[][] arr,String fileName) throws IOException {
-        File file=new File("C:\\Users\\WangHH\\Desktop\\output");
+
+    public static void OutToTXTPPP(double[] arr,String fileName,double L) throws IOException {
+        File file=new File(OUT_PUT_PATH);
         if(!file.exists()){//如果文件夹不存在
             file.mkdir();//创建文件夹
         }
 
-        File file2 = new File("C:\\Users\\WangHH\\Desktop\\output\\"+ fileName +".txt"); //lg
+        File file1 = new File(OUT_PUT_PATH + "\\"+ fileName +".txt");
+        FileWriter out1 = new FileWriter(file1);        //文件写入流
+        for(int yy=0;yy<arr.length;yy++){
+            L=L+500;
+            //out1.write(yy + "\t");
+            out1.write(L/1000.0 + "\t");
+            out1.write(arr[yy]/1000000.0 + "\t");
+            out1.write("\n");
+        }
+        out1.close();
+    }
+    public static void OutToTXTZZZ(double[] arr,String fileName,double L) throws IOException {
+        File file=new File(OUT_PUT_PATH);
+        if(!file.exists()){//如果文件夹不存在
+            file.mkdir();//创建文件夹
+        }
+
+        File file1 = new File(OUT_PUT_PATH+"\\"+ fileName +".txt");
+        FileWriter out1 = new FileWriter(file1);        //文件写入流
+        for(int yy=0;yy<arr.length;yy++){
+            L=L+500;
+            //out1.write(yy + "\t");
+            out1.write(L/1000.0 + "\t");
+            out1.write(arr[yy] + "\t");
+            out1.write("\n");
+        }
+        out1.close();
+    }
+    public static void OutToTXT1(double[][] arr,String fileName) throws IOException {
+        File file=new File(OUT_PUT_PATH);
+        if(!file.exists()){//如果文件夹不存在
+            file.mkdir();//创建文件夹
+        }
+
+        File file2 = new File(OUT_PUT_PATH+"\\"+ fileName +".txt"); //lg
         FileWriter out1 = new FileWriter(file2);        //文件写入流
         for(int zz=0;zz<arr.length;zz++) {
             if (zz == 0){
@@ -68,12 +105,12 @@ public class Output {
     }
 
     public static void OutToTXTL(double[][] arr,String fileName) throws IOException {
-        File file=new File("C:\\Users\\WangHH\\Desktop\\output");
+        File file=new File(OUT_PUT_PATH);
         if(!file.exists()){//如果文件夹不存在
             file.mkdir();//创建文件夹
         }
 
-        File file2 = new File("C:\\Users\\WangHH\\Desktop\\output\\"+ fileName +".txt"); //lg
+        File file2 = new File(OUT_PUT_PATH+"\\"+ fileName +".txt"); //lg
         FileWriter out1 = new FileWriter(file2);        //文件写入流
 
         for(int yy=0;yy< arr.length;yy++){
@@ -82,19 +119,19 @@ public class Output {
                 out1.write(arr[yy][zz]/1000000 + "\t");
             }
             out1.write("\n");
-            if (arr[yy+2][5]==0&&arr[yy][5]!=0) break;
+            //if (arr[yy][5]==0&&arr[yy-1][5]!=0) break;
         }
         out1.close();
     }
 
 
     public static void OutToTXTFP(double[][] arr,String fileName) throws IOException {
-        File file=new File("C:\\Users\\WangHH\\Desktop\\output");
+        File file=new File(OUT_PUT_PATH);
         if(!file.exists()){//如果文件夹不存在
             file.mkdir();//创建文件夹
         }
 
-        File file2 = new File("C:\\Users\\WangHH\\Desktop\\output\\"+ fileName +".txt"); //lg
+        File file2 = new File(OUT_PUT_PATH+"\\"+ fileName +".txt"); //lg
         FileWriter out1 = new FileWriter(file2);        //文件写入流
 
         for(int yy=0;yy< arr.length;yy++){
@@ -103,10 +140,13 @@ public class Output {
                 out1.write(arr[yy][zz] + "\t");
             }
             out1.write("\n");
-            //if (arr[yy+2][5]==0&&arr[yy][5]!=0) break;
+            //if (arr[yy][5]==0&&arr[yy-1][5]!=0) break;
         }
         out1.close();
     }
+
+
+
 
 
 }

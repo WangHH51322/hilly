@@ -51,9 +51,6 @@ class HillyApplicationTests {
         commonProvider.startDataRequirementProcess(project);
 
         project.run();
-        //获取数据
-        System.out.println(project.getPg_his());
-        System.out.println(project.getDpl());
     }
 
     @Test

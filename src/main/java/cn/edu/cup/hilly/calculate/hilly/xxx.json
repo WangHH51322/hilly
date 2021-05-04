@@ -1,0 +1,1854 @@
+{
+  "_id" : "60910cfadbe2e64305cbdf08",
+  "name" : "hilly0001",
+  "interInfo" : {
+    "errorInfo" : {
+      "name" : "错误提示",
+      "unit" : "",
+      "value" : "demo字符串"
+    },
+    "generalInfo" : {
+      "name" : "普通提示",
+      "unit" : "",
+      "value" : "demo字符串"
+    },
+    "warnInfo" : {
+      "name" : "警告提示",
+      "unit" : "",
+      "value" : "demo字符串"
+    },
+    "pigHeadDistance" : {
+      "name" : "投放前清管器与水头距离",
+      "unit" : "km",
+      "value" : "0.0"
+    },
+    "pumpStartFrequence" : {
+      "name" : "启泵频率",
+      "unit" : "",
+      "value" : "0.0"
+    },
+    "pumpStartTime" : {
+      "name" : "启泵时间",
+      "unit" : "s",
+      "value" : "0.0"
+    }
+  },
+  "medium" : {
+    "mediumId" : {
+      "name" : "流体介质编号",
+      "unit" : "",
+      "value" : "1389504983296155648"
+    },
+    "mediumDensity" : {
+      "name" : "流体介质密度",
+      "unit" : "kg/m³",
+      "value" : "0.0"
+    },
+    "mediumName" : {
+      "name" : "流体介质名称",
+      "unit" : "",
+      "value" : "demo字符串"
+    },
+    "mediumTemperature" : {
+      "name" : "流体介质温度",
+      "unit" : "K",
+      "value" : "0.0"
+    },
+    "mediumViscosity" : {
+      "name" : "流体介质粘度",
+      "unit" : "mPa.s",
+      "value" : "0.0"
+    }
+  },
+  "mediumList" : {
+    "name" : "流体介质列表",
+    "unit" : "",
+    "value" : [
+      {
+        "mediumId" : {
+          "name" : "流体介质编号",
+          "unit" : "",
+          "value" : "1389505954155896832"
+        },
+        "mediumDensity" : {
+          "name" : "流体介质密度",
+          "unit" : "kg/m³",
+          "value" : "1000.00"
+        },
+        "mediumName" : {
+          "name" : "流体介质名称",
+          "unit" : "",
+          "value" : "水"
+        },
+        "mediumTemperature" : {
+          "name" : "流体介质温度",
+          "unit" : "K",
+          "value" : "293.00"
+        },
+        "mediumViscosity" : {
+          "name" : "流体介质粘度",
+          "unit" : "mPa.s",
+          "value" : "1.00"
+        }
+      }
+    ]
+  },
+  "pig" : {
+    "pigId" : {
+      "name" : "清管器编号",
+      "unit" : "",
+      "value" : "1389504983363264512"
+    },
+    "pigArea" : {
+      "name" : "清管器截面积",
+      "unit" : "m^2",
+      "value" : ""
+    },
+    "pigName" : {
+      "name" : "清管器名称",
+      "unit" : "",
+      "value" : ""
+    },
+    "pigDiameter" : {
+      "name" : "清管器直径",
+      "unit" : "m",
+      "value" : ""
+    },
+    "pigMass" : {
+      "name" : "清管器质量",
+      "unit" : "kg",
+      "value" : ""
+    }
+  },
+  "pigList" : {
+    "name" : "清管器列表",
+    "unit" : "",
+    "value" : [
+      {
+        "pigId" : {
+          "name" : "清管器编号",
+          "unit" : "",
+          "value" : "1389507872295002112"
+        },
+        "pigArea" : {
+          "name" : "清管器截面积",
+          "unit" : "m^2",
+          "value" : "0.50"
+        },
+        "pigName" : {
+          "name" : "清管器名称",
+          "unit" : "",
+          "value" : "清管器1"
+        },
+        "pigDiameter" : {
+          "name" : "清管器直径",
+          "unit" : "m",
+          "value" : "0.70"
+        },
+        "pigMass" : {
+          "name" : "清管器质量",
+          "unit" : "kg",
+          "value" : "700"
+        }
+      }
+    ]
+  },
+  "pipe" : {
+    "pipeOutDiameter" : {
+      "name" : "外径",
+      "unit" : "m",
+      "value" : "0.813"
+    },
+    "pipeRoughness" : {
+      "name" : "绝对粗糙度",
+      "unit" : "m",
+      "value" : "0.0001"
+    },
+    "pipeThickness" : {
+      "name" : "壁厚",
+      "unit" : "m",
+      "value" : "0.0172"
+    }
+  },
+  "pump" : {
+    "pumpId" : {
+      "name" : "泵编号",
+      "unit" : "",
+      "value" : "1389504983430373376"
+    },
+    "pumpName" : {
+      "name" : "离心泵名称",
+      "unit" : "",
+      "value" : "demo字符串"
+    },
+    "flowRate" : {
+      "name" : "离心泵流量",
+      "unit" : "m3/h",
+      "value" : "[0.0,1.0,2.0,3.0]"
+    },
+    "waterHead" : {
+      "name" : "离心泵扬程",
+      "unit" : "m",
+      "value" : "[0.0,1.0,2.0,3.0]"
+    },
+    "w" : {
+      "name" : "离心泵功率",
+      "unit" : "KW",
+      "value" : "0.0"
+    },
+    "rev" : {
+      "name" : "离心泵转速",
+      "unit" : "r/min",
+      "value" : "0.0"
+    },
+    "startTime" : {
+      "name" : "启泵时长",
+      "unit" : "s",
+      "value" : "0.0"
+    },
+    "pumpType" : {
+      "name" : "泵类型",
+      "unit" : "",
+      "value" : "demo字符串"
+    },
+    "pumpState" : {
+      "name" : "泵状态",
+      "unit" : "",
+      "value" : "0"
+    }
+  },
+  "pumpList" : {
+    "name" : "离心泵列表",
+    "unit" : "",
+    "value" : [
+      {
+        "pumpId" : {
+          "name" : "泵编号",
+          "unit" : "",
+          "value" : "1389504983463927808"
+        },
+        "pumpName" : {
+          "name" : "离心泵名称",
+          "unit" : "",
+          "value" : "demo字符串"
+        },
+        "flowRate" : {
+          "name" : "离心泵流量",
+          "unit" : "m3/h",
+          "value" : "[0.0,1.0,2.0,3.0]"
+        },
+        "waterHead" : {
+          "name" : "离心泵扬程",
+          "unit" : "m",
+          "value" : "[0.0,1.0,2.0,3.0]"
+        },
+        "w" : {
+          "name" : "离心泵功率",
+          "unit" : "KW",
+          "value" : "0.0"
+        },
+        "rev" : {
+          "name" : "离心泵转速",
+          "unit" : "r/min",
+          "value" : "0.0"
+        },
+        "startTime" : {
+          "name" : "启泵时长",
+          "unit" : "s",
+          "value" : "0.0"
+        },
+        "pumpType" : {
+          "name" : "泵类型",
+          "unit" : "",
+          "value" : "demo字符串"
+        },
+        "pumpState" : {
+          "name" : "泵状态",
+          "unit" : "",
+          "value" : "0"
+        }
+      }
+    ]
+  },
+  "siteInfo" : {
+    "siteKeyAltitude" : {
+      "name" : "关键点高程",
+      "unit" : "m",
+      "value" : "0.0"
+    },
+    "siteKeyMileage" : {
+      "name" : "关键点里程",
+      "unit" : "km",
+      "value" : "0.0"
+    },
+    "siteKeyName" : {
+      "name" : "关键点名称",
+      "unit" : "",
+      "value" : "demo字符串"
+    }
+  },
+  "valve" : {
+    "valveId" : {
+      "name" : "阀门编号",
+      "unit" : "",
+      "value" : "1389504983497482240"
+    },
+    "valveD" : {
+      "name" : "阀门直径",
+      "unit" : "m",
+      "value" : "0.0"
+    },
+    "valveK" : {
+      "name" : "阀门开度",
+      "unit" : "",
+      "value" : "0.0"
+    },
+    "valveT" : {
+      "name" : "启动时间",
+      "unit" : "s",
+      "value" : "0.0"
+    },
+    "valveName" : {
+      "name" : "阀门名称",
+      "unit" : "",
+      "value" : "demo字符串"
+    },
+    "valveType" : {
+      "name" : "阀门类型",
+      "unit" : "",
+      "value" : "0"
+    },
+    "valveS" : {
+      "name" : "阀门位置",
+      "unit" : "m",
+      "value" : "0.0"
+    },
+    "valveC" : {
+      "name" : "阀门系数",
+      "unit" : "",
+      "value" : "0.0"
+    }
+  },
+  "valveList" : {
+    "name" : "阀门列表",
+    "unit" : "",
+    "value" : [
+      {
+        "valveId" : {
+          "name" : "阀门编号",
+          "unit" : "",
+          "value" : "1389506419572645888"
+        },
+        "valveD" : {
+          "name" : "阀门直径",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "valveK" : {
+          "name" : "阀门开度",
+          "unit" : "",
+          "value" : "0.0"
+        },
+        "valveT" : {
+          "name" : "启动时间",
+          "unit" : "s",
+          "value" : "50.0"
+        },
+        "valveName" : {
+          "name" : "阀门名称",
+          "unit" : "",
+          "value" : "demo字符串"
+        },
+        "valveType" : {
+          "name" : "阀门类型",
+          "unit" : "",
+          "value" : "1.00"
+        },
+        "valveS" : {
+          "name" : "阀门位置",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "valveC" : {
+          "name" : "阀门系数",
+          "unit" : "",
+          "value" : "0.0"
+        }
+      }
+    ]
+  },
+  "variableParameter" : {
+    "totalTime" : {
+      "name" : "总模拟时长",
+      "unit" : "h",
+      "value" : "100.00"
+    },
+    "designFlow" : {
+      "name" : "设计投产流量",
+      "unit" : "m3/h",
+      "value" : "869.00"
+    }
+  },
+  "station" : {
+    "stationId" : {
+      "name" : "泵站点编号",
+      "unit" : "",
+      "value" : "1389504983564591104"
+    },
+    "stationName" : {
+      "name" : "站点名称",
+      "unit" : "m",
+      "value" : "demo字符串"
+    },
+    "stationType" : {
+      "name" : "站点类型",
+      "unit" : "m",
+      "value" : "0"
+    },
+    "stationPumps" : {
+      "name" : "站内离心泵列表",
+      "unit" : "",
+      "value" : [
+        {
+          "pumpId" : {
+            "name" : "泵编号",
+            "unit" : "",
+            "value" : "1389504983598145536"
+          },
+          "pumpName" : {
+            "name" : "离心泵名称",
+            "unit" : "",
+            "value" : "demo字符串"
+          },
+          "flowRate" : {
+            "name" : "离心泵流量",
+            "unit" : "m3/h",
+            "value" : "[0.0,1.0,2.0,3.0]"
+          },
+          "waterHead" : {
+            "name" : "离心泵扬程",
+            "unit" : "m",
+            "value" : "[0.0,1.0,2.0,3.0]"
+          },
+          "w" : {
+            "name" : "离心泵功率",
+            "unit" : "KW",
+            "value" : "0.0"
+          },
+          "rev" : {
+            "name" : "离心泵转速",
+            "unit" : "r/min",
+            "value" : "0.0"
+          },
+          "startTime" : {
+            "name" : "启泵时长",
+            "unit" : "s",
+            "value" : "0.0"
+          },
+          "pumpType" : {
+            "name" : "泵类型",
+            "unit" : "",
+            "value" : "demo字符串"
+          },
+          "pumpState" : {
+            "name" : "泵状态",
+            "unit" : "",
+            "value" : "0"
+          }
+        }
+      ]
+    },
+    "stationValves" : {
+      "name" : "站内阀门列表",
+      "unit" : "",
+      "value" : [
+        {
+          "valveId" : {
+            "name" : "阀门编号",
+            "unit" : "",
+            "value" : "1389504983631699968"
+          },
+          "valveD" : {
+            "name" : "阀门直径",
+            "unit" : "m",
+            "value" : "0.0"
+          },
+          "valveK" : {
+            "name" : "阀门开度",
+            "unit" : "",
+            "value" : "0.0"
+          },
+          "valveT" : {
+            "name" : "启动时间",
+            "unit" : "s",
+            "value" : "0.0"
+          },
+          "valveName" : {
+            "name" : "阀门名称",
+            "unit" : "",
+            "value" : "demo字符串"
+          },
+          "valveType" : {
+            "name" : "阀门类型",
+            "unit" : "",
+            "value" : "0"
+          },
+          "valveS" : {
+            "name" : "阀门位置",
+            "unit" : "m",
+            "value" : "0.0"
+          },
+          "valveC" : {
+            "name" : "阀门系数",
+            "unit" : "",
+            "value" : "0.0"
+          }
+        }
+      ]
+    },
+    "stationL" : {
+      "name" : "站点里程",
+      "unit" : "m",
+      "value" : "0.0"
+    },
+    "stationZ" : {
+      "name" : "站点高程",
+      "unit" : "m",
+      "value" : "0.0"
+    }
+  },
+  "stationList" : {
+    "name" : "站点列表",
+    "unit" : "",
+    "value" : [
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389504983665254400"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389504983694614528"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "变频泵1"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[1800.0,2025.0,2335.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[222.47,205.7,179.3]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "1500.00"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "3000.00"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "50"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "2"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            },
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389504983694614528"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "变频泵1"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[1800.0,2025.0,2335.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[222.47,205.7,179.3]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "1500.00"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "3000.00"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "50"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "2"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389504983728168960"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      },
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389510542057603072"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389510542086963200"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "0.0"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "0.0"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389510542120517632"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      },
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389510554397245440"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389510554430799872"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "0.0"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "0.0"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389510554464354304"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      },
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389510559426215936"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389510559459770368"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "0.0"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "0.0"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389510559489130496"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      },
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389510654259429376"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389510654292983808"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "0.0"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "0.0"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389510654326538240"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      },
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389510659703635968"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389510659732996096"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "0.0"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "0.0"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389510659766550528"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      },
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389510665214951424"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389510665248505856"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "0.0"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "0.0"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389510665282060288"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      },
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389510671095365632"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389510671124725760"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "0.0"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "0.0"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389510671158280192"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      },
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389510677235826688"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389510677265186816"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "0.0"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "0.0"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389510677298741248"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      },
+      {
+        "stationId" : {
+          "name" : "泵站点编号",
+          "unit" : "",
+          "value" : "1389510683862827008"
+        },
+        "stationName" : {
+          "name" : "站点名称",
+          "unit" : "m",
+          "value" : "demo字符串"
+        },
+        "stationType" : {
+          "name" : "站点类型",
+          "unit" : "m",
+          "value" : "0"
+        },
+        "stationPumps" : {
+          "name" : "站内离心泵列表",
+          "unit" : "",
+          "value" : [
+            {
+              "pumpId" : {
+                "name" : "泵编号",
+                "unit" : "",
+                "value" : "1389510683896381440"
+              },
+              "pumpName" : {
+                "name" : "离心泵名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "flowRate" : {
+                "name" : "离心泵流量",
+                "unit" : "m3/h",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "waterHead" : {
+                "name" : "离心泵扬程",
+                "unit" : "m",
+                "value" : "[0.0,1.0,2.0,3.0]"
+              },
+              "w" : {
+                "name" : "离心泵功率",
+                "unit" : "KW",
+                "value" : "0.0"
+              },
+              "rev" : {
+                "name" : "离心泵转速",
+                "unit" : "r/min",
+                "value" : "0.0"
+              },
+              "startTime" : {
+                "name" : "启泵时长",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "pumpType" : {
+                "name" : "泵类型",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "pumpState" : {
+                "name" : "泵状态",
+                "unit" : "",
+                "value" : "0"
+              }
+            }
+          ]
+        },
+        "stationValves" : {
+          "name" : "站内阀门列表",
+          "unit" : "",
+          "value" : [
+            {
+              "valveId" : {
+                "name" : "阀门编号",
+                "unit" : "",
+                "value" : "1389510683929935872"
+              },
+              "valveD" : {
+                "name" : "阀门直径",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveK" : {
+                "name" : "阀门开度",
+                "unit" : "",
+                "value" : "0.0"
+              },
+              "valveT" : {
+                "name" : "启动时间",
+                "unit" : "s",
+                "value" : "0.0"
+              },
+              "valveName" : {
+                "name" : "阀门名称",
+                "unit" : "",
+                "value" : "demo字符串"
+              },
+              "valveType" : {
+                "name" : "阀门类型",
+                "unit" : "",
+                "value" : "0"
+              },
+              "valveS" : {
+                "name" : "阀门位置",
+                "unit" : "m",
+                "value" : "0.0"
+              },
+              "valveC" : {
+                "name" : "阀门系数",
+                "unit" : "",
+                "value" : "0.0"
+              }
+            }
+          ]
+        },
+        "stationL" : {
+          "name" : "站点里程",
+          "unit" : "m",
+          "value" : "0.0"
+        },
+        "stationZ" : {
+          "name" : "站点高程",
+          "unit" : "m",
+          "value" : "0.0"
+        }
+      }
+    ]
+  },
+  "_class" : "cn.edu.cup.hilly.dataSource.model.mongo.Hilly"
+}

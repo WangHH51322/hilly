@@ -1,4 +1,4 @@
-package cn.edu.cup.hilly.dataSource.service.mongo;
+package cn.edu.cup.hilly.dataSource.service.mongo.result;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultDPLDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
@@ -23,13 +23,15 @@ public class ResultDPLService {
         resultDPLDao.save(resultDPL);
     }
     public void update(ResultDPL resultDPL) {
-        String id = resultDPL.getProjectId();
+//        String id = resultDPL.getProjectId();
+        String id = resultDPL.get_id();
         Query query = Query.query(Criteria.where("_id").is(id));
         Update update = Update.update("dPL",resultDPL.getDPL());
         mongoTemplate.upsert(query,update, ResultDPL.class,"resultDPL");
     }
     public void updateMap(ResultDPL resultDPL) {
-        String id = resultDPL.getProjectId();
+//        String id = resultDPL.getProjectId();
+        String id = resultDPL.get_id();
         Query query = Query.query(Criteria.where("_id").is(id));
         Update update = Update.update("dPLMap",resultDPL.getDPLMap());
         mongoTemplate.upsert(query,update, ResultDPL.class,"resultDPL");
