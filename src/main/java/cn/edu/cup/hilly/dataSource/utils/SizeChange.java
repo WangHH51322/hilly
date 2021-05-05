@@ -165,14 +165,14 @@ public class SizeChange {
          */
         int size = 0;
         double[] lastDPL = resultsLists.get(resultsLists.size() - 1);
-        System.out.println("resultsLists:"+ resultsLists.size());
+//        System.out.println("resultsLists:"+ resultsLists.size());
         for (int i = 0; i < lastDPL.length; i++) {
             if (lastDPL[i] == 0 && lastDPL[i+1] == 0) {
                 size = i;
                 break;
             }
         }
-        System.out.println("size:" + size);
+//        System.out.println("size:" + size);
 //        System.out.println("转换之后的值: ");
         for (int i = 0; i < resultsLists.size(); i++) {
             double[] dPLList = resultsLists.get(i);

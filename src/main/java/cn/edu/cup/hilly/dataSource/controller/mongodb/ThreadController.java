@@ -2,19 +2,13 @@ package cn.edu.cup.hilly.dataSource.controller.mongodb;
 
 import cn.edu.cup.base.CommonProvider;
 import cn.edu.cup.hilly.calculate.hilly.large.Project;
-import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultAllLineFP;
-import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
-import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultLgHis;
-import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultSimple;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.*;
 import cn.edu.cup.hilly.dataSource.model.rabbitmq.PushMsgProducer;
 import cn.edu.cup.hilly.dataSource.model.rabbitmq.WiselyMessage;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyService;
 import cn.edu.cup.hilly.dataSource.model.mongo.DataMap;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
-import cn.edu.cup.hilly.dataSource.service.mongo.result.ResultALFPService;
-import cn.edu.cup.hilly.dataSource.service.mongo.result.ResultDPLService;
-import cn.edu.cup.hilly.dataSource.service.mongo.result.ResultLgHisService;
-import cn.edu.cup.hilly.dataSource.service.mongo.result.ResultSimpleService;
+import cn.edu.cup.hilly.dataSource.service.mongo.result.*;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +30,10 @@ public class ThreadController {
     ResultALFPService resultALFPService;
     @Autowired
     ResultLgHisService resultLgHisService;
+    @Autowired
+    ResultPgHisService resultPgHisService;
+    @Autowired
+    ResultMHisService resultMHisService;
     @Autowired
     ResultSimpleService resultSimpleService;
     @Autowired
@@ -110,6 +108,10 @@ public class ThreadController {
             resultAllLineFP.set_id(id);
             ResultLgHis resultLgHis = new ResultLgHis();
             resultLgHis.set_id(id);
+            ResultPgHis resultPgHis = new ResultPgHis();
+            resultPgHis.set_id(id);
+            ResultMHis resultMHis = new ResultMHis();
+            resultMHis.set_id(id);
             ResultSimple resultSimple = new ResultSimple();
             resultSimple.set_id(id);
             while (thread.isAlive()) {
@@ -127,6 +129,14 @@ public class ThreadController {
                         Map<Integer, double[]> lgHis = project.getLgHis();
                         resultLgHis.setLgHisMap(lgHis);
                         resultLgHisService.updateMap(resultLgHis);
+
+                        Map<Integer, double[]> pgHis = project.getPgHis();
+                        resultPgHis.setPgHisMap(pgHis);
+                        resultPgHisService.updateMap(resultPgHis);
+
+                        Map<Integer, double[]> mHis = project.getmHis();
+                        resultMHis.setMHisMap(mHis);
+                        resultMHisService.updateMap(resultMHis);
 
                         double[][] pigV = project.getPigV();
                         resultSimple.setPigV(pigV);

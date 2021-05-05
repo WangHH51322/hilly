@@ -75,6 +75,27 @@ public class Project extends Thread implements Serializable {
         this.lgHis = lgHis;
     }
     /**
+     * m_his
+     */
+    private Map<Integer, double[]> mHis;
+    public Map<Integer, double[]> getmHis() {
+        return mHis;
+    }
+    public void setmHis(Map<Integer, double[]> mHis) {
+        this.mHis = mHis;
+    }
+    /**
+     * pg_his
+     */
+    private Map<Integer, double[]> pgHis;
+    public Map<Integer, double[]> getPgHis() {
+        return pgHis;
+    }
+    public void setPgHis(Map<Integer, double[]> pgHis) {
+        this.pgHis = pgHis;
+    }
+
+    /**
      * allLineStaticP,pig_V,pig_L
      */
     private double[][] pigV;
@@ -624,6 +645,14 @@ public class Project extends Thread implements Serializable {
         SizeChange lgHisChange = new SizeChange(lgHisReverse);
         Map<Integer, double[]> lgHisAfterChange = lgHisChange.ResultAfterChange();
         setLgHis(lgHisAfterChange);
+        double[][] pgHisReverse = SizeChange.reverse(varPara.Pg_his);
+        SizeChange pgHisChange = new SizeChange(pgHisReverse);
+        Map<Integer, double[]> pgHisAfterChange = pgHisChange.ResultAfterChange();
+        setPgHis(pgHisAfterChange);
+        double[][] mHisReverse = SizeChange.reverse(varPara.M_his);
+        SizeChange mHisChange = new SizeChange(mHisReverse);
+        Map<Integer, double[]> mHisAfterChange = mHisChange.ResultAfterChange();
+        setmHis(mHisAfterChange);
         /**
          * 全部循环结束,存储pig_V pig-L allLineStaticP
          * 起始时刻:flagpigT
