@@ -552,7 +552,7 @@ public class Project extends Thread implements Serializable {
                             }
                         }
                         for (int stationNum00=0;stationNum00<stations.size();stationNum00++){//查询当前点所处的站点位置
-                            if (varPara.waterL[varPara.num] > stations.get(stationNum00).getStationL()+20000 && stations.get(stationNum00).getStationType()==1.0 && varPara.pigflag==0){//水头流动至距首站后20km
+                            if (false && varPara.waterL[varPara.num] > stations.get(stationNum00).getStationL()+20000 && stations.get(stationNum00).getStationType()==1.0 && varPara.pigflag==0){//水头流动至距首站后20km
                                 if (flagpigT==0)
                                 {
                                     flagpigT=varPara.num;
@@ -2037,7 +2037,7 @@ public class Project extends Thread implements Serializable {
                             *varPara.slopeD[i][0])*oil.getDensity()*conPara.g+conPara.p0;
                     varPara.allLineStaticP[0][x]=varPara.allLineStaticP[0][x+1]+dx*varPara.slopeU[i][0]*oil.getDensity()*conPara.g;
                 }else if (Lx >= varPara.line_l[i][1] && Lx <= varPara.line_l[i][1]+varPara.lgk[i]){
-                    varPara.allLineStaticP[0][x]=varPara.allLineStaticP[0][x+1];
+                    varPara.allLineStaticP[0][x]=varPara.allLineStaticP[0][x+1]-dx*varPara.slopeD[i][0]*(1-varPara.Hgk[i])*oil.getDensity()*conPara.g;
                 }else if (Lx >= varPara.line_l[i][1]+varPara.lgk[i] && Lx <= varPara.line_l[i][2]){
                     varPara.allLineStaticP[0][x]=varPara.allLineStaticP[0][x+1]-dx*varPara.slopeD[i][0]*oil.getDensity()*conPara.g;
                 }
@@ -2055,7 +2055,7 @@ public class Project extends Thread implements Serializable {
                 if (Lx >= varPara.line_l[i][2] && Lx <= varPara.line_l[i][3]) {
                     varPara.allLineStaticP[0][x]=varPara.allLineStaticP[0][x+1]+dx*varPara.slopeU[i][0]*oil.getDensity()*conPara.g;
                 }else if (Lx >= varPara.line_l[i][1] && Lx <= varPara.line_l[i][1]+varPara.lgk[i]){
-                    varPara.allLineStaticP[0][x]=varPara.allLineStaticP[0][x+1];
+                    varPara.allLineStaticP[0][x]=varPara.allLineStaticP[0][x+1]+dx*varPara.slopeD[i][0]*(1-varPara.Hgk[i])*oil.getDensity()*conPara.g;
                 }else if (Lx >= varPara.line_l[i][1]+varPara.lgk[i] && Lx <= varPara.line_l[i][2]){
                     if (i==n) {
                         varPara.allLineStaticP[0][x]=conPara.p0;

@@ -3,8 +3,8 @@ package cn.edu.cup.hilly.dataSource.controller.mongodb;
 import cn.edu.cup.base.CommonProvider;
 import cn.edu.cup.hilly.calculate.hilly.large.Project;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.*;
-import cn.edu.cup.hilly.dataSource.model.rabbitmq.PushMsgProducer;
-import cn.edu.cup.hilly.dataSource.model.rabbitmq.WiselyMessage;
+//import cn.edu.cup.hilly.dataSource.model.rabbitmq.PushMsgProducer;
+//import cn.edu.cup.hilly.dataSource.model.rabbitmq.WiselyMessage;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyService;
 import cn.edu.cup.hilly.dataSource.model.mongo.DataMap;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
@@ -36,8 +36,8 @@ public class ThreadController {
     ResultMHisService resultMHisService;
     @Autowired
     ResultSimpleService resultSimpleService;
-    @Autowired
-    PushMsgProducer sender;
+//    @Autowired
+//    PushMsgProducer sender;
 
     /**
      * 调用方法求解
@@ -46,7 +46,7 @@ public class ThreadController {
      */
     @GetMapping("/run")
     public RespBean run(@RequestParam("id") String id){
-        WiselyMessage msg = new WiselyMessage();
+//        WiselyMessage msg = new WiselyMessage();
         try {
             Project project = new Project();
             Thread thread = new Thread(project);
@@ -68,16 +68,16 @@ public class ThreadController {
                         Map<Integer, double[]> dpl = project.getDPL();
                         resultDPL.setDPLMap(dpl);
                         resultDPLService.updateMap(resultDPL);
-                        msg.setName("hello");
-                        msg.setRoutingKey("rk_pushmsg");
-                        msg.setMsg("这是一条来自后端的消息");
-                        msg.setObject(resultDPL);
+//                        msg.setName("hello");
+//                        msg.setRoutingKey("rk_pushmsg");
+//                        msg.setMsg("这是一条来自后端的消息");
+//                        msg.setObject(resultDPL);
                         System.out.println("save data");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                sender.send(msg);
+//                sender.send(msg);
             }
             return RespBean.ok("开始计算");
         } catch (Exception e) {
@@ -88,6 +88,7 @@ public class ThreadController {
 
     @GetMapping("/run2")
     public RespBean run2(@RequestParam("id") String id){
+//        WiselyMessage msg = new WiselyMessage();
         try {
             Project project = new Project();
             Thread thread = new Thread(project);
@@ -121,6 +122,11 @@ public class ThreadController {
                         Map<Integer, double[]> dpl = project.getDPL();
                         resultDPL.setDPLMap(dpl);
                         resultDPLService.updateMap(resultDPL);
+//                        msg.setName("hello");
+//                        msg.setRoutingKey("rk_pushmsg");
+//                        msg.setMsg("这是一条来自后端的消息");
+//                        msg.setObject(resultDPL);
+//                        System.out.println("save data");
 
                         Map<Integer, double[]> aLineFP = project.getALineFP();
                         resultAllLineFP.setALineFPMap(aLineFP);
@@ -153,6 +159,7 @@ public class ThreadController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+//                sender.send(msg);
             }
             return RespBean.ok("开始计算");
         } catch (Exception e) {

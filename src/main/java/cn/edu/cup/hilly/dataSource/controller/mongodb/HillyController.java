@@ -28,6 +28,7 @@ public class HillyController {
      */
     @GetMapping("/getAll")
     public RespBean getAllHilly() {
+        System.out.println("getAll方法已执行");
         List<Hilly> hilly =  hillyService.getAllHilly();
         return RespBean.ok("查询成功!",hilly);
     }

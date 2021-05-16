@@ -29,11 +29,14 @@ public class HillyService {
     private MongoTemplate mongoTemplate;
 
     public List<Hilly> getAllHilly() {
+        System.out.println("getAllHilly方法已执行");
         List<Hilly> all = hillyDao.findAll();
         return all;
     }
 
     public Hilly getHillyById(String id) {
+//        Query query = new Query(Criteria.where("_id").is(id));
+//        List<Hilly> hillies = mongoTemplate.find(query, Hilly.class, "hilly");
         Hilly hilly = hillyDao.findById(id).get();
         return hilly;
     }

@@ -59,7 +59,7 @@ public class Hilly {
         this.valve = new Valve();
         this.valveList = new ValveList();
         this.variableParameter = new VariableParameter();
-        this.station = new Station();
-        this.stationList = new StationList();
+//        this.station = new Station();
+//        this.stationList = new StationList();
     }
 }

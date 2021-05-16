@@ -2,7 +2,9 @@ package cn.edu.cup.hilly;
 
 import cn.edu.cup.base.CommonProvider;
 import cn.edu.cup.hilly.calculate.hilly.large.Project;
+import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.TempTest;
+import cn.edu.cup.hilly.dataSource.service.mongo.HillyLiquidService;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyProjectService;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyService;
 import cn.edu.cup.hilly.dataSource.model.mongo.DataMap;
@@ -25,6 +27,8 @@ class HillyApplicationTests {
     HillyProjectService hillyProjectService;
     @Autowired
     TempTestSer tempTestService;
+    @Autowired
+    HillyLiquidService hillyLiquidService;
 
     @Test
     void contextLoads() {
@@ -42,15 +46,18 @@ class HillyApplicationTests {
 
     @Test
     void test01() {
-        Project project = new Project();
-        Hilly hilly = hillyService.getHillyById("6066b58ec26f66377d192515");
-        Map<String, Object> dataMap = DataMap.getDataMap(hilly);
+//        Project project = new Project();
+        Hilly hilly = hillyService.getHillyById("60910cfadbe2e64305cbdf08");
+        MediumList mediumListById = hillyLiquidService.getMediumListById("60910cfadbe2e64305cbdf08");
+        System.out.println("mediumListById:" + mediumListById);
+//        Map<String, Object> dataMap = DataMap.getDataMap(hilly);
 
-        CommonProvider commonProvider = new CommonProvider();
-        commonProvider.setDataMap(dataMap);
-        commonProvider.startDataRequirementProcess(project);
-
-        project.run();
+//
+//        CommonProvider commonProvider = new CommonProvider();
+//        commonProvider.setDataMap(dataMap);
+//        commonProvider.startDataRequirementProcess(project);
+//
+//        project.run();
     }
 
     @Test
