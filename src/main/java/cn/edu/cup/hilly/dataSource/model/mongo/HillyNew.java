@@ -14,10 +14,8 @@ import cn.edu.cup.hilly.dataSource.model.mongo.stationList.StationList;
 import cn.edu.cup.hilly.dataSource.model.mongo.valveList.Valve;
 import cn.edu.cup.hilly.dataSource.model.mongo.valveList.ValveList;
 import cn.edu.cup.hilly.dataSource.model.mongo.variableParameter.VariableParameter;
-import cn.edu.cup.hilly.dataSource.utils.IdWorker;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -26,7 +24,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @ToString
 @Document
-public class Hilly {
+public class HillyNew {
 
     @Id
     private String _id;
@@ -47,19 +45,19 @@ public class Hilly {
     private Station station;
     private StationList stationList;
 
-    public Hilly() {
-        this.interInfo = new InterInfo();
+    public HillyNew() {
+//        this.interInfo = new InterInfo();
 //        this.medium = new Medium();
-        this.mediumList = new MediumList();
+//        this.mediumList = new MediumList();
 //        this.pig = new Pig();
-        this.pigList = new PigList();
-        this.pipe = new Pipe();
+//        this.pigList = new PigList();
+//        this.pipe = new Pipe();
 //        this.pump = new Pump();
 //        this.pumpList = new PumpList();
 //        this.siteInfo = new SiteInfo();
 //        this.valve = new Valve();
 //        this.valveList = new ValveList();
-        this.variableParameter = new VariableParameter();
+//        this.variableParameter = new VariableParameter();
 //        this.station = new Station();
 //        this.stationList = new StationList();
     }

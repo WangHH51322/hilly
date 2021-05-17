@@ -3,12 +3,16 @@ package cn.edu.cup.hilly.dataSource.service.mongo;
 import cn.edu.cup.hilly.dataSource.mapper.mongo.HillyDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
 import cn.edu.cup.hilly.dataSource.model.mongo.Pipe.Pipe;
+import cn.edu.cup.hilly.dataSource.model.mongo.interInfo.InterInfo;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.Medium;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.Pig;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigList;
 import cn.edu.cup.hilly.dataSource.model.mongo.siteInfo.SiteInfo;
 import cn.edu.cup.hilly.dataSource.model.mongo.variableParameter.VariableParameter;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.mongodb.BasicDBObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -17,7 +21,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -35,9 +41,28 @@ public class HillyService {
     }
 
     public Hilly getHillyById(String id) {
-//        Query query = new Query(Criteria.where("_id").is(id));
-//        List<Hilly> hillies = mongoTemplate.find(query, Hilly.class, "hilly");
-        Hilly hilly = hillyDao.findById(id).get();
+        Query query = new Query(Criteria.where("_id").is(id));
+        Hilly hilly = mongoTemplate.find(query, Hilly.class, "hilly").get(0);
+//        Hilly hilly = hillyDao.findById(id).get();
+        return hilly;
+    }
+
+    public BasicDBObject getHillyById2(String id) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        BasicDBObject hilly = mongoTemplate.find(query, BasicDBObject.class, "hilly").get(0);
+//        hilly.put("_id", hilly.get("_id"));
+//        System.out.println(hilly.get("_id"));
+//        String hillyString = JSON.toJSONString(hilly);
+//        JSONObject hillyJson = JSONObject.parseObject(hillyString);
+//        Hilly hillyNew = JSON.toJavaObject(hillyJson,Hilly.class);
+//        String jsonString = JSON.toJSONString(hilly);
+//        JSONObject jsonObject = JSON.parseObject(jsonString);
+//        Object interInfo = jsonObject.get("interInfo");
+//        String interInfoString = JSON.toJSONString(interInfo);
+//        JSONObject interInfoObj = JSON.parseObject(interInfoString);
+//        Object errorInfo = interInfoObj.get("errorInfo");
+        System.out.println(hilly);
+//        Hilly hilly = hillyDao.findById(id).get();
         return hilly;
     }
 

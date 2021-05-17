@@ -20,6 +20,6 @@ public class PumpList {
         this.name = "离心泵列表";
         this.unit = "";
         this.value = new ArrayList<>();
-        value.add(new Pump());
+//        value.add(new Pump());
     }
 }

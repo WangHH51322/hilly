@@ -2,11 +2,15 @@ package cn.edu.cup.hilly.dataSource.service.mongo;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.HillyDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
+import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
 import cn.edu.cup.hilly.dataSource.model.mongo.pumpList.Pump;
 import cn.edu.cup.hilly.dataSource.model.mongo.pumpList.PumpId;
 import cn.edu.cup.hilly.dataSource.model.mongo.stationList.*;
 import cn.edu.cup.hilly.dataSource.model.mongo.valveList.Valve;
 import cn.edu.cup.hilly.dataSource.model.mongo.valveList.ValveId;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -30,8 +35,23 @@ public class HillyStationService {
     MongoTemplate mongoTemplate;
 
     public StationList getAll(String id) {
-        Hilly hilly = hillyDao.findById(id).get();
-        return hilly.getStationList();
+        Query query = new Query(Criteria.where("_id").is(id));
+        BasicDBObject hilly = mongoTemplate.find(query, BasicDBObject.class, "hilly").get(0);
+        Object stationListOld = hilly.get("stationList");
+        String string = JSON.toJSONString(stationListOld);
+        StationList stations = JSONObject.parseObject(string, StationList.class);
+        return stations;
+    }
+
+    public List<Station> getList(String id) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        BasicDBObject hilly = mongoTemplate.find(query, BasicDBObject.class, "hilly").get(0);
+        Object stationListOld = hilly.get("stationList");
+        String string = JSON.toJSONString(stationListOld);
+        JSONObject json = JSONObject.parseObject(string);
+        String list = JSON.toJSONString(json.get("value"));
+        List<Station> stations = JSONObject.parseObject(list, (Type) Station.class);
+        return stations;
     }
 
     public Station getById(String hid, String id) {

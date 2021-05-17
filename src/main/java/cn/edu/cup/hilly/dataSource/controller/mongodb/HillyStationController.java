@@ -13,6 +13,8 @@ import cn.edu.cup.hilly.dataSource.utils.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * @author wong
@@ -34,6 +36,20 @@ public class HillyStationController {
     public RespBean getAll(@RequestParam("id") String id) {
         try {
             StationList all = stationService.getAll(id);
+            return RespBean.ok("查询成功",all);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getClass().getName());
+        }
+    }
+    /**
+     * 根据项目id查询全部站点信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/getAllList")
+    public RespBean getAllList(@RequestParam("id") String id) {
+        try {
+            List<Station> all = stationService.getList(id);
             return RespBean.ok("查询成功",all);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getClass().getName());

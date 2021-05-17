@@ -48,7 +48,7 @@ class HillyApplicationTests {
     void test01() {
 //        Project project = new Project();
         Hilly hilly = hillyService.getHillyById("60910cfadbe2e64305cbdf08");
-        MediumList mediumListById = hillyLiquidService.getMediumListById("60910cfadbe2e64305cbdf08");
+        MediumList mediumListById = hillyLiquidService.getMediumListById2("60910cfadbe2e64305cbdf08");
         System.out.println("mediumListById:" + mediumListById);
 //        Map<String, Object> dataMap = DataMap.getDataMap(hilly);
 

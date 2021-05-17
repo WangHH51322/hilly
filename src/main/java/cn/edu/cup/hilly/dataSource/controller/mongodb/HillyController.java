@@ -10,6 +10,7 @@ import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigList;
 import cn.edu.cup.hilly.dataSource.model.mongo.siteInfo.SiteInfo;
 import cn.edu.cup.hilly.dataSource.model.mongo.variableParameter.VariableParameter;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
+import com.mongodb.BasicDBObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class HillyController {
      */
     @GetMapping("/getById")
     public RespBean getHillyById(@RequestParam("id") String id) {
-        Hilly hillyById = hillyService.getHillyById(id);
+        BasicDBObject hillyById = hillyService.getHillyById2(id);
         return RespBean.ok("查询成功!",hillyById);
     }
 

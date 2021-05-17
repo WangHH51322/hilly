@@ -4,11 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @ToString
 @Data
 @AllArgsConstructor
+@Document
 public class InterInfo {
+    @Id
+    private String _id;
+
+    @Indexed(unique = true)
+    private String hillyId;
+
     private ErrorInfo errorInfo;
     private GeneralInfo generalInfo;
     private WarnInfo warnInfo;

@@ -4,8 +4,11 @@ import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.Medium;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyLiquidService;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/mediumList")
@@ -22,7 +25,28 @@ public class HillyLiquidController {
     @GetMapping("/getAll")
     public RespBean getMediumListById(@RequestParam("id") String id) {
         try {
-            MediumList mediumList = hillyLiquidService.getMediumListById(id);
+            JSONObject mediumList = hillyLiquidService.getMediumListObjById(id);
+//            List<MediumList> mediumList = hillyLiquidService.getMediumListByIdNewAll(id);
+            return RespBean.ok("流体介质列表查询成功!",mediumList);
+        } catch (Exception e) {
+            return RespBean.error("查询失败",e.getClass().getName());
+        }
+    }
+
+    @GetMapping("/getList")
+    public RespBean getMediumList(@RequestParam("id") String id) {
+        try {
+            List<Medium> mediumList = hillyLiquidService.getMediumList(id);
+            return RespBean.ok("流体介质列表查询成功!",mediumList);
+        } catch (Exception e) {
+            return RespBean.error("查询失败",e.getClass().getName());
+        }
+    }
+
+    @GetMapping("/getList2")
+    public RespBean getMediumList2(@RequestParam("id") String id) {
+        try {
+            MediumList mediumList = hillyLiquidService.getMediumListById2(id);
             return RespBean.ok("流体介质列表查询成功!",mediumList);
         } catch (Exception e) {
             return RespBean.error("查询失败",e.getClass().getName());
@@ -38,7 +62,8 @@ public class HillyLiquidController {
     @GetMapping("/getById")
     public RespBean getMediumById(@RequestParam("hid") String hid, @RequestParam("id") String id) {
         try {
-            Medium mediumById = hillyLiquidService.getMediumById(hid, id);
+//            Medium mediumById = hillyLiquidService.getMediumById(hid, id);
+            Medium mediumById = hillyLiquidService.getMediumByIdNew(hid, id);
             if (mediumById != null) {
                 return RespBean.ok("流体介质查询成功",mediumById);
             }
@@ -49,6 +74,17 @@ public class HillyLiquidController {
 
     }
 
+    @PostMapping("/add")
+    public RespBean add (@RequestParam("id") String id) {
+        try {
+            MediumList mediumList = hillyLiquidService.add(id);
+            return RespBean.ok("新建成功",mediumList);
+        } catch (Exception e) {
+            return RespBean.error("新建出错",e.getClass().getName());
+        }
+    }
+
+
     /**
      * 根据项目计算数据id添加单一流体介质
      * @param hid
@@ -56,9 +92,10 @@ public class HillyLiquidController {
      * @return
      */
     @PostMapping("/insert")
-    public RespBean add(@RequestParam("hid") String hid, @RequestBody Medium medium) {
+    public RespBean insert(@RequestParam("hid") String hid, @RequestBody Medium medium) {
         try {
-            long modified = hillyLiquidService.add(hid, medium);
+//            long modified = hillyLiquidService.insert(hid, medium);
+            long modified = hillyLiquidService.insertNew(hid, medium);
             if (modified == 1) {
                 return RespBean.ok("流体介质添加成功");
             }
