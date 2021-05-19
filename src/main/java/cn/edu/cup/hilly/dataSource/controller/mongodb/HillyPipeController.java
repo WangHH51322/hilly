@@ -3,6 +3,7 @@ package cn.edu.cup.hilly.dataSource.controller.mongodb;
 import cn.edu.cup.hilly.dataSource.model.mongo.Pipe.Pipe;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyPipeService;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class HillyPipeController {
     @GetMapping("/getById")
     public RespBean getById(@RequestParam("id") String id) {
         try {
-            Pipe pipe = hillyPipeService.getById(id);
+            JSONObject pipe = hillyPipeService.getById(id);
             if (pipe != null) {
                 return RespBean.ok("查询成功",pipe);
             }

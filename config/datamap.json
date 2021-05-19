@@ -41,7 +41,7 @@
 					"valveT":{
 						"unit":"s",
 						"name":"valveT",
-						"value":"50.00"
+						"value":"500.00"
 					},
 					"valveName":{
 						"unit":"m",
@@ -80,7 +80,7 @@
 			"totalTime":{
 				"unit":"h",
 				"name":"totalTime",
-				"value":"70.00"
+				"value":"100.00"
 			}
 		},
 		"stationList":{
@@ -540,7 +540,7 @@
 								"valveD":{
 									"unit":"m",
 									"name":"valveD",
-									"value":"0.50"
+									"value":"0.30"
 								},
 								"valveT":{
 									"unit":"s",
@@ -811,7 +811,7 @@
 								"valveD":{
 									"unit":"m",
 									"name":"valveD",
-									"value":"0.50"
+									"value":"0.30"
 								},
 								"valveT":{
 									"unit":"s",
@@ -1082,7 +1082,7 @@
 								"valveD":{
 									"unit":"m",
 									"name":"valveD",
-									"value":"0.50"
+									"value":"0.30"
 								},
 								"valveT":{
 									"unit":"s",
@@ -1152,7 +1152,7 @@
 								"valveD":{
 									"unit":"m",
 									"name":"valveD",
-									"value":"0.50"
+									"value":"0.30"
 								},
 								"valveT":{
 									"unit":"s",
@@ -1222,7 +1222,7 @@
 								"valveD":{
 									"unit":"m",
 									"name":"valveD",
-									"value":"0.50"
+									"value":"0.30"
 								},
 								"valveT":{
 									"unit":"s",

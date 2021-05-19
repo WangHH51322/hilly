@@ -49,18 +49,18 @@ public class Hilly {
 
     public Hilly() {
         this.interInfo = new InterInfo();
-//        this.medium = new Medium();
+        this.medium = new Medium();
         this.mediumList = new MediumList();
-//        this.pig = new Pig();
+        this.pig = new Pig();
         this.pigList = new PigList();
         this.pipe = new Pipe();
-//        this.pump = new Pump();
-//        this.pumpList = new PumpList();
-//        this.siteInfo = new SiteInfo();
-//        this.valve = new Valve();
-//        this.valveList = new ValveList();
+        this.pump = new Pump();
+        this.pumpList = new PumpList();
+        this.siteInfo = new SiteInfo();
+        this.valve = new Valve();
+        this.valveList = new ValveList();
         this.variableParameter = new VariableParameter();
-//        this.station = new Station();
-//        this.stationList = new StationList();
+        this.station = new Station();
+        this.stationList = new StationList();
     }
 }

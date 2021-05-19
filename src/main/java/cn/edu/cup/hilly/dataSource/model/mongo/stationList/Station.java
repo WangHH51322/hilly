@@ -20,8 +20,8 @@ public class Station {
         this.stationId = new StationId();
         this.stationName = new StationName();
         this.stationType = new StationType();
-        this.stationPumps = new StationPumps();
-        this.stationValves = new StationValves();
+//        this.stationPumps = new StationPumps();
+//        this.stationValves = new StationValves();
         this.stationL = new StationL();
         this.stationZ = new StationZ();
     }

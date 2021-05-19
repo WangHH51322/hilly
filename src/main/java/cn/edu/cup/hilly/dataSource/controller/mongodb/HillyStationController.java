@@ -10,6 +10,7 @@ import cn.edu.cup.hilly.dataSource.model.mongo.stationList.StationValves;
 import cn.edu.cup.hilly.dataSource.model.mongo.valveList.Valve;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyStationService;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class HillyStationController {
     @GetMapping("/getAll")
     public RespBean getAll(@RequestParam("id") String id) {
         try {
-            StationList all = stationService.getAll(id);
+            JSONObject all = stationService.getAllStationList(id);
             return RespBean.ok("查询成功",all);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getClass().getName());
@@ -49,7 +50,7 @@ public class HillyStationController {
     @GetMapping("/getAllList")
     public RespBean getAllList(@RequestParam("id") String id) {
         try {
-            List<Station> all = stationService.getList(id);
+            List<Station> all = stationService.getStationList(id);
             return RespBean.ok("查询成功",all);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getClass().getName());
@@ -121,7 +122,7 @@ public class HillyStationController {
     @GetMapping("/stationPumps/getAll")
     public RespBean sPGetAll(@RequestParam("hid") String hid,@RequestParam("id") String id) {
         try {
-            StationPumps stationPumps = stationService.sPGetAllPumps(hid, id);
+            StationPumps stationPumps = stationService.getStationPump(hid, id);
             return RespBean.ok("查询成功",stationPumps);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getClass().getName());
@@ -138,7 +139,7 @@ public class HillyStationController {
     @PostMapping("/stationPumps/insert")
     public RespBean sPInsert(@RequestParam("hid") String hid,@RequestParam("id") String id,@RequestBody Pump pump) {
         try {
-            long sPInsert = stationService.sPInsert(hid, id, pump);
+            long sPInsert = stationService.addStationPump(hid, id, pump);
             if (sPInsert == 1) {
                 return RespBean.ok("添加成功");
             }
@@ -158,7 +159,7 @@ public class HillyStationController {
     @PutMapping("/stationPumps/update")
     public RespBean sPUpdate(@RequestParam("hid") String hid,@RequestParam("id") String id,@RequestBody Pump pump) {
         try {
-            long update = stationService.sPUpdate(hid,id,pump);
+            long update = stationService.updateStationPump(hid,id,pump);
             if (update == 1) {
                 return RespBean.ok("更新成功");
             }
@@ -178,7 +179,7 @@ public class HillyStationController {
     @DeleteMapping("/stationPumps/delete")
     public RespBean sPDelete(@RequestParam("hid") String hid,@RequestParam("id") String id,@RequestParam("pid") String pid) {
         try {
-            long delete = stationService.sPDelete(hid, id, pid);
+            long delete = stationService.deleteStationPump(hid, id, pid);
             if (delete == 1) {
                 return RespBean.ok("删除成功");
             }
@@ -196,7 +197,7 @@ public class HillyStationController {
     @GetMapping("/stationValves/getAll")
     public RespBean sVGetAll(@RequestParam("hid") String hid,@RequestParam("id") String id) {
         try {
-            StationValves stationValves = stationService.sVGetAll(hid, id);
+            StationValves stationValves = stationService.getStationValve(hid, id);
             return RespBean.ok("查询成功",stationValves);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getClass().getName());
@@ -212,7 +213,7 @@ public class HillyStationController {
     @PostMapping("/stationValves/insert")
     public RespBean sVInsert(@RequestParam("hid") String hid,@RequestParam("id") String id,@RequestBody Valve valve) {
         try {
-            long sVInsert = stationService.sVInsert(hid, id, valve);
+            long sVInsert = stationService.addStationValve(hid, id, valve);
             if (sVInsert == 1) {
                 return RespBean.ok("添加成功");
             }
@@ -231,7 +232,7 @@ public class HillyStationController {
     @PutMapping("/stationValves/update")
     public RespBean sVUpdate(@RequestParam("hid") String hid,@RequestParam("id") String id,@RequestBody Valve valve) {
         try {
-            long update = stationService.sVUpdate(hid,id,valve);
+            long update = stationService.updateStationValve(hid,id,valve);
             if (update == 1) {
                 return RespBean.ok("更新成功");
             }
@@ -250,7 +251,7 @@ public class HillyStationController {
     @DeleteMapping("/stationValves/delete")
     public RespBean sVDelete(@RequestParam("hid") String hid,@RequestParam("id") String id,@RequestParam("vid") String vid) {
         try {
-            long delete = stationService.sVDelete(hid, id, vid);
+            long delete = stationService.deleteStationValve(hid, id, vid);
             if (delete == 1) {
                 return RespBean.ok("删除成功");
             }

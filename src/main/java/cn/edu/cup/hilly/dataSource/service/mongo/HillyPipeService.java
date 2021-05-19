@@ -4,6 +4,9 @@ import cn.edu.cup.hilly.dataSource.mapper.mongo.HillyDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
 import cn.edu.cup.hilly.dataSource.model.mongo.Pipe.Pipe;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigList;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -24,9 +27,13 @@ public class HillyPipeService {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public Pipe getById(String id) {
-        Hilly hilly = hillyDao.findById(id).get();
-        return hilly.getPipe();
+    public JSONObject getById(String id) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        BasicDBObject hilly = mongoTemplate.find(query, BasicDBObject.class, "hilly").get(0);
+        Object pipeOld = hilly.get("pipe");
+        String string = JSON.toJSONString(pipeOld);
+        JSONObject json = JSONObject.parseObject(string);
+        return json;
     }
 
     public long update(String id, Pipe pipe) {

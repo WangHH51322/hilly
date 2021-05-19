@@ -1,22 +1,15 @@
 package cn.edu.cup.hilly;
 
-import cn.edu.cup.base.CommonProvider;
-import cn.edu.cup.hilly.calculate.hilly.large.Project;
-import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.TempTest;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyLiquidService;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyProjectService;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyService;
-import cn.edu.cup.hilly.dataSource.model.mongo.DataMap;
-import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
 import cn.edu.cup.hilly.dataSource.model.mongo.project.HillyProject;
 import cn.edu.cup.hilly.dataSource.service.mongo.TempTestSer;
 //import cn.edu.cup.hilly.dataSource.service.mongo.TempTestService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Map;
 
 @SpringBootTest
 class HillyApplicationTests {
@@ -47,9 +40,9 @@ class HillyApplicationTests {
     @Test
     void test01() {
 //        Project project = new Project();
-        Hilly hilly = hillyService.getHillyById("60910cfadbe2e64305cbdf08");
-        MediumList mediumListById = hillyLiquidService.getMediumListById2("60910cfadbe2e64305cbdf08");
-        System.out.println("mediumListById:" + mediumListById);
+//        Hilly hilly = hillyService.getHillyById("60910cfadbe2e64305cbdf08");
+//        MediumList mediumListById = hillyLiquidService.getMediumListById2("60910cfadbe2e64305cbdf08");
+//        System.out.println("mediumListById:" + mediumListById);
 //        Map<String, Object> dataMap = DataMap.getDataMap(hilly);
 
 //

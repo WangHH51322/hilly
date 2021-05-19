@@ -2,9 +2,15 @@ package cn.edu.cup.hilly.dataSource.service.mongo;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.HillyDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
+import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.Medium;
+import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumId;
+import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.Pig;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigId;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigList;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -26,80 +32,132 @@ public class HillyPigService {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public PigList getAll(String id) {
-        Hilly hilly = hillyDao.findById(id).get();
-        return hilly.getPigList();
+    /**
+     * 快速返回一个未经转换的对象
+     * @param id
+     * @return
+     */
+    public JSONObject getAll(String id) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        BasicDBObject hilly = mongoTemplate.find(query, BasicDBObject.class, "hilly").get(0);
+        Object pigListOld = hilly.get("pigList");
+        String string = JSON.toJSONString(pigListOld);
+        JSONObject json = JSONObject.parseObject(string);
+        return json;
     }
 
-    public Pig getById(String hid, String id) {
-        PigList pigList = getAll(hid);
-        List<Pig> pigs = pigList.getValue();
-        for (Pig pig : pigs) {
-            String value = pig.getPigId().getValue();
-            if (value.equals(id)) {
+    /**
+     * 返回一个经过转换的List<Pig>
+     * @param id
+     * @return
+     */
+    public List<Pig> getPigList(String id) {
+        JSONObject json = getAll(id);
+        Object pigs = json.get("value");
+        String pigsString = JSON.toJSONString(pigs);
+        List<Pig> pigsList = JSONObject.parseArray(pigsString,Pig.class);
+        return pigsList;
+    }
+
+    /**
+     * 根据项目id和流体id,获取 medium
+     * @param hid
+     * @param pid
+     * @return
+     */
+    public Pig getById(String hid, String pid) {
+        List<Pig> list = getPigList(hid);
+        for (Pig pig : list) {
+            if (pig.getPigId().getValue().equals(pid)){
                 return pig;
             }
         }
         return null;
     }
 
-    public long insert(String id, Pig pig) {
-        /**
-         * 首先将新的pig添加到pigList中
-         */
-        PigList pigList = getAll(id);
-        List<Pig> pigs = pigList.getValue();
+    /**
+     * 插入一个流体参数
+     * @param hid
+     * @param pig
+     * @return
+     */
+    public long insert(String hid, Pig pig) {
         pig.setPigId(new PigId());
-        pigs.add(pig);
-        pigList.setValue(pigs);
+        List<Pig> list = getPigList(hid);
+        list.add(pig);
+        PigList pigList = new PigList();
+        pigList.setValue(list);
         /**
-         * 再更新整个hilly中的pigList
+         * 再更新整个hilly中的MediumList
          */
-        return extracted(id, pigList);
-    }
-
-    public long update(String id, Pig pig) {
-        /**
-         * 首先删除对应id的pig
-         */
-        String pigId = pig.getPigId().getValue();
-        delete(id,pigId);
-        /**
-         * 然后将新的pig添加进去
-         */
-        return insert(id,pig);
-    }
-
-    public long delete(String hid, String id) {
-        /**
-         * 首先将新的pig从pigList删除
-         */
-        PigList pigList = getAll(hid);
-        List<Pig> pigs = pigList.getValue();
-        for (Pig pig : pigs) {
-            String pigId = pig.getPigId().getValue();
-            if (pigId.equals(id)) {
-                pigs.remove(pig);
-                break;
-            }
-        }
-        pigList.setValue(pigs);
-        /**
-         * 再更新整个hilly中的pigList
-         */
-        return extracted(hid, pigList);
+        Query query = new Query(Criteria.where("_id").is(hid));
+        Update update = new Update();
+        update.set("pigList",pigList);
+        UpdateResult updateFirst = mongoTemplate.updateFirst(query, update, Hilly.class, "hilly");
+        return updateFirst.getModifiedCount();
     }
 
     /**
-     * 抽离部分代码
-     * @param id
-     * @param pigList
+     * 更新一条流体数据
+     * @param hid
+     * @param pig
      * @return
      */
-    private long extracted(String id, PigList pigList) {
-        Query query = new Query(Criteria.where("_id").is(id));
+    public long update(String hid, Pig pig) {
+        String id = pig.getPigId().getValue();
+        /**
+         * 首先删除pig
+         */
+        List<Pig> values = getPigList(hid);
+        for (Pig value : values) {
+            String s = value.getPigId().getValue();
+            if (s.equals(id)) {
+                values.remove(value);
+                break;
+            }
+        }
+        /**
+         * 然后将更新后的medium添加进去
+         */
+        values.add(pig);
+        PigList pigList = new PigList();
+        pigList.setValue(values);
+        /**
+         * 再更新整个hilly中的MediumList
+         */
+        Query query = new Query(Criteria.where("_id").is(hid));
         Update update = new Update();
-        update.set("pigList", pigList);
+        update.set("pigList",pigList);
+        UpdateResult updateFirst = mongoTemplate.updateFirst(query, update, Hilly.class, "hilly");
+        return updateFirst.getModifiedCount();
+    }
+
+    /**
+     * 删除一个流体参数数据
+     * @param hid
+     * @param id
+     * @return
+     */
+    public long delete(String hid, String id) {
+        /**
+         * 首先获取到需要删除的medium
+         */
+        List<Pig> value = getPigList(hid);
+        for (Pig pig : value) {
+            String s = pig.getPigId().getValue();
+            if (s.equals(id)) {
+                value.remove(pig);
+                break;
+            }
+        }
+        PigList pigList = new PigList();
+        pigList.setValue(value);
+        /**
+         * 再更新整个hilly中的MediumList
+         */
+        Query query = new Query(Criteria.where("_id").is(hid));
+        Update update = new Update();
+        update.set("pigList",pigList);
         UpdateResult updateFirst = mongoTemplate.updateFirst(query, update, Hilly.class, "hilly");
         return updateFirst.getModifiedCount();
     }

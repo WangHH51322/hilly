@@ -23,30 +23,9 @@ public class HillyLiquidController {
      * @return MediumList
      */
     @GetMapping("/getAll")
-    public RespBean getMediumListById(@RequestParam("id") String id) {
-        try {
-            JSONObject mediumList = hillyLiquidService.getMediumListObjById(id);
-//            List<MediumList> mediumList = hillyLiquidService.getMediumListByIdNewAll(id);
-            return RespBean.ok("流体介质列表查询成功!",mediumList);
-        } catch (Exception e) {
-            return RespBean.error("查询失败",e.getClass().getName());
-        }
-    }
-
-    @GetMapping("/getList")
     public RespBean getMediumList(@RequestParam("id") String id) {
         try {
-            List<Medium> mediumList = hillyLiquidService.getMediumList(id);
-            return RespBean.ok("流体介质列表查询成功!",mediumList);
-        } catch (Exception e) {
-            return RespBean.error("查询失败",e.getClass().getName());
-        }
-    }
-
-    @GetMapping("/getList2")
-    public RespBean getMediumList2(@RequestParam("id") String id) {
-        try {
-            MediumList mediumList = hillyLiquidService.getMediumListById2(id);
+            JSONObject mediumList = hillyLiquidService.getMediumListObjById(id);
             return RespBean.ok("流体介质列表查询成功!",mediumList);
         } catch (Exception e) {
             return RespBean.error("查询失败",e.getClass().getName());
@@ -60,10 +39,9 @@ public class HillyLiquidController {
      * @return Medium
      */
     @GetMapping("/getById")
-    public RespBean getMediumById(@RequestParam("hid") String hid, @RequestParam("id") String id) {
+    public RespBean getMedium(@RequestParam("hid") String hid, @RequestParam("id") String id) {
         try {
-//            Medium mediumById = hillyLiquidService.getMediumById(hid, id);
-            Medium mediumById = hillyLiquidService.getMediumByIdNew(hid, id);
+            Medium mediumById = hillyLiquidService.getMediumById(hid, id);
             if (mediumById != null) {
                 return RespBean.ok("流体介质查询成功",mediumById);
             }
@@ -74,28 +52,16 @@ public class HillyLiquidController {
 
     }
 
-    @PostMapping("/add")
-    public RespBean add (@RequestParam("id") String id) {
-        try {
-            MediumList mediumList = hillyLiquidService.add(id);
-            return RespBean.ok("新建成功",mediumList);
-        } catch (Exception e) {
-            return RespBean.error("新建出错",e.getClass().getName());
-        }
-    }
-
-
     /**
      * 根据项目计算数据id添加单一流体介质
-     * @param hid
+     * @param id
      * @param medium
      * @return
      */
     @PostMapping("/insert")
-    public RespBean insert(@RequestParam("hid") String hid, @RequestBody Medium medium) {
+    public RespBean insert(@RequestParam("id") String id, @RequestBody Medium medium) {
         try {
-//            long modified = hillyLiquidService.insert(hid, medium);
-            long modified = hillyLiquidService.insertNew(hid, medium);
+            long modified = hillyLiquidService.insert(id, medium);
             if (modified == 1) {
                 return RespBean.ok("流体介质添加成功");
             }
@@ -107,14 +73,14 @@ public class HillyLiquidController {
 
     /**
      * 根据项目计算数据id修改单一流体介质
-     * @param hid
+     * @param id
      * @param medium
      * @return
      */
     @PutMapping("/update")
-    public RespBean update(@RequestParam("hid") String hid, @RequestBody Medium medium) {
+    public RespBean update(@RequestParam("id") String id, @RequestBody Medium medium) {
         try {
-            long update = hillyLiquidService.update(hid, medium);
+            long update = hillyLiquidService.update(id, medium);
             if (update == 1) {
                 return RespBean.ok("流体介质更新成功");
             }

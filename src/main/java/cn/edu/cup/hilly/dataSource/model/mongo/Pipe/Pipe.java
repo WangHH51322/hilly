@@ -19,6 +19,7 @@ public class Pipe {
 //    private PipeSiteLocation pipeSiteLocation;
 //    private PipeStartAltitude pipeStartAltitude;
     private PipeThickness pipeThickness;
+    private PipeMaxPressure pipeMaxPressure;
 
     public Pipe() {
 //        this.pipeStartMileage = new PipeStartMileage();
@@ -30,5 +31,6 @@ public class Pipe {
 //        this.pipeSiteLocation = new PipeSiteLocation();
 //        this.pipeStartAltitude = new PipeStartAltitude();
         this.pipeThickness = new PipeThickness();
+        this.pipeMaxPressure = new PipeMaxPressure();
     }
 }

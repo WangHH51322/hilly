@@ -20,6 +20,6 @@ public class ValveList {
         this.name = "阀门列表";
         this.unit = "";
         this.value = new ArrayList<>();
-        value.add(new Valve());
+//        value.add(new Valve());
     }
 }

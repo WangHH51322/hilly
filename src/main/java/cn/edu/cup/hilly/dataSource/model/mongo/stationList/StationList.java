@@ -20,6 +20,6 @@ public class StationList {
         this.name = "站点列表";
         this.unit = "";
         this.value = new ArrayList<>();
-        value.add(new Station());
+//        value.add(new Station());
     }
 }

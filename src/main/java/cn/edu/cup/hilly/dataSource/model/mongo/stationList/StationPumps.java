@@ -17,8 +17,12 @@ public class StationPumps extends PumpList {
     @Id
     private String _id;
 
-    @Indexed(unique = true)
+    @Indexed
     private String hillyId;
+
+    @Indexed
+    private String stationId;
+
     public StationPumps() {
         super();
         this.setName("站内离心泵列表");

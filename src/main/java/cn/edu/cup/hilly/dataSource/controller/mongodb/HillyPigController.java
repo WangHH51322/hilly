@@ -4,6 +4,7 @@ import cn.edu.cup.hilly.dataSource.model.mongo.pigList.Pig;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigList;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyPigService;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class HillyPigController {
     @GetMapping("/getAll")
     public RespBean getAll(@RequestParam("id") String id) {
         try {
-            PigList pigList = pigService.getAll(id);
+            JSONObject pigList = pigService.getAll(id);
             return RespBean.ok("查询成功",pigList);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getClass().getName());

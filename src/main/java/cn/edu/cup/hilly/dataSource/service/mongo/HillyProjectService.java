@@ -3,6 +3,7 @@ package cn.edu.cup.hilly.dataSource.service.mongo;
 import cn.edu.cup.hilly.dataSource.mapper.mongo.HillyProjectDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
 import cn.edu.cup.hilly.dataSource.model.mongo.project.HillyProject;
+import cn.edu.cup.hilly.dataSource.model.mongo.stationList.StationPumps;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class HillyProjectService {
 
     @Autowired
     HillyProjectDao hillyProjectDao;
+    @Autowired
+    HillyStationService hillyStationService;
     @Autowired
     HillyService hillyService;
     @Autowired

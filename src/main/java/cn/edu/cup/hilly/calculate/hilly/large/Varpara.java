@@ -79,6 +79,18 @@ public class Varpara {
     double[] MGk;      //下坡段的气体质量，，??排气后
     double[] Dengk;      //下坡段的气体密度
 
+
+    double[] Qh1k;    //下坡段初始液位高度
+    double[] Qh2k;    //上坡段初始液位高度
+    double[] QPgk;    //初始气相压力，大气压
+    double[] QHgk;         //初始截面含气率
+    double[] Quk;          //水头在上坡段的前进速度
+    double[] Qlgk;         //初始气段长度，即下坡段长度
+    double[] QdMg_in;     //本段净流入气体质量
+    double[] QdMg_out;    //净流出气体质量
+    double[] QMGk;      //下坡段的气体质量，，??排气后
+    double[] QDengk;      //下坡段的气体密度
+
     double[][] slopeD;      //下坡段高程里程比的绝对值
     double[][] line_l;      //沿线里程，接收一维里程数组转化为三点式里程
     double[][] line_d;      ///沿线高程，接收一维高程数组转化为三点式高程
@@ -101,6 +113,9 @@ public class Varpara {
 
     double[] f_i;         //相间摩阻系数
     double[] f_l;         //液壁摩阻系数
+
+    double[][] dMg_p;         //排气参数存储
+    double[][] maxThree;         //最长的三个积气段数据存储
 
     double[] Hf_f;         //各段的分层流的摩阻水力损失
     double[] Hf_j;          //各段的局部摩阻损失
@@ -128,16 +143,18 @@ public class Varpara {
 
     double[] l0;         //积气段尾部长度
     int[] flag00;        //水力排气结束的标志
+    int[] flag01;        //清管器导致水力紊乱的标志
 
     int num;        //
     int pigNum = 0;        //清管器计数
     int pigflag = 0;        //清管器1标记
+    int pigflag1 = 0;        //清管器1标记
     int flag0;        //
     double ipj;        //
 
     int startPumpFlag=0;        //启泵的标志
     int stopPumpFlag=0;        //停泵的标志
-    int startPumpFlag1=0;        //调整变频泵的标志
+    int []startPumpFlag1;        //调整变频泵的标志
     double PumpRev=0.4;        //调整变频泵的标志,起始变频泵转速
     double [][]a;
     double []Hss;
@@ -177,6 +194,11 @@ public class Varpara {
         this.kt = (int) Math.rint(T* 3600 / deltaT);            //模拟总时步的计算
 
         this.pigV = new double[getK()];
+        this.dMg_p = new double[5][getK()+1];
+        this.maxThree = new double[3][2];
+        this.flag01 = new int[getI()];
+
+
         this.pigL = new double[getK()];
         this.pigZ = new double[getK()];
         this.allLine = new double[5][getK()];
@@ -231,6 +253,19 @@ public class Varpara {
         this.dMg_out = new double[i];    //净流出气体质量
         this.MGk = new double[i];      //下坡段的气体质量，，??排气后
         this.Dengk = new double[i];      //下坡段的气体质量，，??排气后
+
+        this.Qh1k = new double[i];    //下坡段初始液位高度
+        this.Qh2k = new double[i];    //上坡段初始液位高度
+        this.QPgk = new double[i];    //初始气相压力，大气压
+        this.QHgk = new double[i];         //初始截面含气率
+        this.Quk = new double[i];          //水头在上坡段的前进速度
+        this.Qlgk = new double[i];         //初始气段长度，即下坡段长度
+        this.QdMg_in = new double[i];     //本段净流入气体质量
+        this.QdMg_out = new double[i];    //净流出气体质量
+        this.QMGk = new double[i];      //下坡段的气体质量，，??排气后
+        this.QDengk = new double[i];      //下坡段的气体质量，，??排气后
+
+
         this.slopeD = new double[i][1];      //下坡段的气体质量，，??排气后
         this.line_l = new double[i][4];      //里程
         this.line_d = new double[i][4];      //高程
@@ -248,6 +283,7 @@ public class Varpara {
         this.startPressure = new double[k];          //起点压头，随水头位置变化而变化
         this.flowPressure = new double[k][1];          //全过程，全地形的动压
         this.ssr = new int[i][2];
+        this.startPumpFlag1 = new int[100];
 
         this.backPressure = new double[i + 1]; //各管段的背压
         this.pre_back = new double[i + 1];     //破碎前的背压

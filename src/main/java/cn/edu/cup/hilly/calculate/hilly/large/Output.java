@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Output {
 
-    private static final String OUT_PUT_PATH = "C:\\Users\\WangHH\\Desktop\\output";
+    private static final String OUT_PUT_PATH = "C:\\Users\\WangHH\\Desktop\\TempFile\\DaLuoCha\\output\\008";
 
     public static void OutToTXT(double[] arr,String fileName) throws IOException {
         File file=new File(OUT_PUT_PATH);
@@ -99,6 +99,33 @@ public class Output {
                 out1.write(arr[zz][yy] + "\t");
             }
             yy=yy+11;
+            out1.write("\n");
+        }
+        out1.close();
+    }
+
+    public static void OutToTXT123(double[][] arr,String fileName) throws IOException {
+        File file=new File(OUT_PUT_PATH);
+        if(!file.exists()){//如果文件夹不存在
+            file.mkdir();//创建文件夹
+        }
+
+        File file2 = new File(OUT_PUT_PATH+"\\"+ fileName +".txt"); //lg
+        FileWriter out1 = new FileWriter(file2);        //文件写入流
+        for(int zz=0;zz<arr.length;zz++) {
+            if (zz == 0){
+                out1.write("时刻\t");
+            }else{
+                out1.write("第"+ zz + "个参数\t");
+            }
+        }
+        out1.write("\n");
+        for(int yy=0;yy<arr[0].length;yy++){    //////////////////////////////与原始不同         0124
+            //out1.write(  yy+ "\t");
+            out1.write(  yy*10/1.7+ "\t");/////////*10或*5
+            for(int zz=1;zz<arr.length;zz++) {
+                out1.write(arr[zz][yy] + "\t");
+            }
             out1.write("\n");
         }
         out1.close();
