@@ -34,6 +34,7 @@ public class RabbitmqConfig {
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
         connectionFactory.setHost("192.168.136.128");
+//        connectionFactory.setHost("hillyrabbit");
 //        connectionFactory.setPort(5762);
         /*channel缓存的大小*/
         connectionFactory.setChannelCacheSize(200);
@@ -149,7 +150,7 @@ public class RabbitmqConfig {
      */
     @Bean
     DirectExchange directExchange() {
-        return new DirectExchange("exchange_test");
+        return new DirectExchange("exchange_test3");
     }
 
     /**
@@ -158,8 +159,8 @@ public class RabbitmqConfig {
     @Bean
     public Object declareDirectQueue() {
         List<String> receiveQueueNames = new ArrayList<>();
-        String receive = "queue_pushmsg";
-        declare(receive, directExchange(), "rk_recivemsg");
+        String receive = "queue_pushmsg3";
+        declare(receive, directExchange(), "rk_recivemsg3");
         receiveQueueNames.add(receive);
         newListenerContainer(new ReceivePushMsgListener(), receiveQueueNames.toArray(new String[receiveQueueNames.size()]));
         return null;

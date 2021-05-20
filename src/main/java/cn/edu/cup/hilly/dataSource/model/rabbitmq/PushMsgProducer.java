@@ -43,7 +43,7 @@ public class PushMsgProducer implements RabbitTemplate.ConfirmCallback, RabbitTe
      */
     public void send(WiselyMessage messageVo) throws IOException {
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
-        rabbitTemplate.convertAndSend("exchange_test", messageVo.getRoutingKey(), messageVo, correlationId);
+        rabbitTemplate.convertAndSend("exchange_test3", messageVo.getRoutingKey(), messageVo, correlationId);
     }
 }
 

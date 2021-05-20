@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -55,6 +56,25 @@ public class ThreadController {
 //        DataMap dataMap = new DataMap();
         Map<String, Object> stringObjectMap = dataMap.convertDataMap(id);
         return RespBean.ok("转换成功",stringObjectMap);
+    }
+
+    @GetMapping("/test/rabbit")
+    public void rabbitTest() throws IOException {
+        WiselyMessage msg = new WiselyMessage();
+        int i = 5;
+        while (i > 0) {
+            i --;
+            try {
+                Thread.sleep(1 * 1000); //设置暂停的时间 1 秒
+                    msg.setName("hello");
+                    msg.setRoutingKey("rk_pushmsg3");
+                    msg.setMsg("这是一条来自后端的消息");
+                    System.out.println("save data");
+                } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            sender.send(msg);
+        }
     }
 
     /**
@@ -140,7 +160,7 @@ public class ThreadController {
                         resultDPL.setDPLMap(dpl);
                         resultDPLService.updateMap(resultDPL);
                         msg.setName("hello");
-                        msg.setRoutingKey("rk_pushmsg");
+                        msg.setRoutingKey("rk_pushmsg3");
                         msg.setMsg("这是一条来自后端的消息");
                         msg.setObject(resultDPL);
                         System.out.println("save data");
