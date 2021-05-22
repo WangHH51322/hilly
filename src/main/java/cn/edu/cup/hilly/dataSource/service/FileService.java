@@ -21,11 +21,12 @@ public class FileService {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public ExcelFile save(double[][] data, String hillyId,Integer inum) {
+    public ExcelFile save(double[][] data, String hillyId,Integer inum, double[][] terrainData) {
         ExcelFile excelFile = new ExcelFile();
         excelFile.setHillyId(hillyId);
         excelFile.setLz(data);
         excelFile.setInum(inum);
+        excelFile.setTerrainData(terrainData);
         ExcelFile save = mongoTemplate.save(excelFile, "file");
         return save;
     }
@@ -34,5 +35,11 @@ public class FileService {
         Query query = new Query(Criteria.where("hillyId").is(id));
         ExcelFile file = mongoTemplate.findOne(query, ExcelFile.class, "file");
         return file;
+    }
+
+    public double[][] findTerrainData(String id) {
+        ExcelFile excelFile = find(id);
+        double[][] terrainData = excelFile.getTerrainData();
+        return terrainData;
     }
 }

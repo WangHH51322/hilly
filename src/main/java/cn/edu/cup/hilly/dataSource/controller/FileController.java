@@ -25,8 +25,17 @@ public class FileController {
 
     @Autowired
     FileService fileService;
-
     SimpleDateFormat sdf = new SimpleDateFormat("/yyyy/MM/dd/");
+
+    @GetMapping("/terrainData")
+    public RespBean getTerrainData(@RequestParam("id") String id) {
+        try {
+            double[][] terrainData = fileService.findTerrainData(id);
+            return RespBean.ok("查询成功",terrainData);
+        } catch (Exception e) {
+            return RespBean.error("查询失败",e.getMessage());
+        }
+    }
 
     @PostMapping("/upload")
     @ResponseBody
@@ -52,9 +61,11 @@ public class FileController {
 //            String url = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + format + newName;
 //            return url;
             //数据转换
-            double[][] locations = ExcelData.Graphic(fileAfter, "location");
+            ExcelData excelData = new ExcelData();
+            double[][] locations = excelData.Graphic(fileAfter, "location");
+            double[][] terrainData = excelData.getTerrainData();
             int inum = ExcelData.inum;
-            ExcelFile file1 = fileService.save(locations, id, inum);
+            ExcelFile file1 = fileService.save(locations, id, inum, terrainData);
             return RespBean.ok("上传成功",file1);
         } catch (IOException e) {
             e.printStackTrace();

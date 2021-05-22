@@ -11,6 +11,10 @@ import java.io.*;
 public class ExcelData {
     private XSSFSheet sheet;
     public static int inum;
+    private double[][] terrainData;
+
+    public ExcelData() {
+    }
 
     /**
      * 构造函数，初始化excel数据
@@ -536,9 +540,9 @@ public class ExcelData {
         return lz;
     }
 
-    public static double[][] Graphic(File file, String sheetName) {
+    public double[][] Graphic(File file, String sheetName) {
         ExcelData sheet1 = new ExcelData(file, sheetName);
-//创建储存里程高程数据的数组
+        //创建储存里程高程数据的数组
         double[][] lll = new double[sheet1.sheet.getPhysicalNumberOfRows()][2];
         double[] l = new double[sheet1.sheet.getPhysicalNumberOfRows()];
         double[] z = new double[sheet1.sheet.getPhysicalNumberOfRows()];
@@ -549,15 +553,8 @@ public class ExcelData {
         for (int i = 0; i < lll.length; i++) {
             l[i] = lll[i][0];
             z[i] = lll[i][1];
-            //System.out.println("l="+l[i]);
-            //System.out.println("z="+z[i]);
         }
 
-
-        //地形数据处理，按1km一段输出
-//        if (l[l.length - 1]%1==0 && l[0]%1==0) {
-//            l[l.length - 1]=l[l.length - 1]-1;
-//        }
         double[] l_st = new double[((int) l[l.length - 1] - (int) l[0]) + 2];   //*****当原始地形首末点为整数时，l_st倒数第二个数空值
         double[] z_st = new double[((int) l[l.length - 1] - (int) l[0]) + 2];   //*****当原始地形首末点为整数时，z_st倒数第二个数空值
         double[] j_st = new double[((int) l[l.length - 1] - (int) l[0]) + 2];   //坡度，当前点与前一点的
@@ -565,9 +562,7 @@ public class ExcelData {
         double[][] lll_st = new double[((int) l[l.length - 1] - (int) l[0]) + 2][2];   //*****当原始地形首末点为整数时，z_st倒数第二个数空值
         double[][] lll_new = new double[((int) l[l.length - 1] - (int) l[0]) * 20][4];   //*****初次简化，剔除千分之五坡度的段
         double[][] lll_new1 = new double[((int) l[l.length - 1] - (int) l[0]) + 5][4];   //*****二次简化
-//        if (l[l.length - 1]%1==0 && l[0]%1==0) {
-//            l[l.length - 1]=l[l.length - 1]+1;
-//        }
+
         l_st[0] = l[0];
         z_st[0] = z[0];
         if ((int) l[l.length - 1] - l[l.length - 1] != 0.0) {      //末点不是整数
@@ -578,8 +573,6 @@ public class ExcelData {
             z_st[(int) (l[l.length - 1] - l[0])] = z[z.length - 1];
         }
 
-
-        //}
         if (l[l.length - 1] - l[0] > 0) {
             for (int i = (int) l[0] + 1; i < l[l.length - 1] - l[0]; i++) {
                 l_st[i] = i;
@@ -607,24 +600,31 @@ public class ExcelData {
                     z_st[k] = z_st[k - 1] + (z[i] - z[i - 1]) / (l[i] - l[i - 1]);
                     k++;
                 }
-
                 //给空点赋值
                 if (z_st[k] == 0) {
                     z_st[k] = z_st[k - 1] + (z[i] - z[i - 1]) / (l[i] - l[i - 1]);
                 }
             }
-
-
         }
 
 
         for (int kkk = 0; kkk < z_st.length; kkk++) {
-            //System.out.println(l_st[kkk]);
-            //System.out.println(z_st[kkk]);
             lll_st[kkk][0] = l_st[kkk];
             lll_st[kkk][1] = z_st[kkk];
-
         }
+        double[][] data = new double[lll_st.length][2];
+        for (int i = 0; i < lll_st.length; i++) {
+            data[i][0] = lll_st[i][0];
+            System.out.print("data[i][0] = " + data[i][0] + " ");
+            data[i][1] = lll_st[i][1];
+            System.out.print("data[i][1] = " + data[i][1]);
+            System.out.println();
+        }
+        /**
+         * 存储地形数据
+         */
+        setTerrainData(data);
+
         for (int kkk = 1; kkk < z_st.length; kkk++) {//计算坡度
             j_st[kkk] = (z_st[kkk] - z_st[kkk - 1]) / (l_st[kkk] - l_st[kkk - 1]);
         }
@@ -637,9 +637,6 @@ public class ExcelData {
         lll_new[0][1] = z_st[0];
         int num = 1;
         for (int kkk = 1; kkk < z_st.length; kkk++) {//初次简化，剔除千分之五坡度的段
-//            if (z_st[kkk]<0){
-//                z_st[kkk]=z_st[kkk-1];
-//            }
             if ((j_st[kkk] > 5 || j_st[kkk] < -5)) {
                 lll_new[num][0] = l_st[kkk];//里程
                 lll_new[num][1] = z_st[kkk];//高程
@@ -649,8 +646,6 @@ public class ExcelData {
                 lll_new[num][1] = z_st[kkk];//高程
                 num++;
             }
-
-
         }
         for (int kkk = 1; kkk < lll_new.length; kkk++) {//求新简化的地形的坡度
             if (lll_new[kkk][0] != 0 && lll_new[kkk][1] != 0) {
@@ -675,8 +670,6 @@ public class ExcelData {
                 lll_new1[num1][1] = lll_new[kkk - 1][1];//高程保留
             }
         } while (lll_new[kkk][0] != 0 && lll_new[kkk][1] != 0);
-        //lll_new1[num1 + 1][0] = lll_new[kkk-1][0];//末点里程保留
-        //lll_new1[num1 + 1][1] = lll_new[kkk-1][1];//末点高程保留
 
         double[][] lj = new double[lll_new1.length][lll_new1[0].length];
         for (int ui = 0; ui < lll_new1.length; ui++) {
@@ -728,9 +721,6 @@ public class ExcelData {
         double[][] ll = new double[(inum) / 2 + 1][4];
         double[][] zz = new double[(inum) / 2 + 1][4];
         double[][] lz = new double[(inum) / 2 + 1][8];
-//        double[][] ll = new double[inum+1][4];
-//        double[][] zz = new double[inum+1][4];
-//        double[][] lz = new double[inum+1][8];
 
         ll[1][1] = lll_new1[0][0];
         zz[1][1] = lll_new1[0][1];
