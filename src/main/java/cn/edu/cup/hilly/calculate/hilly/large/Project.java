@@ -5,6 +5,9 @@ import cn.edu.cup.base.IOElement;
 import cn.edu.cup.base.InputField;
 import cn.edu.cup.hilly.dataSource.utils.SizeChange;
 import com.alibaba.fastjson.JSON;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -15,6 +18,9 @@ import java.util.Map;
 
 import static java.lang.Math.*;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @IOElement(name = "hillyProject")
 public class Project extends Thread implements Serializable {
 
@@ -57,12 +63,12 @@ public class Project extends Thread implements Serializable {
     /**
      * allLineFP
      */
-    private Map<Integer, double[]> aLineFP;
+    private Map<Integer, double[]> allLineFP;
     public Map<Integer, double[]> getALineFP() {
-        return aLineFP;
+        return allLineFP;
     }
     public void setALineFP(Map<Integer, double[]> aLineFP) {
-        this.aLineFP = aLineFP;
+        this.allLineFP = aLineFP;
     }
     /**
      * lg_his
@@ -174,6 +180,39 @@ public class Project extends Thread implements Serializable {
         }
     }
 
+    /**
+     * 三点式地形
+     */
+    private double [][] lz;
+    public double[][] getLz() {
+        return lz;
+    }
+    public void setLz(double[][] lz) {
+        this.lz = lz;
+    }
+
+    /**
+     * 差值inum
+     */
+    private Integer inum;
+    public Integer getInum() {
+        return inum;
+    }
+    public void setInum(Integer inum) {
+        this.inum = inum;
+    }
+
+    /**
+     * U型管段里程
+     */
+    private double[] ULocation;
+    public double[] getULocation() {
+        return ULocation;
+    }
+    public void setULocation(double[] ULocation) {
+        this.ULocation = ULocation;
+    }
+
     @SneakyThrows
     public void run() {
         conPara.Ql = varPara.Qh/3600.0;
@@ -184,8 +223,15 @@ public class Project extends Thread implements Serializable {
         double A=Math.PI*D*D/4.0;
         double J=0.0246*Math.pow(conPara.Ql,1.75)*Math.pow(1.006e-6,0.25)/Math.pow(D,4.75);
         double F = A*oils.get(0).getDensity()*conPara.g*J;
-        double [][] lz;
-        lz = ExcelData.Graphic();       //运用地形简化程序得到的三点式地形
+//        double [][] lz;
+//        lz = ExcelData.Graphic();       //运用地形简化程序得到的三点式地形
+        System.out.println("lz : ");
+        for (int i = 0; i < lz.length; i++) {
+            System.out.println();
+            for (int i1 = 0; i1 < lz[i].length; i1++) {
+                System.out.print(lz[i][i1] + " ");
+            }
+        }
         //varPara.i= 33;
         varPara.stationListZ.add(0);
         varPara.stationListL.add(0);
@@ -218,15 +264,17 @@ public class Project extends Thread implements Serializable {
         double Ha,Hb,his_h2k;
         //加入固定地形点位
 
-        for (num2 = 1; num2 < ExcelData.inum/2+1; num2++) {     //原管道地形的所有管段
+        for (num2 = 1; num2 < inum/2+1; num2++) {     //原管道地形的所有管段
             for (int b=0;b<4;b++){
                 varPara.line_lll[num2][b] = lz[num2][b];
+//                System.out.println("lz[num2][b]");
+//                System.out.print(lz[num2][b] + " ");
                 varPara.line_ddd[num2][b] = lz[num2][b+4];
             }
         }
         for (int num=1;num<=varPara.stationListZ.size()-1;num++) {      //插入点数量    、、、、、、、、、、、、插入点限制，两点间距不小于10km
 
-            for (num0 = num1-1; num0 < ExcelData.inum/2+1; num0++) {     //原管道地形的所有管段
+            for (num0 = num1-1; num0 < inum/2+1; num0++) {     //原管道地形的所有管段
                 if (lz[num0][1] < (double)varPara.stationListL.get(num) && lz[num0][2] > (double)varPara.stationListL.get(num)) {//插入点在下坡段
                     num0=num0+num-1;
                     varPara.line_lll[num0][1] = lz[num0-num+1][1];
@@ -253,9 +301,9 @@ public class Project extends Thread implements Serializable {
                     varPara.line_ddd[num0 + 1][2] = lz[num0-num+1][6];
                     varPara.line_ddd[num0 + 1][3] = lz[num0-num+1][7];
                     num1=num0;
-                    for (num2 = num0+2; num2 < ExcelData.inum/2+1; num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
+                    for (num2 = num0+2; num2 < inum/2+1; num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
                         for (int b=0;b<4;b++){
-                            if (num2-num<ExcelData.inum/2+1){
+                            if (num2-num<inum/2+1){
                                 varPara.line_lll[num2][b] = lz[num2-num][b];
                                 varPara.line_ddd[num2][b] = lz[num2-num][b+4];
                             }
@@ -281,9 +329,9 @@ public class Project extends Thread implements Serializable {
                     varPara.line_ddd[num0 + 1][2] = (double)varPara.stationListZ.get(num) - 50;
                     varPara.line_ddd[num0 + 1][3] = lz[num0-num+1][7];
                     num1=num0;
-                    for (num2 = num0+2; num2 < (ExcelData.inum/2+(double)varPara.stationListZ.size()); num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
+                    for (num2 = num0+2; num2 < (inum/2+(double)varPara.stationListZ.size()); num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
                         for (int b=0;b<4;b++){
-                            if (num2-num<ExcelData.inum/2+1){
+                            if (num2-num<inum/2+1){
                                 varPara.line_lll[num2][b] = lz[num2-num][b];
                                 varPara.line_ddd[num2][b] = lz[num2-num][b+4];
                             }
@@ -308,8 +356,19 @@ public class Project extends Thread implements Serializable {
                 }
                 System.out.println();
             }
-
         }
+        /**
+         * 存储U型管段位置并返回前端
+         */
+        double[] line = new double[varPara.line_l.length - 1];
+        System.out.println("ULocation");
+        for (int j = 1; j < varPara.line_l.length; j++) {
+            line[j-1] = varPara.line_l[j][1];
+            System.out.print(line[j-1] + " ");
+        }
+        setULocation(line);
+
+
         System.out.println("varPara.line_d[1][1]="+varPara.line_d[1][1]);
         varPara.slopeD = calSlopeD(varPara.line_d, varPara.line_l);         //计算下坡角度
         varPara.slopeU = calSlopeU(varPara.line_d, varPara.line_l);         //计算上坡角度
@@ -640,17 +699,9 @@ public class Project extends Thread implements Serializable {
 
                         for (int rrr = 1; rrr <= n; rrr++) {
                             if (varPara.MGk[rrr] > 1.0 && varPara.pigL[varPara.pigNum] >= varPara.line_l[rrr][1] && varPara.pigL[varPara.pigNum] < varPara.line_l[rrr][2]) {//当积气段气体质量剩余，且清管器位于积气段10km内时
-                                //AddMg[rrr]=varPara.Dengk[rrr]*varPara.deltaT*(varPara.pigV[varPara.pigNum] - conPara.Ql/A)*varPara.Hgk[rrr]*A;       //添加清管器赶气的附加破碎质量流量
-                                //AddMg[rrr]=varPara.Dengk[rrr]*varPara.deltaT*(varPara.pigV[varPara.pigNum])*varPara.Hgk[rrr]*A;       //添加清管器赶气的附加破碎质量流量
                                 AddMg[rrr] = varPara.MGk[rrr] * (varPara.pigL[varPara.pigNum] - varPara.line_l[rrr][1]) / (varPara.line_l[rrr][2] - varPara.line_l[rrr][1]);       //添加清管器赶气的附加破碎质量流量
-
-                                //if (AddMg[rrr]>500)  AddMg[rrr]=500*(1+50.0/AddMg[rrr]);//////////////////20210518
-                                //if (varPara.flag01[rrr]==1)  AddMg[rrr]=0;
                             }
                             AddMg_his[rrr][varPara.num] = AddMg[rrr];
-                            //                        else if (varPara.pigL[varPara.pigNum]<varPara.line_l[rrr][1] && varPara.pigL[varPara.pigNum]>varPara.line_l[rrr][1]-10000){//当清管器路过后，清管器上游改为纯液相
-                            //
-                            //                        }
                         }
 
 
@@ -665,7 +716,7 @@ public class Project extends Thread implements Serializable {
                             SizeChange allLineFPChange = new SizeChange(varPara.allLineFP);
                             Map<Integer, double[]> allLineFPAfterChange = allLineFPChange.ResultAfterChange();
     //                        System.out.println("varPara.allLineFP: " + allLineFPAfterChange);
-                            setALineFP(allLineFPAfterChange);
+                            setAllLineFP(allLineFPAfterChange);
                         }
                     }
                 }

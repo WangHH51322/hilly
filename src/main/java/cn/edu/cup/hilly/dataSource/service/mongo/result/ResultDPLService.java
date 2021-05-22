@@ -36,4 +36,9 @@ public class ResultDPLService {
         Update update = Update.update("dPLMap",resultDPL.getDPLMap());
         mongoTemplate.upsert(query,update, ResultDPL.class,"resultDPL");
     }
+    public ResultDPL find(String id) {
+        Query query = Query.query(Criteria.where("_id").is(id));
+        ResultDPL resultDPL = mongoTemplate.findOne(query, ResultDPL.class, "resultDPL");
+        return resultDPL;
+    }
 }

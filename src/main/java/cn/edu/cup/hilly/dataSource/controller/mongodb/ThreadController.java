@@ -2,12 +2,14 @@ package cn.edu.cup.hilly.dataSource.controller.mongodb;
 
 import cn.edu.cup.base.CommonProvider;
 import cn.edu.cup.hilly.calculate.hilly.large.Project;
+import cn.edu.cup.hilly.dataSource.model.ExcelFile;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.*;
 //import cn.edu.cup.hilly.dataSource.model.rabbitmq.PushMsgProducer;
 //import cn.edu.cup.hilly.dataSource.model.rabbitmq.WiselyMessage;
 import cn.edu.cup.hilly.dataSource.model.mongo.stationList.StationPumps;
 import cn.edu.cup.hilly.dataSource.model.rabbitmq.PushMsgProducer;
 import cn.edu.cup.hilly.dataSource.model.rabbitmq.WiselyMessage;
+import cn.edu.cup.hilly.dataSource.service.FileService;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyService;
 import cn.edu.cup.hilly.dataSource.model.mongo.DataMap;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 @RestController
@@ -31,6 +34,8 @@ public class ThreadController {
 
     @Autowired
     HillyService hillyService;
+    @Autowired
+    ResultULService resultULService;
     @Autowired
     ResultDPLService resultDPLService;
     @Autowired
@@ -49,6 +54,8 @@ public class ThreadController {
     DataMap dataMap;
     @Autowired
     PushMsgProducer sender;
+    @Autowired
+    FileService fileService;
 
 
     @GetMapping("/test")
@@ -128,8 +135,20 @@ public class ThreadController {
     @GetMapping("/run2")
     public RespBean run2(@RequestParam("id") String id){
         WiselyMessage msg = new WiselyMessage();
+        ExcelFile excelFile = fileService.find(id);
+        double[][] lz = excelFile.getLz();  //三角式地形数据
+        Integer inum = excelFile.getInum();
+        System.out.println("lz : ");
+        for (int i = 0; i < lz.length; i++) {
+            System.out.println();
+            for (int i1 = 0; i1 < lz[i].length; i1++) {
+                System.out.print(lz[i][i1] + " ");
+            }
+        }
         try {
             Project project = new Project();
+            project.setLz(lz);
+            project.setInum(inum);
             Thread thread = new Thread(project);
             Map<String, Object> data = dataMap.convertDataMap(id);
             CommonProvider commonProvider = new CommonProvider();
@@ -140,6 +159,8 @@ public class ThreadController {
             /**
              * 数据存储,输出
              */
+            ResultULocation resultULocation = new ResultULocation();
+            resultULocation.setHillyId(id);
             ResultDPL resultDPL = new ResultDPL();
             resultDPL.set_id(id);
             ResultAllLineFP resultAllLineFP = new ResultAllLineFP();
@@ -156,17 +177,30 @@ public class ThreadController {
                 try {
                     Thread.sleep(1 * 1000); //设置暂停的时间 1 秒
                     if (!project.isLocked()) {
-                        Map<Integer, double[]> dpl = project.getDPL();
-                        resultDPL.setDPLMap(dpl);
-                        resultDPLService.updateMap(resultDPL);
+                        /**
+                         * 传输数据
+                         */
                         msg.setName("hello");
                         msg.setRoutingKey("rk_pushmsg3");
                         msg.setMsg("这是一条来自后端的消息");
+                        /**
+                         * U型管段地形数据
+                         */
+                        double[] uLocation = project.getULocation();
+//                        if (uLocation != null) {
+                        resultULocation.setULocation(uLocation);
+                        resultULService.updateMap(resultULocation);
+                        msg.setULocation(uLocation);
+//                        }
+
+                        Map<Integer, double[]> dpl = project.getDPL();
+                        resultDPL.setDPLMap(dpl);
+                        resultDPLService.updateMap(resultDPL);
                         msg.setObject(resultDPL);
                         System.out.println("save data");
 
                         Map<Integer, double[]> aLineFP = project.getALineFP();
-                        resultAllLineFP.setALineFPMap(aLineFP);
+                        resultAllLineFP.setAllLineFPMap(aLineFP);
                         resultALFPService.updateMap(resultAllLineFP);
 
                         Map<Integer, double[]> lgHis = project.getLgHis();

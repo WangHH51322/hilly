@@ -2,6 +2,7 @@ package cn.edu.cup.hilly.dataSource.service.mongo.result;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultDPLDao;
 import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultLgHisDao;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultAllLineFP;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultLgHis;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,4 +26,11 @@ public class ResultLgHisService {
         Update update = Update.update("lgHisMap",resultLgHis.getLgHisMap());
         mongoTemplate.upsert(query,update, ResultLgHis.class,"resultLgHis");
     }
+
+    public ResultLgHis find(String id) {
+        Query query = Query.query(Criteria.where("_id").is(id));
+        ResultLgHis resultLgHis = mongoTemplate.findOne(query, ResultLgHis.class,"resultLgHis");
+        return resultLgHis;
+    }
+
 }

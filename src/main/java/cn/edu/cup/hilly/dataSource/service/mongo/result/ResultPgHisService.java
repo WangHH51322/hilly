@@ -26,4 +26,10 @@ public class ResultPgHisService {
         Update update = Update.update("pgHisMap",resultPgHis.getPgHisMap());
         mongoTemplate.upsert(query,update, ResultPgHis.class,"resultPgHis");
     }
+    public ResultPgHis find(String id) {
+        Query query = Query.query(Criteria.where("_id").is(id));
+        ResultPgHis resultPgHis = mongoTemplate.findOne(query, ResultPgHis.class,"resultPgHis");
+        return resultPgHis;
+    }
+
 }

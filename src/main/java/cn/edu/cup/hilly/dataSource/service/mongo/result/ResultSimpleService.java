@@ -2,6 +2,7 @@ package cn.edu.cup.hilly.dataSource.service.mongo.result;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultDPLDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultMHis;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultSimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -44,5 +45,11 @@ public class ResultSimpleService {
         Query query = Query.query(Criteria.where("_id").is(id));
         Update update = Update.update("aLSP",resultSimple.getALSP());
         mongoTemplate.upsert(query,update, ResultSimple.class,"resultSimple");
+    }
+
+    public ResultSimple find(String id) {
+        Query query = Query.query(Criteria.where("_id").is(id));
+        ResultSimple resultSimple = mongoTemplate.findOne(query, ResultSimple.class, "resultSimple");
+        return resultSimple;
     }
 }
