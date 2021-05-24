@@ -53,51 +53,51 @@ public class Project extends Thread implements Serializable {
     /**
      * dpl
      */
-    private Map<Integer, double[]> dPL;
-    public Map<Integer, double[]> getDPL() {
+    private Map<Double, double[]> dPL;
+    public Map<Double, double[]> getDPL() {
         return dPL;
     }
-    public void setDPL(Map<Integer, double[]> dPL) {
+    public void setDPL(Map<Double, double[]> dPL) {
         this.dPL = dPL;
     }
     /**
      * allLineFP
      */
-    private Map<Integer, double[]> allLineFP;
-    public Map<Integer, double[]> getALineFP() {
+    private Map<Double, double[]> allLineFP;
+    public Map<Double, double[]> getALineFP() {
         return allLineFP;
     }
-    public void setALineFP(Map<Integer, double[]> aLineFP) {
+    public void setALineFP(Map<Double, double[]> aLineFP) {
         this.allLineFP = aLineFP;
     }
     /**
      * lg_his
      */
-    private Map<Integer, double[]> lgHis;
-    public Map<Integer, double[]> getLgHis() {
+    private Map<Double, double[]> lgHis;
+    public Map<Double, double[]> getLgHis() {
         return lgHis;
     }
-    public void setLgHis(Map<Integer, double[]> lgHis) {
+    public void setLgHis(Map<Double, double[]> lgHis) {
         this.lgHis = lgHis;
     }
     /**
      * m_his
      */
-    private Map<Integer, double[]> mHis;
-    public Map<Integer, double[]> getmHis() {
+    private Map<Double, double[]> mHis;
+    public Map<Double, double[]> getmHis() {
         return mHis;
     }
-    public void setmHis(Map<Integer, double[]> mHis) {
+    public void setmHis(Map<Double, double[]> mHis) {
         this.mHis = mHis;
     }
     /**
      * pg_his
      */
-    private Map<Integer, double[]> pgHis;
-    public Map<Integer, double[]> getPgHis() {
+    private Map<Double, double[]> pgHis;
+    public Map<Double, double[]> getPgHis() {
         return pgHis;
     }
-    public void setPgHis(Map<Integer, double[]> pgHis) {
+    public void setPgHis(Map<Double, double[]> pgHis) {
         this.pgHis = pgHis;
     }
 
@@ -107,6 +107,7 @@ public class Project extends Thread implements Serializable {
     private double[][] pigV;
     private double[][] pigL;
     private double[][] aLSP;
+    private double[][] dMgP;
     public double[][] getPigV() {
         return pigV;
     }
@@ -118,6 +119,12 @@ public class Project extends Thread implements Serializable {
     }
     public void setPigL(double[][] pigL) {
         this.pigL = pigL;
+    }
+    public double[][] getDMgP() {
+        return dMgP;
+    }
+    public void setDMgP(double[][] dMgP) {
+        this.dMgP = dMgP;
     }
     public double[][] getaLSP() {
         return aLSP;
@@ -342,7 +349,6 @@ public class Project extends Thread implements Serializable {
                 } else if (lz[num0][1] == (double)varPara.stationListL.get(num) || lz[num0][2] == (double)varPara.stationListL.get(num) || lz[num0][3] == (double)varPara.stationListL.get(num)) {//插入点与原点重合
                     System.out.println("里程高程插入异常！");
                 }
-
             }
         }
         for (int a=44;a< 68;a++){          ///////////全线
@@ -596,7 +602,7 @@ public class Project extends Thread implements Serializable {
                          * 存储dpl
                          */
                         SizeChange dPLChange = new SizeChange(varPara.dPL);
-                        Map<Integer, double[]> dPLAfterChange = dPLChange.ResultAfterChange();
+                        Map<Double, double[]> dPLAfterChange = dPLChange.ResultAfterChange(2,2.5);
 //                        System.out.println("varPara.dPL: " + dPLAfterChange);
                         setDPL(dPLAfterChange);
 
@@ -714,7 +720,7 @@ public class Project extends Thread implements Serializable {
                              * 存储allLineFP
                              */
                             SizeChange allLineFPChange = new SizeChange(varPara.allLineFP);
-                            Map<Integer, double[]> allLineFPAfterChange = allLineFPChange.ResultAfterChange();
+                            Map<Double, double[]> allLineFPAfterChange = allLineFPChange.ResultAfterChange(2,2.5);
     //                        System.out.println("varPara.allLineFP: " + allLineFPAfterChange);
                             setAllLineFP(allLineFPAfterChange);
                         }
@@ -747,29 +753,49 @@ public class Project extends Thread implements Serializable {
          * 循环结束,存储lg_his pg_his mg_his
          *
          */
+
+        try {
+            Output.OutToTXT1(varPara.Pg_his, "Pg_his");
+            Output.OutToTXTL(varPara.dPL, "dPL");
+            Output.OutToTXTFP(varPara.allLineFP, "allLineFP");
+            Output.OutToTXT1(varPara.lg_his, "lg_his");
+            Output.OutToTXT1(varPara.M_his, "M_his");
+            Output.OutToTXTLLL(varPara.pigL, "pigL", flagpigT);
+            Output.OutToTXT123(varPara.dMg_p, "dMg_p");
+            Output.OutToTXTLLL(varPara.pigV, "pigV", flagpigT);
+            Output.OutToTXTLLL(varPara.pigZ, "pigZ", flagpigT);
+            Output.OutToTXTPPP(varPara.allLineStaticP[0], "allLineStaticP", varPara.line_l[1][1]);
+            Output.OutToTXTZZZ(varPara.allLineStaticP[1], "allLineZ", varPara.line_l[1][1]);
+
+        }catch (Exception e) {
+                e.printStackTrace();
+        }
         double[][] lgHisReverse = SizeChange.reverse(varPara.lg_his);
         SizeChange lgHisChange = new SizeChange(lgHisReverse);
-        Map<Integer, double[]> lgHisAfterChange = lgHisChange.ResultAfterChange();
+        Map<Double, double[]> lgHisAfterChange = lgHisChange.ResultAfterChange(10,0.5);
         setLgHis(lgHisAfterChange);
         double[][] pgHisReverse = SizeChange.reverse(varPara.Pg_his);
         SizeChange pgHisChange = new SizeChange(pgHisReverse);
-        Map<Integer, double[]> pgHisAfterChange = pgHisChange.ResultAfterChange();
+        Map<Double, double[]> pgHisAfterChange = pgHisChange.ResultAfterChange(10,0.5);
         setPgHis(pgHisAfterChange);
         double[][] mHisReverse = SizeChange.reverse(varPara.M_his);
         SizeChange mHisChange = new SizeChange(mHisReverse);
-        Map<Integer, double[]> mHisAfterChange = mHisChange.ResultAfterChange();
+        Map<Double, double[]> mHisAfterChange = mHisChange.ResultAfterChange(10,0.5);
         setmHis(mHisAfterChange);
         /**
          * 全部循环结束,存储pig_V pig-L allLineStaticP
          * 起始时刻:flagpigT
          */
-        SizeChange pigVChange = new SizeChange(varPara.pigV,flagpigT/12,(1.0/12));
+        SizeChange pigVChange = new SizeChange(varPara.pigV,flagpigT/24,(1.0/24));
         double[][] pigVAfterChange = pigVChange.ResultAfterChange2();
         setPigV(pigVAfterChange);
-        SizeChange pigLChange = new SizeChange(varPara.pigL,flagpigT/12,(1.0/12));
+        SizeChange pigLChange = new SizeChange(varPara.pigL,flagpigT/24,(1.0/24));
         double[][] pigLAfterChange = pigLChange.ResultAfterChange2();
         setPigL(pigLAfterChange);
-        SizeChange aLSPChange = new SizeChange(varPara.allLineStaticP[0],0.5,0.5);
+        SizeChange dMgPChange = new SizeChange(varPara.dMg_p);
+        double[][] dMgPAfterChange = dMgPChange.ResultAfterChange3();
+        setDMgP(dMgPAfterChange);
+        SizeChange aLSPChange = new SizeChange(varPara.allLineStaticP[0],248,0.5);
         double[][] aLSPAfterChange = aLSPChange.ResultAfterChange2();
         setaLSP(aLSPAfterChange);
 
@@ -2367,13 +2393,6 @@ public class Project extends Thread implements Serializable {
         }
         return Q2;
     }
-
-
-
-
-
-
-
     public Pipeline getPipeline() {
         return pipeLine;
     }

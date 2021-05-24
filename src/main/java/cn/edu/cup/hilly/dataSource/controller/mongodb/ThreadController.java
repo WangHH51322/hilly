@@ -111,7 +111,7 @@ public class ThreadController {
                 try {
                     Thread.sleep(1 * 1000); //设置暂停的时间 1 秒
                     if (!project.isLocked()) {
-                        Map<Integer, double[]> dpl = project.getDPL();
+                        Map<Double, double[]> dpl = project.getDPL();
                         resultDPL.setDPLMap(dpl);
                         resultDPLService.updateMap(resultDPL);
 //                        msg.setName("hello");
@@ -134,7 +134,7 @@ public class ThreadController {
 
     @GetMapping("/run2")
     public RespBean run2(@RequestParam("id") String id){
-        WiselyMessage msg = new WiselyMessage();
+//        WiselyMessage msg = new WiselyMessage();
         ExcelFile excelFile = fileService.find(id);
         double[][] lz = excelFile.getLz();  //三角式地形数据
         Integer inum = excelFile.getInum();
@@ -180,9 +180,9 @@ public class ThreadController {
                         /**
                          * 传输数据
                          */
-                        msg.setName("hello");
-                        msg.setRoutingKey("rk_pushmsg3");
-                        msg.setMsg("这是一条来自后端的消息");
+//                        msg.setName("hello");
+//                        msg.setRoutingKey("rk_pushmsg3");
+//                        msg.setMsg("这是一条来自后端的消息");
                         /**
                          * U型管段地形数据
                          */
@@ -190,28 +190,28 @@ public class ThreadController {
 //                        if (uLocation != null) {
                         resultULocation.setULocation(uLocation);
                         resultULService.updateMap(resultULocation);
-                        msg.setULocation(uLocation);
+//                        msg.setULocation(uLocation);
 //                        }
 
-                        Map<Integer, double[]> dpl = project.getDPL();
+                        Map<Double, double[]> dpl = project.getDPL();
                         resultDPL.setDPLMap(dpl);
                         resultDPLService.updateMap(resultDPL);
-                        msg.setObject(resultDPL);
-                        System.out.println("save data");
+//                        msg.setObject(resultDPL);
+//                        System.out.println("save data");
 
-                        Map<Integer, double[]> aLineFP = project.getALineFP();
+                        Map<Double, double[]> aLineFP = project.getALineFP();
                         resultAllLineFP.setAllLineFPMap(aLineFP);
                         resultALFPService.updateMap(resultAllLineFP);
 
-                        Map<Integer, double[]> lgHis = project.getLgHis();
+                        Map<Double, double[]> lgHis = project.getLgHis();
                         resultLgHis.setLgHisMap(lgHis);
                         resultLgHisService.updateMap(resultLgHis);
 
-                        Map<Integer, double[]> pgHis = project.getPgHis();
+                        Map<Double, double[]> pgHis = project.getPgHis();
                         resultPgHis.setPgHisMap(pgHis);
                         resultPgHisService.updateMap(resultPgHis);
 
-                        Map<Integer, double[]> mHis = project.getmHis();
+                        Map<Double, double[]> mHis = project.getmHis();
                         resultMHis.setMHisMap(mHis);
                         resultMHisService.updateMap(resultMHis);
 
@@ -221,16 +221,19 @@ public class ThreadController {
                         double[][] pigL = project.getPigL();
                         resultSimple.setPigL(pigL);
                         resultSimpleService.updatePigL(resultSimple);
+                        double[][] dMgP = project.getDMgP();
+                        resultSimple.setDMgP(dMgP);
+                        resultSimpleService.updateDMgP(resultSimple);
                         double[][] aLSP = project.getaLSP();
                         resultSimple.setALSP(aLSP);
                         resultSimpleService.updateALSP(resultSimple);
 
-                        System.out.println("save data");
+//                        System.out.println("save data");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                sender.send(msg);
+//                sender.send(msg);
             }
             return RespBean.ok("开始计算");
         } catch (Exception e) {

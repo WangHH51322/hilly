@@ -39,6 +39,12 @@ public class ResultSimpleService {
         Update update = Update.update("pigL",resultSimple.getPigL());
         mongoTemplate.upsert(query,update, ResultSimple.class,"resultSimple");
     }
+    public void updateDMgP(ResultSimple resultSimple) {
+        String id = resultSimple.get_id();
+        Query query = Query.query(Criteria.where("_id").is(id));
+        Update update = Update.update("dMgP",resultSimple.getDMgP());
+        mongoTemplate.upsert(query,update, ResultSimple.class,"resultSimple");
+    }
 
     public void updateALSP(ResultSimple resultSimple) {
         String id = resultSimple.get_id();

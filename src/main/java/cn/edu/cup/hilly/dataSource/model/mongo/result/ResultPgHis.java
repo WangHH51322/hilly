@@ -19,5 +19,5 @@ public class ResultPgHis {
     private Integer segments;
     private Double singleLength;
     private double[][] pgHis;
-    private Map<Integer, double[]> pgHisMap;
+    private Map<Double, double[]> pgHisMap;
 }

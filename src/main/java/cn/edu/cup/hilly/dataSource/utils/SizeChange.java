@@ -48,6 +48,22 @@ public class SizeChange {
         return doubles;
     }
 
+    public double[][] ResultAfterChange3() {
+        int size = 0;
+        for (int i = 0; i < resultsData.length; i++) {
+            if (i != 0 && resultsData[i][1] == 0) {
+                size = i;
+                break;
+            }
+        }
+        double[][] results = new double[size][2];
+        for (int i = 0; i < size; i++) {
+            results[i][0] = resultsData[i][0];
+            results[i][1] = resultsData[i][1];
+        }
+        return results;
+    }
+
     public double[][] ResultAfterChange2() {
         int size = 0;
         for (int i = 0; i < resultData.length; i++) {
@@ -124,16 +140,16 @@ public class SizeChange {
 //        return new TreeMap(dPLs);
 //    }
 
-    public Map<Integer,double[]> ResultAfterChange() throws NoSuchFieldException, IllegalAccessException {
+    public Map<Double,double[]> ResultAfterChange(int skip, double multiple) throws NoSuchFieldException, IllegalAccessException {
         /**
          * 中间参数
          */
-        Map<Integer,double[]> results = new HashMap<>();
+        Map<Double,double[]> results = new HashMap<>();
         List<double[]> resultsLists = new ArrayList<>();
         /**
          * 将输入的double[][]进行行截取
          */
-        loop:for (int j = 0; j < resultsData.length; j+=2) {
+        loop:for (int j = 0; j < resultsData.length; j+=skip) {
             double sum = 0;
             double[] dPL = new double[resultsData[0].length];
             for (int k = 0; k < resultsData[j].length; k++) {
@@ -156,7 +172,7 @@ public class SizeChange {
          */
         if (resultsLists.size() == 0) {
             double[] lastDPL = resultsLists.get(0);
-            results.put(0,lastDPL);
+            results.put(0.0,lastDPL);
             return results;
         }
         /**
@@ -167,7 +183,7 @@ public class SizeChange {
         double[] lastDPL = resultsLists.get(resultsLists.size() - 1);
 //        System.out.println("resultsLists:"+ resultsLists.size());
         for (int i = 0; i < lastDPL.length; i++) {
-            if (lastDPL[i] == 0 && lastDPL[i+1] == 0) {
+            if (i == lastDPL.length-1 || (lastDPL[i] == 0 && lastDPL[i+1] == 0)) {
                 size = i;
                 break;
             }
@@ -185,7 +201,7 @@ public class SizeChange {
                 dPL[j] = dPLList[j];
 //                System.out.print("dPL+" + dPL[j] + " ");
             }
-            results.put(i*10,dPL);
+            results.put(i*skip*multiple,dPL);
         }
         /**
          * 将Map排序并输出

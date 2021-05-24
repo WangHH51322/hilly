@@ -20,5 +20,5 @@ public class ResultDPL {
     private Double singleLength;
 //    private String projectId;
     private double[][] dPL;
-    private Map<Integer, double[]> dPLMap;
+    private Map<Double, double[]> dPLMap;
 }

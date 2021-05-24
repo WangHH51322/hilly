@@ -22,4 +22,5 @@ public class ResultSimple {
     private double[][] pigV;
     private double[][] pigL;
     private double[][] aLSP;
+    private double[][] dMgP;
 }

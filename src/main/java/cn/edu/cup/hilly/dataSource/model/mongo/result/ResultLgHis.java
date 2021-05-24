@@ -19,5 +19,5 @@ public class ResultLgHis {
     private Integer segments;
     private Double singleLength;
     private double[][] lgHis;
-    private Map<Integer, double[]> lgHisMap;
+    private Map<Double, double[]> lgHisMap;
 }

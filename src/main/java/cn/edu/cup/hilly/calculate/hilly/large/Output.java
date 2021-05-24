@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Output {
 
-    private static final String OUT_PUT_PATH = "C:\\Users\\WangHH\\Desktop\\TempFile\\DaLuoCha\\output\\008";
+    private static final String OUT_PUT_PATH = "C:\\Users\\WangHH\\Desktop\\TempFile\\DaLuoCha\\output\\009";
 
     public static void OutToTXT000(double[][] arr,double[][] arrL,String fileName) throws IOException {
         File file=new File(OUT_PUT_PATH);

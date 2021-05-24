@@ -23,5 +23,5 @@ public class ResultAllLineFP {
     private Integer segments;
     private Double singleLength;
     private double[][] aLineFP;
-    private Map<Integer, double[]> allLineFPMap;
+    private Map<Double, double[]> allLineFPMap;
 }

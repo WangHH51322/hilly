@@ -190,8 +190,8 @@ public class Varpara {
 
     public void setArr(){
 
-        this.k = (int)(T*5*3600/300)+1002;      //300步一输出的存储序号
-        this.kt = (int) Math.rint(T* 3600 / deltaT);            //模拟总时步的计算
+        this.k = (int)(T*2*5*3600/300)+1002;      //300步一输出的存储序号
+        this.kt = (int) Math.rint(T*2* 3600 / deltaT);            //模拟总时步的计算
 
         this.pigV = new double[getK()];
         this.dMg_p = new double[5][getK()+1];
@@ -202,8 +202,8 @@ public class Varpara {
         this.pigL = new double[getK()];
         this.pigZ = new double[getK()];
         this.allLine = new double[5][getK()];
-        this.allLineFP = new double[(int)T*12+2+1][1802];
-        this.allLineStaticP = new double[(int)T*12+2+1][1802];
+        this.allLineFP = new double[(int)T*2*12+2+1][1802];
+        this.allLineStaticP = new double[(int)T*2*12+2+1][1802];
         this.Hss=new double[100];
         this.Hs=50*9.81*1000;//初始值为首站进站压力
         this.a= new double[100][3];
@@ -308,12 +308,12 @@ public class Varpara {
         this.Hfk_jj = new double[i];
         this.Hf_j = new double[k];              //局部阻力
 
-        this.dPL=new double[(int)T*12+2+1][1802];;       //全局压力
+        this.dPL=new double[(int)T*2*12+2+1][1802];;       //全局压力
         this.lg_f = new double[i][k];   //各段分层流实时长度
         this.lp_b = new double[i][k];   //气泡流和气团流实时长度，下坡段部分
         this.lp_bU = new double[i][k];  //气泡流和气团流实时长度，上坡段部分
-        this.lg_fff = new double[i][(int)T*12+2];//3000s一步的时步分层流长度数据
-        this.waterL = new double[(int)T*12+2];//3000s一步的水头位置
+        this.lg_fff = new double[i][(int)T*2*12+2];//3000s一步的时步分层流长度数据
+        this.waterL = new double[(int)T*2*12+2];//3000s一步的水头位置
 
         this.l0 = new double[i + 1];      //积气段尾部长度
         this.flag00 = new int[i];        //水力排气结束的标志

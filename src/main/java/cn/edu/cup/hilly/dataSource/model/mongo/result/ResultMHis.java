@@ -19,5 +19,5 @@ public class ResultMHis {
     private Integer segments;
     private Double singleLength;
     private double[][] mHis;
-    private Map<Integer, double[]> mHisMap;
+    private Map<Double, double[]> mHisMap;
 }

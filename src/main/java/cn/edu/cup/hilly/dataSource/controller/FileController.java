@@ -65,7 +65,7 @@ public class FileController {
             double[][] locations = excelData.Graphic(fileAfter, "location");
             double[][] terrainData = excelData.getTerrainData();
             int inum = ExcelData.inum;
-            ExcelFile file1 = fileService.save(locations, id, inum, terrainData);
+            ExcelFile file1 = fileService.insert(locations, id, inum, terrainData);
             return RespBean.ok("上传成功",file1);
         } catch (IOException e) {
             e.printStackTrace();
