@@ -21,6 +21,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -274,6 +277,12 @@ public class HillyStationService {
         insertStationPump(id,sid);
         insertStationValve(id,sid);
         stations.add(station);
+        stations.sort(new Comparator<Station>() {
+            @Override
+            public int compare(Station station1, Station station2) {
+                return station1.getStationL().getValue().compareTo(station2.getStationL().getValue());
+            }
+        });
         stationList.setValue(stations);
         return extracted(id, stationList);
     }

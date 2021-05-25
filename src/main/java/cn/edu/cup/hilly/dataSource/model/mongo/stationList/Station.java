@@ -7,7 +7,7 @@ import lombok.ToString;
 @ToString
 @Data
 @AllArgsConstructor
-public class Station {
+public class Station implements Comparable {
     private StationId stationId;
     private StationName stationName;
     private StationType stationType;
@@ -24,5 +24,11 @@ public class Station {
 //        this.stationValves = new StationValves();
         this.stationL = new StationL();
         this.stationZ = new StationZ();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Station s = (Station) o;
+        return this.stationL.getValue().compareTo(s.stationL.getValue());
     }
 }
