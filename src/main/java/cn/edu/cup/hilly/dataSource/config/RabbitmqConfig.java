@@ -34,7 +34,7 @@ public class RabbitmqConfig {
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
         connectionFactory.setHost("192.168.136.128");
-//        connectionFactory.setHost("hillyrabbit");
+//        connectionFactory.setHost("hillyrabbitmq");
 //        connectionFactory.setPort(5762);
         /*channel缓存的大小*/
         connectionFactory.setChannelCacheSize(200);

@@ -179,8 +179,6 @@ public class HillyStationService {
         return json;
     }
 
-
-
     /**
      * 新增一个站内阀组
      */
@@ -280,7 +278,11 @@ public class HillyStationService {
         stations.sort(new Comparator<Station>() {
             @Override
             public int compare(Station station1, Station station2) {
-                return station1.getStationL().getValue().compareTo(station2.getStationL().getValue());
+                String string1 = station1.getStationL().getValue();
+                String string2 = station2.getStationL().getValue();
+                Double double1 = Double.parseDouble(string1);
+                Double double2 = Double.parseDouble(string2);
+                return double1.compareTo(double2);
             }
         });
         stationList.setValue(stations);
@@ -310,6 +312,16 @@ public class HillyStationService {
                 break;
             }
         }
+        stations.sort(new Comparator<Station>() {
+            @Override
+            public int compare(Station station1, Station station2) {
+                String string1 = station1.getStationL().getValue();
+                String string2 = station2.getStationL().getValue();
+                Double double1 = Double.parseDouble(string1);
+                Double double2 = Double.parseDouble(string2);
+                return double1.compareTo(double2);
+            }
+        });
         stationList.setValue(stations);
         /**
          * 更新stationList
