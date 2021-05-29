@@ -19,7 +19,7 @@ public class StationId {
 
     public StationId() {
         IdWorker idWorker = new IdWorker();
-        this.name = "泵站点编号";
+        this.name = "站点编号";
         this.unit = "";
         this.value = String.valueOf(idWorker.nextId());
     }

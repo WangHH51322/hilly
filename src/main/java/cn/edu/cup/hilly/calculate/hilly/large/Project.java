@@ -61,6 +61,24 @@ public class Project extends Thread implements Serializable {
         this.dPL = dPL;
     }
     /**
+     * dhl
+     */
+    private Map<Double, double[]> dHL;
+    public Map<Double, double[]> getDHL() {
+        return dHL;
+    }
+    /**
+     * hss
+     */
+    private Map<String, Map<Double, double[]>> hSS;
+    public Map<String, Map<Double, double[]>> getHSS() {
+        return hSS;
+    }
+    public void setHSS(Map<String, Map<Double, double[]>> hSS) {
+        this.hSS = hSS;
+    }
+
+    /**
      * allLineFP
      */
     private Map<Double, double[]> allLineFP;
@@ -108,6 +126,13 @@ public class Project extends Thread implements Serializable {
     private double[][] pigL;
     private double[][] aLSP;
     private double[][] dMgP;
+    private double[][] mG;
+    public double[][] getmG() {
+        return mG;
+    }
+    public void setmG(double[][] mG) {
+        this.mG = mG;
+    }
     public double[][] getPigV() {
         return pigV;
     }
@@ -268,7 +293,7 @@ public class Project extends Thread implements Serializable {
 
         int i,n=1,num0,num1=1,num2,flagpigT=0; //i为水头所在段，n为当前计算管段编号
 
-        double Ha,Hb,his_h2k;
+        double Ha,Hb;
         //加入固定地形点位
 
         for (num2 = 1; num2 < inum/2+1; num2++) {     //原管道地形的所有管段
@@ -404,7 +429,8 @@ public class Project extends Thread implements Serializable {
         System.out.println("总模拟长度："+(varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/1000+"km");
         cal_l0();//计算各管段的气段尾部估计位置，也计算了满管流动的水力坡降
         varPara.Time[0] = t_all;       //时步与时间的整合对应
-
+        double timeStop=0;
+        int flag05 = 1;
         //1、从第一个U型管段的低点开始进行时间循环
         long start1,end1,end3;
         start1 = System.currentTimeMillis();        //开始计算的时间标记
@@ -465,11 +491,14 @@ public class Project extends Thread implements Serializable {
                     }
                     //计算单位管长下的分层流（只有下坡有分层流）压降，带重位压差
                     varPara.Hfk_f[i] = dpf_cal(-varPara.slopeD[i][0], varPara.Hgk[i], A, oil.density, 1.205, conPara.Ql / A, varPara.f_l[i], 0.0143, varPara.Sl[i]);
+                    varPara.Hfk_f1[i] = dHf_cal(-varPara.slopeD[i][0], varPara.Hgk[i], A, oil.density, 1.205, conPara.Ql / A, varPara.f_l[i], 0.0143, varPara.Sl[i]);
                     //计算单位管长下的下坡段分层流压降，带重位压差
                     varPara.Hfk_b[i] = dPb_cal(A, -varPara.slopeD[i][0], varPara.Hgbk[i], A, oil.density, 1.205, 0.001 * oil.getViscosity(), conPara.Ql / A, conPara.Ql / A, conPara.Ql / A, 0.0001);
+                    varPara.Hfk_b1[i] = dHb_cal(A, -varPara.slopeD[i][0], varPara.Hgbk[i], A, oil.density, 1.205, 0.001* oil.getViscosity(), conPara.Ql / A, conPara.Ql / A, conPara.Ql / A, 0.0001);
                     varPara.Hfk_dU[i] = dPd_cal(varPara.slopeU[i][0], varPara.Hgbk[i], conPara.Ql, A, A, oil.density, conPara.Ql / A, conPara.Ql / A, 0.0001);
                     //计算单位管长下的上坡段分层流压降，带重位压差
                     varPara.Hfk_bU[i] = dPbU_cal(A, varPara.slopeU[i][0], varPara.Hgbk[i], A, oil.density, 1.205, 0.001 * oil.getViscosity(), conPara.Ql / A, conPara.Ql / A, conPara.Ql / A, 0.0001);
+                    varPara.Hfk_bU1[i] = dHbU_cal(A, varPara.slopeU[i][0], varPara.Hgbk[i], A, oil.density, 1.205, 0.001* oil.getViscosity(), conPara.Ql / A, conPara.Ql / A, conPara.Ql / A, 0.0001);
                     //某管段在当前时刻的总压降
                     varPara.Hfk[i] = dP_cal(varPara.vll[i], varPara.vll[i], varPara.Hgbk[i], 3, A, oil.getDensity(), 1.205, varPara.Hfk_b[i], varPara.Hfk_bU[i], varPara.Hfk_f[i], varPara.lg_f[i][kk / 300], varPara.lp_b[i][kk / 300], varPara.lp_bU[i][kk / 300])[3];
                     varPara.Hfk_jj[i] = dP_cal(varPara.vll[i], varPara.vll[i], varPara.Hgbk[i], 3, A, oil.getDensity(), 1.205, varPara.Hfk_b[i], varPara.Hfk_bU[i], varPara.Hfk_f[i], varPara.lg_f[i][kk / 300], varPara.lp_b[i][kk / 300], varPara.lp_bU[i][kk / 300])[2];
@@ -589,6 +618,12 @@ public class Project extends Thread implements Serializable {
                         varPara.lg_fff[1][0] = 0;
                         for (int cc = 1; cc <= n; cc++) {
                             varPara.lg_fff[cc][varPara.num] = varPara.lg_f[cc][varPara.num * 5];
+                            //varPara.Mg[varPara.num]=(varPara.lg_fff[cc][varPara.num]-varPara.lg_fff[cc][varPara.num-1])*varPara.Hgk[cc]*A*varPara.Dengk[cc]+varPara.Mg[varPara.num-1];
+                            varPara.Mg[varPara.num]=(varPara.M_his[cc][varPara.num * 5]-varPara.M_his[cc][varPara.num * 5 - 5])+varPara.Mg[varPara.num-1];
+                            if (cc==n){
+                                varPara.Mg[varPara.num]=(varPara.M_his[cc][varPara.num * 5]-varPara.M_his[cc][varPara.num * 5 - 5])+varPara.Mg[varPara.num-1]-varPara.dMg_out[n]*1000*30;
+                            }
+                            if (varPara.Mg[varPara.num]<0) varPara.Mg[varPara.num]=varPara.Mg[varPara.num-1];
                         }
                         varPara.waterL[varPara.num] = varPara.waterHeadLocation[varPara.num * 5];
 
@@ -597,14 +632,16 @@ public class Project extends Thread implements Serializable {
 
                         }
                         dpL(n, varPara.T, varPara.num, varPara.deltaX, varPara.waterL, varPara.Hfk_b, varPara.Hfk_bU, varPara.Hfk_f, varPara.lg_fff, varPara.vll, varPara.stationLLL, varPara.Hd);
-
+                        dHL(n, varPara.T, varPara.num, varPara.deltaX, varPara.waterL, varPara.Hfk_b1, varPara.Hfk_bU1, varPara.Hfk_f1, varPara.lg_fff,varPara.vll,varPara.stationLLL,varPara.Hd);
                         /**
-                         * 存储dpl
+                         * 存储dpl  dHL
                          */
                         SizeChange dPLChange = new SizeChange(varPara.dPL);
                         Map<Double, double[]> dPLAfterChange = dPLChange.ResultAfterChange(2,2.5);
-//                        System.out.println("varPara.dPL: " + dPLAfterChange);
                         setDPL(dPLAfterChange);
+                        SizeChange dHLChange = new SizeChange(varPara.dHL);
+                        Map<Double, double[]> dHLAfterChange = dHLChange.ResultAfterChange(2, 2.5);
+                        setDHL(dHLAfterChange);
 
                         ff = 0;
                         startPump(varPara.num, varPara.dPL[varPara.num], varPara.waterL[varPara.num]);
@@ -638,7 +675,7 @@ public class Project extends Thread implements Serializable {
                                     varPara.maxThree[2][1] = varPara.lgk[cc];
                                 }
                             }
-                            double timeStop;
+                            ///////////////20210528///////////////double timeStop;
                             System.out.println("最长积气段为第" + varPara.maxThree[0][0] + "段,长度为" + varPara.maxThree[0][1]);
                             System.out.println("第二长的积气段为第" + varPara.maxThree[1][0] + "段,长度为" + varPara.maxThree[1][1]);
                             System.out.println("第三长的积气段为第" + varPara.maxThree[2][0] + "段,长度为" + varPara.maxThree[2][1]);
@@ -724,6 +761,14 @@ public class Project extends Thread implements Serializable {
     //                        System.out.println("varPara.allLineFP: " + allLineFPAfterChange);
                             setAllLineFP(allLineFPAfterChange);
                         }
+
+                        if (flag05 < timeStop){
+                            flag05=299+flag05;
+                            varPara.Mg[varPara.num] = varPara.Mg[varPara.num]-(varPara.dMg_p[1][flag05/300+1]-varPara.dMg_p[1][flag05/300])*20;
+                        }
+
+
+
                     }
                 }
                 //System.out.println("水头位置："+waterHeadLocation[kk]/1000+"km");
@@ -744,18 +789,31 @@ public class Project extends Thread implements Serializable {
                     staticP(n, varPara.waterL[varPara.num], varPara.deltaX);
                 }
 
+
+
+
+
+
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
             }
         }
-        /**
-         * 循环结束,存储lg_his pg_his mg_his
-         *
-         */
+
+        varPara.dPL[0][0]=varPara.line_l[1][1]/1000;
+        varPara.allLineFP[0][0]=varPara.line_l[1][1]/1000;
+        for (int x = 1; x <=(varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/500+1; x++) {
+            varPara.dPL[0][x]=0.5+varPara.dPL[0][x-1];//地形的里程
+            //varPara.dHL[0]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      [x]=getZ(varPara.line_l, varPara.line_d,varPara.dHL[0][x]*1000);
+//            varPara.dPL[varPara.num+3][x]=2499.385+varPara.dPL[varPara.num][x]/9.81/1000;
+            varPara.allLineFP[0][x]=0.5+varPara.allLineFP[0][x-1];
+        }
 
         try {
             Output.OutToTXT1(varPara.Pg_his, "Pg_his");
+            Output.OutToTXTL(varPara.Hss,"Hss");
+            Output.OutToTXTDHL(varPara.dHL,"dHL");
+            Output.OutToTXTLLL(varPara.Mg,"Mg",0);
             Output.OutToTXTL(varPara.dPL, "dPL");
             Output.OutToTXTFP(varPara.allLineFP, "allLineFP");
             Output.OutToTXT1(varPara.lg_his, "lg_his");
@@ -770,6 +828,10 @@ public class Project extends Thread implements Serializable {
         }catch (Exception e) {
                 e.printStackTrace();
         }
+
+        /**
+         * 循环结束,存储lg_his pg_his mg_his
+         */
         double[][] lgHisReverse = SizeChange.reverse(varPara.lg_his);
         SizeChange lgHisChange = new SizeChange(lgHisReverse);
         Map<Double, double[]> lgHisAfterChange = lgHisChange.ResultAfterChange(10,0.5);
@@ -783,9 +845,26 @@ public class Project extends Thread implements Serializable {
         Map<Double, double[]> mHisAfterChange = mHisChange.ResultAfterChange(10,0.5);
         setmHis(mHisAfterChange);
         /**
+         * 存储Hss
+         */
+        List<String> stationName = new ArrayList<>();
+        for (Stations station : stations) {
+            stationName.add(station.getStationName());
+        }
+        SizeChange hSSChange = new SizeChange(varPara.Hss);
+        Map<String, Map<Double, double[]>> hSSAfterChange = hSSChange.ResultAfterChange(2, 2.5, stationName);
+        for (String s : stationName) {
+            System.out.print(s + " ");
+        }
+        setHSS(hSSAfterChange);
+        /**
          * 全部循环结束,存储pig_V pig-L allLineStaticP
+         * Mg
          * 起始时刻:flagpigT
          */
+        SizeChange mGChange = new SizeChange(varPara.Mg,flagpigT/24,(1.0/24));
+        double[][] mGAfterChange = mGChange.ResultAfterChange2();
+        setmG(mGAfterChange);
         SizeChange pigVChange = new SizeChange(varPara.pigV,flagpigT/24,(1.0/24));
         double[][] pigVAfterChange = pigVChange.ResultAfterChange2();
         setPigV(pigVAfterChange);
@@ -806,7 +885,7 @@ public class Project extends Thread implements Serializable {
 
     }
     //迭代计算明渠流动公式
-    public  double calDelta(double slopeD) {
+    public double calDelta(double slopeD) {
 
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
@@ -1548,7 +1627,35 @@ public class Project extends Thread implements Serializable {
         return dpb;
 
     }
+    public double dHb_cal(double A,double slope, double x,double D,double dl,double dg,double u,double Um,double vsl,double vsg,double e)
+    {
+        double G,Rem,rhom;//混合质量流量
 
+        //混合相的质量流量
+        G=A*vsl*dl*(1-x)+A*vsg*dg*x;
+        //dl还是dg？？？
+
+        //混合相的密度
+        rhom=dl*(1-x)+dg*x;
+
+        //混合项雷诺数
+        //Rem=4*G/((Math.PI)*D*u);          //混合物动力粘度取水的，u=1mPa·s
+        Rem=rhom*Um*D/(u);          //混合物动力粘度取水的，u=1mPa·s
+
+
+
+        //气泡流摩阻系数
+        double fF;
+        fF=0.001375*(1+Math.pow((2*10000)*e/D+(10e6/Rem),1/3));
+        //气泡流摩阻式
+
+        //double dpb=2*fF*rhom*Um*Um/D+rhom*9.81*slope;
+        //不带重位压差
+        double dpb=2*fF*rhom*Um*Um/D;//0.9为重力转化系数
+        //double dpb=2*fF*rhom*Um*Um/D+rhom*9.81*slope;//0.9为重力转化系数
+        return dpb;
+
+    }
     public static  double dPbU_cal(double A,double slope, double x,double D,double dl,double dg,double u,double Um,double vsl,double vsg,double e)
     {
         double G,Rem,rhom;//混合质量流量
@@ -1577,7 +1684,35 @@ public class Project extends Thread implements Serializable {
         return dpb;
 
     }
+    public static  double dHbU_cal(double A,double slope, double x,double D,double dl,double dg,double u,double Um,double vsl,double vsg,double e)
+    {
+        double G,Rem,rhom;//混合质量流量
 
+        //混合相的质量流量
+        G=A*vsl*dl*(1-x)+A*vsg*dg*x;
+        //dl还是dg？？？
+
+        //混合相的密度
+        rhom=dl*(1-x)+dg*x;
+
+        //混合项雷诺数
+        //Rem=4*G/((Math.PI)*D*u);          //混合物动力粘度取水的，u=1mPa·s
+        Rem=rhom*Um*D/(u);          //混合物动力粘度取水的，u=1mPa·s
+
+
+
+        //气泡流摩阻系数
+        double fF;
+        fF=0.001375*(1+Math.pow((2*10000)*e/D+(10e6/Rem),1/3));
+        //气泡流摩阻式
+
+        //double dpb=2*fF*rhom*Um*Um/D+rhom*9.81*slope;
+        //不带重位压差
+        //double dpb=2*fF*rhom*Um*Um/D+rhom*9.81*slope;
+        double dpb=2*fF*rhom*Um*Um/D;
+        return dpb;
+
+    }
 
     public static  double dPd_cal(double slope,double x,double Q,double A,double D,double dl,double vsl,double vsg,double e)
     {
@@ -1596,6 +1731,27 @@ public class Project extends Thread implements Serializable {
 
         //段塞流摩阻式
         double dpd=fl*dl*vpj*vpj*(1+c0)/2/D+rhom*9.81*slope;
+        return dpd;
+    }
+
+    public static  double dHd_cal(double slope,double x,double Q,double A,double D,double dl,double vsl,double vsg,double e)
+    {
+        double G,Re0,rhom,c0,fl,vb=1.4,vpj=Q/A;//混合质量流量
+        //混合相的质量流量
+        G=A*vsl*dl*(1-x)+A*vsg*1.205*x;
+
+        c0=0.00252*Math.log(1000*0.001)/pow(D,1.38)-0.782+0.232*Math.log(vpj)-0.428*log(D);
+        if (c0<-0.213*vpj) c0=-0.213*vpj;
+
+        //混合相的密度
+        rhom=G+dl*vb*A/(Q+vb*A)+c0*dl;
+
+        Re0=D*vpj*dl/0.001;//纯液相雷诺数
+        fl=0.11*pow((e/D+68/Re0),0.25);
+
+        //段塞流摩阻式
+        double dpd=fl*dl*vpj*vpj*(1+c0)/2/D;
+        //double dpd=fl*dl*vpj*vpj*(1+c0)/2/D+rhom*9.81*slope;
         return dpd;
     }
     //分层流压降计算
@@ -1630,6 +1786,28 @@ public class Project extends Thread implements Serializable {
 
     }
 
+    public double dHf_cal(double slope, double x,double D,double dl,double dg,double vsl,double fl,double fi,double sl){
+
+        double rhom;
+
+        //混合相的质量流量
+        //G=A*vsl*dl*(1-x)+A*vsg*dl*x;
+
+        //混合相的密度
+        rhom=dl*(1-x)+dg*x;
+
+        //分层流摩阻式
+        //double dpf=0.01*(dl*vsl*vsl*2/Math.PI*D)*(2*fi*sin(sl/D)*D+fl*sl/(1-x)/(1-x));//无重力项
+
+
+        /**
+         * 20210526  去掉势能部分
+         */
+        //double dpf=(dl*vsl*vsl*2/Math.PI*D)*(2*fi*sin(sl/D)*D+fl*sl/(1-x)/(1-x))+rhom*9.81*slope;
+        double dpf=(dl*vsl*vsl*2/Math.PI*D)*(2*fi*sin(sl/D)*D+fl*sl/(1-x)/(1-x));
+        return dpf;
+
+    }
 
 
 
@@ -1721,7 +1899,15 @@ public class Project extends Thread implements Serializable {
                         varPara.Qh=valveCal(20000,varPara.dPL[kkk][x]-12500000,varPara.Qh);
                     }
                     //varPara.checkP=1;
-                    varPara.Hss[s]=varPara.dPL[kkk][x-1];//记录各站的进站压力
+                    varPara.Hss[kkk][s]=varPara.dPL[kkk][x-1];//记录各站的进站压力
+                    varPara.Hss[kkk][s+49]=varPara.dPL[kkk][x];//记录各站的出站压力
+                    if (varPara.Hss[kkk][s+49]<varPara.Hss[kkk-1][s+49]&&varPara.Hss[kkk][s+49]!=0&&varPara.Hss[kkk-1][s+49]!=0) {
+                        varPara.times++;
+                        varPara.Hss[kkk][s+49]=varPara.Hss[kkk-1][s+49];
+                        varPara.Hss[kkk][s]=varPara.Hss[kkk-1][s];
+                        //System.out.println("出站压力减小第"+varPara.times+"次");
+                    }
+
                 }
 
             }
@@ -1734,6 +1920,133 @@ public class Project extends Thread implements Serializable {
             if(varPara.dPL[num][x]<101325){
                 varPara.dPL[num][x]=101325;
             }
+        }
+
+
+//            if (varPara.Lt>waterHeadLocation[kkk]){
+//                varPara.num=kkk;
+//                break;
+//            }
+        //}
+
+    }
+
+
+    /**
+     * 计算某时刻摩阻压降的方法,
+     * @param n  当前总运行段数
+     * @param dx 距步
+     * @param T  总模拟时长，用来计算数组大小
+     * @param num 时步数，控制，衔接各管段
+     * @param waterHeadLocation 水头位置，要改为3000s每步输入，在现有的rr基础上每300个存储一次3000*0.5=1500m，保证水头记录一次的长度大于距步
+     * @param dpb 气泡流下坡段单位长度压降
+     * @param dpbU  气泡流上坡段单位长度压降
+     * @param dpf   分层流单位长度压降
+     * @param lg_f  各段分层流实时长度
+     */
+    public void dHL(int n,double T,int num,double dx,double[] waterHeadLocation,double[] dpb,double[] dpbU,double[] dpf,double [][]lg_f,double []vll,double []stationL,double []stationP){
+        double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
+        double r=D/2;
+        double A=Math.PI*D*D/4.0;
+        double J=0.0246*Math.pow(conPara.Ql,1.75)*Math.pow(1.006e-6,0.25)/Math.pow(D,4.75);
+        double F = A*oils.get(0).getDensity()*conPara.g*J;
+        Oil oil = oils.get(0);
+        //double [][]dPL=new double[500][800];//当前时步下,各点的压力【时步】【距步】500*300,10s,300,,*30
+        int nn=1,ii=1;
+        int kkk=num;
+        //for (int kkk=num;kkk<(int)T*12+1;kkk++)//时间循环
+        //{
+        varPara.dHL[kkk][0]=varPara.Hs;
+        varPara.Lt=varPara.line_l[1][1];
+
+        for (int x=1;x<=(waterHeadLocation[kkk]-varPara.line_l[1][1])/dx+1;x++)//遍历水头前的各点
+        {
+            varPara.Lt=varPara.Lt+dx;
+
+            varPara.dHL[kkk][x]=varPara.dHL[varPara.dHL.length-2][x];
+
+            for (int i=ii;i<=nn;i++)//遍历水头所在段前的各段
+            {
+                if (varPara.ssr[i][0]!=0) {//破碎结束，按满管计算{
+
+                    if (varPara.Lt - varPara.line_l[i][2] <= 0)  //在下坡段时的满管压降计算
+                    {
+                        varPara.dHL[kkk][x] = oil.getDensity()*9.81*(-varPara.ipj) * dx + varPara.dHL[kkk][x - 1];      //第kkk时步时的距首点第x个距步处的压降；
+                    } else if (varPara.Lt - varPara.line_l[i][2] > 0 && varPara.Lt <= varPara.line_l[i][3]) {     //在上坡时
+                        if (varPara.flag1==0){
+                            //加入转折处波速变化，积气系数取0.03
+                            varPara.dHL[kkk][x-1]=varPara.dHL[kkk][x-1]-0.015*oil.getDensity()*1000*(vll[i]*Math.cos(toDegrees(Math.asin(varPara.slopeD[i][0]/1000))+toDegrees(Math.asin(varPara.slopeU[i][0]/1000)))- conPara.Ql/A);
+                            varPara.flag1++;
+                        }
+                        varPara.dHL[kkk][x] = varPara.dHL[kkk][x - 1] - oil.density*9.81*(varPara.ipj) * dx;
+                    } else {
+                        if (n > nn) {
+                            ii++;
+                            nn++;
+                            varPara.flag1=0;
+                        }
+                    }
+                    //varPara.dPL[kkk][x-1]=varPara.dPL[kkk][x];
+                }else if (varPara.ssr[i][0]==0){
+                    if (varPara.Lt-varPara.line_l[i][1] <= lg_f[i][kkk])  //在小于分层流长度时
+                    {
+                        varPara.dHL[kkk][x]=-dpf[i]*dx+varPara.dHL[kkk][x-1];      //第kkk时步时的距首点第x个距步处的压降；
+                    } else if (varPara.Lt-varPara.line_l[i][1] > lg_f[i][kkk] && varPara.Lt-varPara.line_l[i][1] <= (varPara.line_l[i][2]-varPara.line_l[i][1])) {     //在下坡气泡流时
+                        varPara.dHL[kkk][x]=varPara.dHL[kkk][x-1]-dpb[i]*dx;
+                    } else if (varPara.Lt-varPara.line_l[i][1] > (varPara.line_l[i][2]-varPara.line_l[i][1]) && varPara.Lt-varPara.line_l[i][2] <= (varPara.line_l[i][3]-varPara.line_l[i][2])){//在上坡气泡流时
+                        if (varPara.flag1==0){
+                            //加入转折处波速变化，积气系数取0.03
+                            varPara.dHL[kkk][x-1]=varPara.dHL[kkk][x-1]-0.025*oil.getDensity()*1000*(vll[i]*Math.cos(toDegrees(Math.asin(varPara.slopeD[i][0]/1000))+toDegrees(Math.asin(varPara.slopeU[i][0]/1000)))- conPara.Ql/A);
+                            varPara.flag1++;
+                        }
+                        varPara.dHL[kkk][x]=varPara.dHL[kkk][x-1]-dpbU[i]*dx;
+                    } else{
+                        if (n>nn){
+                            ii++;
+                            nn++;
+                            varPara.flag1=0;
+                        }
+                    }
+                }
+            }
+            for (int s=0;s<stationL.length;s++){        //改变站点压力值
+                if (varPara.Lt>=stationL[s] && varPara.Lt-dx <=stationL[s] && stationL[s]!=0){
+                    varPara.dHL[kkk][x]=stationP[s]+varPara.dHL[kkk][x-1];
+                    //if (varPara.dHL[kkk][x]>14000000) //限制出站压力12MPa，后续加调压阀或者调整变频泵
+                    if (false && varPara.dHL[kkk][x]>12500000 && T%10==0)
+                    {
+                        varPara.checkP=1;
+                        varPara.dHL[kkk][x]=12500001;
+                        //valveCalDp1(varPara.Qh/3600.0,D,5.68,1,1000);/////////////////////////////////////////////////////////////////
+                        varPara.Qh=valveCal(20000,varPara.dHL[kkk][x]-12500000,varPara.Qh);
+                    }
+                    //varPara.checkP=1;
+                }
+
+            }
+
+            if(varPara.dHL[kkk][x]>12500000){
+                varPara.checkP=1;
+                //System.out.println("在第"+num/12.0+"h超压,超压点位置为"+x*0.5+"km,压力为"+varPara.dPL[kkk][x]/1.0e6+"MPa");
+            }
+
+            if(varPara.dHL[num][x]<101325){
+                varPara.dHL[num][x]=101325;
+            }
+
+
+        }
+
+        for (int xx = 0; xx <(varPara.line_l[varPara.i-1][2]-varPara.line_l[1][1])/dx; xx++) {
+            if (xx <= (waterHeadLocation[kkk] - varPara.line_l[1][1]) / dx + 1)//遍历水头前的各点
+            {
+                varPara.dHL[num][xx] = varPara.dHL[num][xx] / 9.81 / 1000;
+                varPara.dHL[num][xx] = varPara.dHL[num][xx] + 1720;
+            } else {
+                varPara.dHL[num][xx] = varPara.dHL[num][xx] / 9.81 / 1000;
+                varPara.dHL[num][xx] = varPara.dHL[num][xx] + varPara.dHL[varPara.dHL.length-2][xx];
+            }
+
         }
 
 
@@ -1938,7 +2251,7 @@ public class Project extends Thread implements Serializable {
 
 
     /**
-     * 获取某里程L处的流型，5为满管流，1为分层流，2为气泡流，3为气泡,4为段塞,6为未赋值
+     * 获取某里程L处的流型，3为满管流，1为分层流，2为气泡流，6为未赋值
      * @param i L点所处管段数
      * @param L 里程，水头位置吧
      * @param pigL
@@ -1946,7 +2259,7 @@ public class Project extends Thread implements Serializable {
      * @return
      */
     public double getFlowPattern(int i,double L,double pigStart,double pigL,double flagpig){
-        double p=6;  //流型，初始未赋值时取6
+        int p=6;  //流型，初始未赋值时取6
 
         if (varPara.line_l[i][1]<=L && varPara.line_l[i][2]>L){
 
@@ -1956,12 +2269,12 @@ public class Project extends Thread implements Serializable {
                 p=2;
             }
         }else if (varPara.line_l[i][2]+0.5*(varPara.line_l[i][3]-varPara.line_l[i][2])<=L && varPara.line_l[i][3]>=L){
-            p=4;
+            p=2;
         }else if (varPara.line_l[i][2]<=L && varPara.line_l[i][2]+0.5*(varPara.line_l[i][3]-varPara.line_l[i][2])>=L){
-            p=3;
+            p=2;
         }
         if (L>pigStart && pigL > L && flagpig!=0){//清管器越过计算点后，流型为满管流
-            p=5;
+            p=3;
         }else{
             if (varPara.line_l[i][1]<=L && varPara.line_l[i][2]>L){
 
@@ -2307,7 +2620,8 @@ public class Project extends Thread implements Serializable {
         double []MG=new double[varPara.k+1];
         double []his=new double[varPara.k+1];
 
-        double rhoe,ue,Mae,Te,deth,eTime=0.2,t_record=0,Flag=0;
+        double rhoe,ue,Mae,Te,deth,eTime=0.2,Flag=0;
+        int t_record=0;
         H1[0]=h1;
         H2[0]=h2;
         Lpaiqi[0]=lgk;

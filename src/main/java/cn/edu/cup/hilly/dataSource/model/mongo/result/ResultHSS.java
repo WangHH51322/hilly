@@ -8,20 +8,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
 
-/**
- * @author CodeChap
- * @date 2021-05-04- 21:05
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Document
-public class ResultSimple {
+public class ResultHSS {
+
     @Id
     private String _id;
-    private double[][] pigV;
-    private double[][] pigL;
-    private double[][] aLSP;
-    private double[][] dMgP;
-    private double[][] mG;
+    private Integer segments;
+    private Double singleLength;
+//    private String projectId;
+    private double[][] hSS;
+//    private Map<Double, double[]> hSSMap;
+    private Map<String, Map<Double, double[]>> hSSMap;
 }

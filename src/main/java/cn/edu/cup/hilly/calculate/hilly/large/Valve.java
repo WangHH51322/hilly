@@ -18,7 +18,7 @@ public class Valve  {
     @InputField(name = "valveS", unit = "m")
     private double valveS;
     @InputField(name = "valveType", unit = "")
-    private double valveType;
+    private int valveType;
 
     public double getValveD() {
         return valveD;
@@ -64,7 +64,7 @@ public class Valve  {
         return valveType;
     }
 
-    public void setValveType(double valveType) {
+    public void setValveType(int valveType) {
         this.valveType = valveType;
     }
 

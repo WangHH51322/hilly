@@ -193,9 +193,9 @@ public class SizeChange {
         for (int i = 0; i < resultsLists.size(); i++) {
             double[] dPLList = resultsLists.get(i);
 //            System.out.println("resultsLists:");
-            for (double v : dPLList) {
+//            for (double v : dPLList) {
 //                System.out.print("dPLList_" + v);
-            }
+//            }
             double[] dPL = new double[size];
             for (int j = 0; j < size; j++) {
                 dPL[j] = dPLList[j];
@@ -203,10 +203,81 @@ public class SizeChange {
             }
             results.put(i*skip*multiple,dPL);
         }
+
         /**
          * 将Map排序并输出
          */
         return new TreeMap(results);
     }
 
+    public Map<String,Map<Double,double[]>> ResultAfterChange(int skip, double multiple, List<String> stationName) throws NoSuchFieldException, IllegalAccessException {
+        /**
+         * 中间参数
+         */
+        Map<String,Map<Double,double[]>> resultOut = new HashMap<>();
+        List<double[]> resultsLists = new ArrayList<>();
+        /**
+         * 将输入的double[][]进行行截取
+         */
+        loop:for (int j = 0; j < resultsData.length; j+=skip) {
+            double sum = 0;
+            double[] dPL = new double[resultsData[0].length];
+            for (int k = 0; k < resultsData[j].length; k++) {
+                Double re = resultsData[j][k];
+                if (re.isNaN()) {
+                    break loop;
+                }
+                dPL[k] = resultsData[j][k];
+                sum += resultsData[j][k];
+            }
+            if (j == 0) {
+                resultsLists.add(dPL);
+            }
+            if (j != 0 && sum != 0.0) {
+                resultsLists.add(dPL);
+            }
+        }
+        /**
+         * 判断是否为初始时刻,此时全线的压力数据全部为0,直接输出
+         */
+//        if (resultsLists.size() == 0) {
+//            double[] lastDPL = resultsLists.get(0);
+//            results.put(0.0,lastDPL);
+//            return results;
+//        }
+        /**
+         * 根据每个时刻最后一行数据的位置,记录,并保存
+         * 然后将前面的行也按此位置进行记录
+         */
+        List<Integer> location = new ArrayList<>();
+        double[] lastDPL = resultsLists.get(resultsLists.size() - 1);
+        for (int i = 0; i < lastDPL.length; i++) {
+            if (lastDPL[i] != 0.0) {
+                location.add(i);
+            }
+        }
+        int size = location.size();
+        List<Integer> locationIn = new ArrayList<>();
+        List<Integer> locationOut = new ArrayList<>();
+        for (int i = 0; i < location.size()/2; i++) {
+            locationIn.add(location.get(i));
+            locationOut.add(location.get(i+location.size()/2));
+        }
+        for (int i = 0; i < size / 2; i++) {
+            Map<Double,double[]> results = new HashMap<>();
+            for (int j = 0; j < resultsLists.size(); j++) {
+                double[] dPLList = resultsLists.get(j);
+                double[] dPL = new double[2];
+                dPL[0] = dPLList[locationIn.get(i)];
+                dPL[1] = dPLList[locationOut.get(i)];
+                results.put(j*skip*multiple,dPL);
+            }
+            resultOut.put(stationName.get(locationIn.get(i)-1),results);
+        }
+        /**
+         * 将Map排序并输出
+         */
+        TreeMap treeMap = new TreeMap(resultOut);
+        return treeMap;
+    }
 }

@@ -39,6 +39,8 @@ public class ThreadController {
     @Autowired
     ResultDPLService resultDPLService;
     @Autowired
+    ResultDHLService resultDHLService;
+    @Autowired
     ResultALFPService resultALFPService;
     @Autowired
     ResultLgHisService resultLgHisService;
@@ -46,6 +48,8 @@ public class ThreadController {
     ResultPgHisService resultPgHisService;
     @Autowired
     ResultMHisService resultMHisService;
+    @Autowired
+    ResultHSSService resultHSSService;
     @Autowired
     ResultSimpleService resultSimpleService;
     @Autowired
@@ -163,6 +167,8 @@ public class ThreadController {
             resultULocation.setHillyId(id);
             ResultDPL resultDPL = new ResultDPL();
             resultDPL.set_id(id);
+            ResultDHL resultDHL = new ResultDHL();
+            resultDHL.set_id(id);
             ResultAllLineFP resultAllLineFP = new ResultAllLineFP();
             resultAllLineFP.set_id(id);
             ResultLgHis resultLgHis = new ResultLgHis();
@@ -171,6 +177,8 @@ public class ThreadController {
             resultPgHis.set_id(id);
             ResultMHis resultMHis = new ResultMHis();
             resultMHis.set_id(id);
+            ResultHSS resultHSS = new ResultHSS();
+            resultHSS.set_id(id);
             ResultSimple resultSimple = new ResultSimple();
             resultSimple.set_id(id);
             while (thread.isAlive()) {
@@ -199,34 +207,13 @@ public class ThreadController {
 //                        msg.setObject(resultDPL);
 //                        System.out.println("save data");
 
+                        Map<Double, double[]> dhl = project.getDHL();
+                        resultDHL.setDHLMap(dhl);
+                        resultDHLService.updateMap(resultDHL);
+
                         Map<Double, double[]> aLineFP = project.getALineFP();
                         resultAllLineFP.setAllLineFPMap(aLineFP);
                         resultALFPService.updateMap(resultAllLineFP);
-
-                        Map<Double, double[]> lgHis = project.getLgHis();
-                        resultLgHis.setLgHisMap(lgHis);
-                        resultLgHisService.updateMap(resultLgHis);
-
-                        Map<Double, double[]> pgHis = project.getPgHis();
-                        resultPgHis.setPgHisMap(pgHis);
-                        resultPgHisService.updateMap(resultPgHis);
-
-                        Map<Double, double[]> mHis = project.getmHis();
-                        resultMHis.setMHisMap(mHis);
-                        resultMHisService.updateMap(resultMHis);
-
-                        double[][] pigV = project.getPigV();
-                        resultSimple.setPigV(pigV);
-                        resultSimpleService.updatePigV(resultSimple);
-                        double[][] pigL = project.getPigL();
-                        resultSimple.setPigL(pigL);
-                        resultSimpleService.updatePigL(resultSimple);
-                        double[][] dMgP = project.getDMgP();
-                        resultSimple.setDMgP(dMgP);
-                        resultSimpleService.updateDMgP(resultSimple);
-                        double[][] aLSP = project.getaLSP();
-                        resultSimple.setALSP(aLSP);
-                        resultSimpleService.updateALSP(resultSimple);
 
 //                        System.out.println("save data");
                     }
@@ -235,6 +222,42 @@ public class ThreadController {
                 }
 //                sender.send(msg);
             }
+            /**
+             * 计算结束后存储数据
+             */
+            Map<Double, double[]> lgHis = project.getLgHis();
+            resultLgHis.setLgHisMap(lgHis);
+            resultLgHisService.updateMap(resultLgHis);
+
+            Map<Double, double[]> pgHis = project.getPgHis();
+            resultPgHis.setPgHisMap(pgHis);
+            resultPgHisService.updateMap(resultPgHis);
+
+            Map<Double, double[]> mHis = project.getmHis();
+            resultMHis.setMHisMap(mHis);
+            resultMHisService.updateMap(resultMHis);
+
+            Map<String, Map<Double, double[]>> hSS = project.getHSS();
+            resultHSS.setHSSMap(hSS);
+            resultHSSService.updateMap(resultHSS);
+
+            double[][] mG = project.getmG();
+            resultSimple.setMG(mG);
+            resultSimpleService.updateMG(resultSimple);
+            double[][] pigV = project.getPigV();
+            resultSimple.setPigV(pigV);
+            resultSimpleService.updatePigV(resultSimple);
+            double[][] pigL = project.getPigL();
+            resultSimple.setPigL(pigL);
+            resultSimpleService.updatePigL(resultSimple);
+            double[][] dMgP = project.getDMgP();
+            resultSimple.setDMgP(dMgP);
+            resultSimpleService.updateDMgP(resultSimple);
+            double[][] aLSP = project.getaLSP();
+            resultSimple.setALSP(aLSP);
+            resultSimpleService.updateALSP(resultSimple);
+//            resultSimpleService.update(resultSimple);
+
             return RespBean.ok("开始计算");
         } catch (Exception e) {
             return RespBean.error("启动失败",e.getClass().getName());

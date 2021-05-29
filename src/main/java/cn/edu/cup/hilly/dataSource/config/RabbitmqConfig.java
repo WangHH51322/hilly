@@ -27,7 +27,7 @@ import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class RabbitmqConfig {
     private static final Logger logger = LoggerFactory.getLogger(RabbitmqConfig.class);
     @Bean

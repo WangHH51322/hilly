@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Output {
 
-    private static final String OUT_PUT_PATH = "C:\\Users\\WangHH\\Desktop\\TempFile\\DaLuoCha\\output\\009";
+    private static final String OUT_PUT_PATH = "C:\\Users\\WangHH\\Desktop\\TempFile\\DaLuoCha\\output\\010";
 
     public static void OutToTXT000(double[][] arr,double[][] arrL,String fileName) throws IOException {
         File file=new File(OUT_PUT_PATH);
@@ -46,7 +46,7 @@ public class Output {
         FileWriter out1 = new FileWriter(file1);        //文件写入流
         for(int yy=0;yy<arr.length;yy++){
             //out1.write(yy + "\t");
-            out1.write(yy/60.0 + "\t");
+            out1.write(yy/120.0 + "\t");
             out1.write(arr[yy] + "\t");
             out1.write("\n");
             yy=yy+11;
@@ -64,7 +64,7 @@ public class Output {
         FileWriter out1 = new FileWriter(file1);        //文件写入流
         for(int yy=0;yy<arr.length;yy++){
             //out1.write(yy + "\t");
-            out1.write(((Tpig+yy)/12.0) + "\t");
+            out1.write(((Tpig+yy)/24.0) + "\t");
             out1.write(arr[yy] + "\t");
             out1.write("\n");
         }
@@ -122,7 +122,7 @@ public class Output {
         }
         out1.write("\n");
         for(int yy=0;yy<arr[0].length;yy++){    //////////////////////////////与原始不同         0124
-            out1.write(  yy/60.0 + "\t");
+            out1.write(  yy/120.0 + "\t");
             for(int zz=1;zz<arr.length;zz++) {
                 out1.write(arr[zz][yy] + "\t");
             }
@@ -169,9 +169,37 @@ public class Output {
         FileWriter out1 = new FileWriter(file2);        //文件写入流
 
         for(int yy=0;yy< arr.length;yy++){
-            out1.write(  yy*5.0/60.0 + "\t");
+            out1.write(  yy*5.0/120.0 + "\t");
             for(int zz=1;zz<arr[0].length;zz++) {
-                out1.write(arr[yy][zz]/1000000 + "\t");
+                if (yy!=0){
+                    out1.write(arr[yy][zz]/1000000 + "\t");
+                }else {
+                    out1.write(arr[yy][zz] + "\t");
+                }
+            }
+            out1.write("\n");
+            //if (arr[yy][5]==0&&arr[yy-1][5]!=0) break;
+        }
+        out1.close();
+    }
+    public static void OutToTXTDHL(double[][] arr,String fileName) throws IOException {
+        File file=new File(OUT_PUT_PATH);
+        if(!file.exists()){//如果文件夹不存在
+            file.mkdir();//创建文件夹
+        }
+
+        File file2 = new File(OUT_PUT_PATH + "\\"+ fileName +".txt"); //lg
+        FileWriter out1 = new FileWriter(file2);        //文件写入流
+
+        for(int yy=0;yy< arr.length;yy++){
+            //out1.write(  yy*5.0/60.0 + "\t");
+            out1.write(  yy*5.0/120.0 + "\t");
+            for(int zz=1;zz<arr[0].length;zz++) {
+                if (yy!=0){
+                    out1.write(arr[yy][zz] + "\t");
+                }else {
+                    out1.write(arr[yy][zz] + "\t");
+                }
             }
             out1.write("\n");
             //if (arr[yy][5]==0&&arr[yy-1][5]!=0) break;
@@ -190,7 +218,7 @@ public class Output {
         FileWriter out1 = new FileWriter(file2);        //文件写入流
 
         for(int yy=0;yy< arr.length;yy++){
-            out1.write(  yy*5.0/60.0 + "\t");
+            out1.write(  yy*5.0/120.0 + "\t");
             for(int zz=1;zz<arr[0].length;zz++) {
                 out1.write(arr[yy][zz] + "\t");
             }

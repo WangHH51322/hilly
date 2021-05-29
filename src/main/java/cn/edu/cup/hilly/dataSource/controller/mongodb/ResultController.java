@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author CodeChap
  * @date 2021-05-22 10:57
@@ -20,6 +23,10 @@ public class ResultController {
 
     @Autowired
     ResultDPLService resultDPLService;
+    @Autowired
+    ResultDHLService resultDHLService;
+    @Autowired
+    ResultHSSService resultHSSService;
     @Autowired
     ResultALFPService resultALFPService;
     @Autowired
@@ -43,10 +50,39 @@ public class ResultController {
         }
     }
 
+    @GetMapping("/DHL")
+    public RespBean getDHL(@RequestParam("id") String id) {
+        try {
+            ResultDHL resultDHL = resultDHLService.find(id);
+            return RespBean.ok("查询成功",resultDHL);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+
+    @GetMapping("/HSS")
+    public RespBean getHSS(@RequestParam("id") String id) {
+        try {
+            ResultHSS resultHSS = resultHSSService.find(id);
+            return RespBean.ok("查询成功",resultHSS);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+
     @GetMapping("/ALFP")
     public RespBean getALFP (@RequestParam("id") String id) {
         try {
             ResultAllLineFP resultAllLineFP = resultALFPService.find(id);
+            return RespBean.ok("查询成功",resultAllLineFP);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+    @GetMapping("/ALFP2")
+    public RespBean getALFP2 (@RequestParam("id") String id) {
+        try {
+            Map<Double, List<ResultAllLineFP.outPut>> resultAllLineFP = resultALFPService.find2(id);
             return RespBean.ok("查询成功",resultAllLineFP);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getMessage());

@@ -11,6 +11,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author CodeChap
  * @date 2021-05-04- 19:22
@@ -36,5 +39,13 @@ public class ResultALFPService {
         ResultAllLineFP resultAllLineFP = mongoTemplate.findOne(query, ResultAllLineFP.class,"resultAllLineFP");
         System.out.println(resultAllLineFP.getAllLineFPMap());
         return resultAllLineFP;
+    }
+
+    public Map<Double, List<ResultAllLineFP.outPut>> find2(String id) {
+//        ResultAllLineFP resultAllLineFP = resultALSPDao.findById(id).get();
+        Query query = new Query(Criteria.where("_id").is(id));
+        ResultAllLineFP resultAllLineFP = mongoTemplate.findOne(query, ResultAllLineFP.class,"resultAllLineFP");
+        Map<Double, List<ResultAllLineFP.outPut>> doubleListMap = resultAllLineFP.convertALFP(248.0);
+        return doubleListMap;
     }
 }

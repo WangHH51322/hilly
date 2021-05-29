@@ -61,7 +61,7 @@
 					"valveType":{
 						"unit":"",
 						"name":"valveType",
-						"value":"1.00"
+						"value":"1"
 					},
 					"valveK":{
 						"unit":"",
@@ -565,7 +565,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1.00"
+									"value":"1"
 								},
 								"valveK":{
 									"unit":"",
@@ -836,7 +836,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1.00"
+									"value":"1"
 								},
 								"valveK":{
 									"unit":"",
@@ -1107,7 +1107,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1.00"
+									"value":"1"
 								},
 								"valveK":{
 									"unit":"",
@@ -1177,7 +1177,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1.00"
+									"value":"1"
 								},
 								"valveK":{
 									"unit":"",
@@ -1247,7 +1247,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1.00"
+									"value":"1"
 								},
 								"valveK":{
 									"unit":"",

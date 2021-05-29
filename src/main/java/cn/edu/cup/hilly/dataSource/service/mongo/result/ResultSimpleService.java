@@ -1,6 +1,7 @@
 package cn.edu.cup.hilly.dataSource.service.mongo.result;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultDPLDao;
+import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultSimpleDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultMHis;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultSimple;
@@ -15,17 +16,22 @@ import org.springframework.stereotype.Service;
 public class ResultSimpleService {
 
     @Autowired
-    ResultDPLDao resultDPLDao;
+    ResultSimpleDao resultSimpleDao;
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public void updateMap(ResultDPL resultDPL) {
-        String id = resultDPL.get_id();
-        Query query = Query.query(Criteria.where("_id").is(id));
-        Update update = Update.update("dPLMap",resultDPL.getDPLMap());
-        mongoTemplate.upsert(query,update, ResultDPL.class,"resultDPL");
-    }
+//    public void update(ResultSimple resultSimple) {
+//        String id = resultSimple.get_id();
+//        Query query = Query.query(Criteria.where("_id").is(id));
+//        mongoTemplate.upsert()
+//    }
 
+    public void updateMG(ResultSimple resultSimple) {
+        String id = resultSimple.get_id();
+        Query query = Query.query(Criteria.where("_id").is(id));
+        Update update = Update.update("mG",resultSimple.getMG());
+        mongoTemplate.upsert(query,update, ResultSimple.class,"resultSimple");
+    }
     public void updatePigV(ResultSimple resultSimple) {
         String id = resultSimple.get_id();
         Query query = Query.query(Criteria.where("_id").is(id));
@@ -58,4 +64,7 @@ public class ResultSimpleService {
         ResultSimple resultSimple = mongoTemplate.findOne(query, ResultSimple.class, "resultSimple");
         return resultSimple;
     }
+
+
+
 }
