@@ -26,6 +26,7 @@ public class ResultAllLineFP {
     private Integer segments;
     private Double singleLength;
     private double[][] aLineFP;
+    private double[][] lz;
     private Map<Double, double[]> allLineFPMap;
 
     public Map<Double, List<outPut>> convertALFP(double startMile) {
@@ -37,7 +38,7 @@ public class ResultAllLineFP {
                 outPut outPut = new outPut();
                 outPut.setStart(startMile + (i-1)*0.5);
                 outPut.setEnd(startMile + (i)*0.5);
-                outPut.setType(value[i]);
+                outPut.setType((int) value[i]);
                 outPuts.add(outPut);
             }
             result.put(entry.getKey(),outPuts);
@@ -48,7 +49,7 @@ public class ResultAllLineFP {
     public class outPut {
         private double start;
         private double end;
-        private double type;
+        private int type;
 
         public double getStart() {
             return start;
@@ -66,11 +67,11 @@ public class ResultAllLineFP {
             this.end = end;
         }
 
-        public double getType() {
+        public int getType() {
             return type;
         }
 
-        public void setType(double type) {
+        public void setType(int type) {
             this.type = type;
         }
     }

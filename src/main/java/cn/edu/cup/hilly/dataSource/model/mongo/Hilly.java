@@ -1,6 +1,7 @@
 package cn.edu.cup.hilly.dataSource.model.mongo;
 
 import cn.edu.cup.hilly.dataSource.model.mongo.Pipe.Pipe;
+import cn.edu.cup.hilly.dataSource.model.mongo.Pipe.PipeList;
 import cn.edu.cup.hilly.dataSource.model.mongo.interInfo.InterInfo;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.Medium;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
@@ -38,6 +39,7 @@ public class Hilly {
     private Pig pig;
     private PigList pigList;
     private Pipe pipe;
+    private PipeList pipeList;
     private Pump pump;
     private PumpList pumpList;
     private SiteInfo siteInfo;
@@ -54,6 +56,7 @@ public class Hilly {
         this.pig = new Pig();
         this.pigList = new PigList();
         this.pipe = new Pipe();
+        this.pipeList = new PipeList();
         this.pump = new Pump();
         this.pumpList = new PumpList();
         this.siteInfo = new SiteInfo();

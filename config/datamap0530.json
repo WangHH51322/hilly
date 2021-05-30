@@ -41,7 +41,7 @@
 					"valveT":{
 						"unit":"s",
 						"name":"valveT",
-						"value":"500.00"
+						"value":"0.00"
 					},
 					"valveName":{
 						"unit":"m",
@@ -61,7 +61,7 @@
 					"valveType":{
 						"unit":"",
 						"name":"valveType",
-						"value":"1"
+						"value":"0"
 					},
 					"valveK":{
 						"unit":"",
@@ -80,7 +80,7 @@
 			"totalTime":{
 				"unit":"h",
 				"name":"totalTime",
-				"value":"100.00"
+				"value":"160.00"
 			}
 		},
 		"stationList":{
@@ -503,7 +503,43 @@
 					"stationValves":{
 						"unit":"",
 						"name":"stationValves",
-						"value":[]
+						"value":[{
+							"valveD":{
+								"unit":"m",
+								"name":"valveD",
+								"value":"0.30"
+							},
+							"valveT":{
+								"unit":"s",
+								"name":"valveT",
+								"value":"300.00"
+							},
+							"valveName":{
+								"unit":"m",
+								"name":"valveName",
+								"value":"调压阀1"
+							},
+							"valveC":{
+								"unit":"",
+								"name":"valveC",
+								"value":"20000.00"
+							},
+							"valveS":{
+								"unit":"m",
+								"name":"valveS",
+								"value":"0.00"
+							},
+							"valveType":{
+								"unit":"",
+								"name":"valveType",
+								"value":"1"
+							},
+							"valveK":{
+								"unit":"",
+								"name":"valveK",
+								"value":"1.00"
+							}
+						}]
 					},
 					"stationType":{
 						"unit":"",
@@ -565,7 +601,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1"
+									"value":"2"
 								},
 								"valveK":{
 									"unit":"",
@@ -821,7 +857,7 @@
 								"valveName":{
 									"unit":"m",
 									"name":"valveName",
-									"value":"排气阀1"
+									"value":"排气阀2"
 								},
 								"valveC":{
 									"unit":"",
@@ -836,7 +872,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1"
+									"value":"2"
 								},
 								"valveK":{
 									"unit":"",
@@ -1092,7 +1128,7 @@
 								"valveName":{
 									"unit":"m",
 									"name":"valveName",
-									"value":"排气阀1"
+									"value":"排气阀3"
 								},
 								"valveC":{
 									"unit":"",
@@ -1107,7 +1143,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1"
+									"value":"2"
 								},
 								"valveK":{
 									"unit":"",
@@ -1162,7 +1198,7 @@
 								"valveName":{
 									"unit":"m",
 									"name":"valveName",
-									"value":"排气阀1"
+									"value":"排气阀4"
 								},
 								"valveC":{
 									"unit":"",
@@ -1177,7 +1213,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1"
+									"value":"2"
 								},
 								"valveK":{
 									"unit":"",
@@ -1232,7 +1268,7 @@
 								"valveName":{
 									"unit":"m",
 									"name":"valveName",
-									"value":"排气阀1"
+									"value":"排气阀5"
 								},
 								"valveC":{
 									"unit":"",
@@ -1247,7 +1283,7 @@
 								"valveType":{
 									"unit":"",
 									"name":"valveType",
-									"value":"1"
+									"value":"2"
 								},
 								"valveK":{
 									"unit":"",
@@ -1275,47 +1311,70 @@
 				}
 			]
 		},
-		"pipe":{
-			"pipeOutDiameter":{
-				"unit":"m",
-				"name":"pipeOutDiameter",
-				"value":"0.813"
-			},
-			"maxPressure":{
-				"unit":"MPa",
-				"name":"maxPressure",
-				"value":"20.0"
-			},
-			"pipeRoughness":{
-				"unit":"m",
-				"name":"pipeRoughness",
-				"value":"0.0001"
-			},
-			"pipeThickness":{
-				"unit":"m",
-				"name":"pipeThickness",
-				"value":"0.0172"
-			}
+		"pipeList":{
+			"unit":"",
+			"name":"pipeList",
+			"value":[
+				{
+					"pipeOutDiameter":{
+						"unit":"m",
+						"name":"pipeOutDiameter",
+						"value":"0.813"
+					},
+					"maxPressure":{
+						"unit":"MPa",
+						"name":"maxPressure",
+						"value":"20.0"
+					},
+					"pipeRoughness":{
+						"unit":"m",
+						"name":"pipeRoughness",
+						"value":"0.0001"
+					},
+					"pipeThickness":{
+						"unit":"m",
+						"name":"pipeThickness",
+						"value":"0.0172"
+					}
+				},
+				{
+					"pipeOutDiameter":{
+						"unit":"m",
+						"name":"pipeOutDiameter",
+						"value":"0.813"
+					},
+					"maxPressure":{
+						"unit":"MPa",
+						"name":"maxPressure",
+						"value":"18.0"
+					},
+					"pipeRoughness":{
+						"unit":"m",
+						"name":"pipeRoughness",
+						"value":"0.0001"
+					},
+					"pipeThickness":{
+						"unit":"m",
+						"name":"pipeThickness",
+						"value":"0.0172"
+					}
+				}
+			]
 		},
 		"pigList":{
 			"unit":"",
 			"name":"pigList",
 			"value":[
 				{
-					"pigDiameter":{
-						"unit":"m",
-						"name":"pigDiameter",
-						"value":"0.70"
-					},
 					"pigMass":{
 						"unit":"kg",
 						"name":"pigMass",
 						"value":"700.00"
 					},
-					"pigArea":{
-						"unit":"m^2",
-						"name":"pigArea",
-						"value":"0.50"
+					"pigExtra":{
+						"unit":"",
+						"name":"pigExtra",
+						"value":"0.05"
 					},
 					"pigName":{
 						"unit":"",
@@ -1334,7 +1393,7 @@
 			"errorTips":{
 				"unit":"",
 				"name":"errorTips",
-				"value":"iiiiiiiiii"
+				"value":"demo字符串"
 			},
 			"startPumpOrderRev":{
 				"unit":"",

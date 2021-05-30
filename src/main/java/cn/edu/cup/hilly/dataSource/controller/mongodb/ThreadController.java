@@ -142,13 +142,13 @@ public class ThreadController {
         ExcelFile excelFile = fileService.find(id);
         double[][] lz = excelFile.getLz();  //三角式地形数据
         Integer inum = excelFile.getInum();
-        System.out.println("lz : ");
-        for (int i = 0; i < lz.length; i++) {
-            System.out.println();
-            for (int i1 = 0; i1 < lz[i].length; i1++) {
-                System.out.print(lz[i][i1] + " ");
-            }
-        }
+//        System.out.println("lz : ");
+//        for (int i = 0; i < lz.length; i++) {
+//            System.out.println();
+//            for (int i1 = 0; i1 < lz[i].length; i1++) {
+//                System.out.print(lz[i][i1] + " ");
+//            }
+//        }
         try {
             Project project = new Project();
             project.setLz(lz);
@@ -163,14 +163,25 @@ public class ThreadController {
             /**
              * 数据存储,输出
              */
+
             ResultULocation resultULocation = new ResultULocation();
             resultULocation.setHillyId(id);
+
             ResultDPL resultDPL = new ResultDPL();
             resultDPL.set_id(id);
+//            resultDPL.setLz(lz_out);
+//            resultDPLService.add(resultDPL);
+
             ResultDHL resultDHL = new ResultDHL();
             resultDHL.set_id(id);
+//            resultDHL.setLz(lz_out);
+//            resultDHLService.add(resultDHL);
+
             ResultAllLineFP resultAllLineFP = new ResultAllLineFP();
             resultAllLineFP.set_id(id);
+//            resultAllLineFP.setLz(lz_out);
+//            resultALFPService.add(resultAllLineFP);
+
             ResultLgHis resultLgHis = new ResultLgHis();
             resultLgHis.set_id(id);
             ResultPgHis resultPgHis = new ResultPgHis();
@@ -181,10 +192,26 @@ public class ThreadController {
             resultHSS.set_id(id);
             ResultSimple resultSimple = new ResultSimple();
             resultSimple.set_id(id);
+            boolean in = true;
             while (thread.isAlive()) {
                 try {
                     Thread.sleep(1 * 1000); //设置暂停的时间 1 秒
                     if (!project.isLocked()) {
+                        //计算过程中的地形,用于数据展示的x轴
+                        if (in) {
+                            double[][] lz_out = project.getLz_out();
+                            if (lz_out != null) {
+                                resultDPL.setLz(lz_out);
+                                resultDPLService.add(resultDPL);
+                                resultDHL.setLz(lz_out);
+                                resultDHLService.add(resultDHL);
+                                resultAllLineFP.setLz(lz_out);
+                                resultALFPService.add(resultAllLineFP);
+                                System.out.println("进入成功!!!");
+                                in = false;
+                            }
+                        }
+
                         /**
                          * 传输数据
                          */
@@ -256,7 +283,6 @@ public class ThreadController {
             double[][] aLSP = project.getaLSP();
             resultSimple.setALSP(aLSP);
             resultSimpleService.updateALSP(resultSimple);
-//            resultSimpleService.update(resultSimple);
 
             return RespBean.ok("开始计算");
         } catch (Exception e) {

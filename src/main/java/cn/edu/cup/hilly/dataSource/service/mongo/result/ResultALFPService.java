@@ -25,6 +25,9 @@ public class ResultALFPService {
     ResultALFPDao resultALSPDao;
     @Autowired
     MongoTemplate mongoTemplate;
+    public void add(ResultAllLineFP result) {
+        resultALSPDao.save(result);
+    }
 
     public void updateMap(ResultAllLineFP resultAllLineFP) {
         String id = resultAllLineFP.get_id();

@@ -12,11 +12,8 @@ public class Pig{
     @InputField(name = "pigMass", unit = "kg")
     double pigM;
 
-    @InputField(name = "pigDiameter", unit = "m")
-    double pigD;
-
-    @InputField(name = "pigArea", unit = "m^2")
-    double pigA;
+    @InputField(name = "pigExtra", unit = "")
+    double pigE;
 
 
     public double getPigM() {
@@ -27,20 +24,12 @@ public class Pig{
         this.pigM = pigM;
     }
 
-    public double getPigD() {
-        return pigD;
+    public double getPigE() {
+        return pigE;
     }
 
-    public void setPigD(double pigD) {
-        this.pigD = pigD;
-    }
-
-    public double getPigA() {
-        return pigA;
-    }
-
-    public void setPigA(double pigA) {
-        this.pigA = pigA;
+    public void setPigE(double pigE) {
+        this.pigE = pigE;
     }
 
     public String getPigName() {

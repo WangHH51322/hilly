@@ -20,5 +20,6 @@ public class ResultDPL {
     private Double singleLength;
 //    private String projectId;
     private double[][] dPL;
+    private double[][] lz;
     private Map<Double, double[]> dPLMap;
 }

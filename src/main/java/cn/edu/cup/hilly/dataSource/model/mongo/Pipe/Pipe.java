@@ -20,8 +20,10 @@ public class Pipe {
 //    private PipeStartAltitude pipeStartAltitude;
     private PipeThickness pipeThickness;
     private PipeMaxPressure pipeMaxPressure;
+    private PipeId pipeId;
 
     public Pipe() {
+        this.pipeId = new PipeId();
 //        this.pipeStartMileage = new PipeStartMileage();
 //        this.pipeLength = new PipeLength();
 //        this.pipeMileage = new PipeMileage();

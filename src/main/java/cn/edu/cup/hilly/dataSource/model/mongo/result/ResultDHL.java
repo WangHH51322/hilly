@@ -20,5 +20,6 @@ public class ResultDHL {
     private Double singleLength;
 //    private String projectId;
     private double[][] dHL;
+    private double[][] lz;
     private Map<Double, double[]> dHLMap;
 }

@@ -10,6 +10,4 @@ public class Conpara {
     double R=8.314;    //气体常数，J/（mol*K）
     double Mg=0.029;    //空气的相对分子质量，kg/mol
     double FT=0.0728;    //水的表面张力
-
-
 }

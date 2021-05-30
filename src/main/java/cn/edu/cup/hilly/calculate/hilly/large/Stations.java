@@ -13,20 +13,18 @@ public class Stations {
     private double stationL;
     @InputField(name = "stationZ", unit = "m")       //站点高程
     private double stationZ;
-    @InputField(name = "stationType", unit = "")     //站点种类，泵站为1、排气点2、阀室3
+    @InputField(name = "stationType", unit = "")     //站点种类，泵站为1、排气点2、阀室3,、、、、、、、、、、、分输站为4
     private int stationType;
+    @InputField(name = "OffLoadFlow", unit = "")     //分输站为4，分输流量，下载流量，即离开主线的流量
+    private double OffLoadFlow;
     @InputField(name = "stationPumps", unit = "")     //泵列表
     private List<Pump> pumps;
     @InputField(name = "stationValves", unit = "")    //阀列表
     private List<Valve> valves;
 
-
-
-
     public List<Pump> getPumps() {
         return pumps;
     }
-
 
     public double getStationZ() {
         return stationZ;
@@ -35,8 +33,6 @@ public class Stations {
     public void setStationZ(double stationZ) {
         this.stationZ = stationZ;
     }
-
-
 
     public void setPumps(List<Pump> pumps) {
         this.pumps = pumps;
@@ -52,6 +48,14 @@ public class Stations {
 
     public String getStationName() {
         return stationName;
+    }
+
+    public double getOffLoadFlow() {
+        return OffLoadFlow;
+    }
+
+    public void setOffLoadFlow(double offLoadFlow) {
+        OffLoadFlow = offLoadFlow;
     }
 
     public void setStationName(String stationName) {

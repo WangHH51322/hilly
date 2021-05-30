@@ -29,8 +29,8 @@ public class Project extends Thread implements Serializable {
     @InputField(name = "variableParameter", unit = "")
     Varpara varPara;
 
-    @InputField(name = "pipe", unit = "")
-    Pipeline pipeLine;
+    @InputField(name = "pipeList", unit = "")
+    List<Pipeline> pipeLines;
 
     @InputField(name = "mediumList", unit = "")
     List<Oil> oils;
@@ -49,6 +49,18 @@ public class Project extends Thread implements Serializable {
 
     @InputField(name = "message", unit = "")
     private Messages msg;
+
+
+    /**
+     * lz_out
+     */
+    private double[][] lz_out;
+    public double[][] getLz_out() {
+        return lz_out;
+    }
+    public void setLz_out(double[][] lz_out) {
+        this.lz_out = lz_out;
+    }
 
     /**
      * dpl
@@ -248,6 +260,7 @@ public class Project extends Thread implements Serializable {
     @SneakyThrows
     public void run() {
         conPara.Ql = varPara.Qh/3600.0;
+        Pipeline pipeLine = pipeLines.get(0);
         Oil oil = oils.get(0);
         double message=0;
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
@@ -425,6 +438,34 @@ public class Project extends Thread implements Serializable {
         }
 
         varPara.waterHeadLocation[0]=varPara.line_l[1][1];   //水头初始位置等于首个下坡段低点
+
+        /**
+         * dHL的第0列未被输出，txt中开始于248.5
+         * lz_new的第0行是248.第一行是248.5
+         */
+        double [][] lz_new = new double[(int)((varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/500+1)][2];
+        lz_new[0][0]=varPara.line_l[1][1];
+        lz_new[0][1]=varPara.line_d[1][1];
+        varPara.dHL[0][0]=varPara.line_l[1][1]/1000.0;
+        for (int x = 1; x <=(varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/500; x++) {
+            varPara.dHL[0][x]=0.5+varPara.dHL[0][x-1];//地形的里程
+            lz_new[x][0]= varPara.dHL[0][x];
+        }
+        for (int x = 1; x <=(varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/500; x++) {
+            varPara.dHL[varPara.dHL.length-2][x]=getZ(varPara.line_l, varPara.line_d,varPara.dHL[0][x]*1000);
+            lz_new[x][1]= varPara.dHL[varPara.dHL.length-2][x];
+        }
+        /**
+         * 输出lz_new
+         */
+        setLz_out(lz_new);
+//        System.out.println("地形数据");
+//        for (int ii = 0; ii < lz_out.length; ii++) {
+//            System.out.println(" ");
+//            for (int j = 0; j < lz_out[ii].length; j++) {
+//                System.out.print(lz_out[ii][j] + " // ");
+//            }
+//        }
 
         System.out.println("总模拟长度："+(varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/1000+"km");
         cal_l0();//计算各管段的气段尾部估计位置，也计算了满管流动的水力坡降
@@ -886,7 +927,7 @@ public class Project extends Thread implements Serializable {
     }
     //迭代计算明渠流动公式
     public double calDelta(double slopeD) {
-
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -916,6 +957,7 @@ public class Project extends Thread implements Serializable {
     }
 
     public double cal0(double slopeD, double Hgk, double MG, double Lpaiqi, double H1, double H2){
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -948,7 +990,7 @@ public class Project extends Thread implements Serializable {
     }
     //迭代计算每个下坡段的液位----
     public  double cal3(double h2, double Hgk, double za, double zb, double slopeD, double slopeU, double MG, double P2){
-
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -1000,6 +1042,7 @@ public class Project extends Thread implements Serializable {
     //-----------------迭代计算新的delta--------------------------
     //--------------delta是液相的圆周角，rad --------
     public  double calVen(double slopeD,double Pgk) {
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -1051,6 +1094,7 @@ public class Project extends Thread implements Serializable {
     }
     //
     public   double[][] matrixAssemblyX(double lgk,double Pgk,double Hgk, double slopeU,double slopeD, double uk,double h1k,double h2k){
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -1084,6 +1128,7 @@ public class Project extends Thread implements Serializable {
      *          h2k：当前U型管段,在第k时步，上坡段的液位高度；
      * */
     public  double[][] matrixAssemblyZ(double lgk, double backPressure_k, double mgk, double Pgk, double Hgk, double slopeU, double slopeD, double uk, double h1k, double h2k){
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -1159,6 +1204,7 @@ public class Project extends Thread implements Serializable {
 
     }
     public  void cal_l0() {
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -1189,6 +1235,7 @@ public class Project extends Thread implements Serializable {
                          double d, double dg0, double M0, double Pgp, double Lgp, double dgp, double Hgp, double[] M,
                          double[] Pg, double[] Lg, double[] deng, double[] Hg, double dl, double nd) throws IOException
     {
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -1825,6 +1872,7 @@ public class Project extends Thread implements Serializable {
      * @param lg_f  各段分层流实时长度
      */
     public void dpL(int n,double T,int num,double dx,double[] waterHeadLocation,double[] dpb,double[] dpbU,double[] dpf,double [][]lg_f,double []vll,double []stationL,double []stationP){
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -1945,6 +1993,7 @@ public class Project extends Thread implements Serializable {
      * @param lg_f  各段分层流实时长度
      */
     public void dHL(int n,double T,int num,double dx,double[] waterHeadLocation,double[] dpb,double[] dpbU,double[] dpf,double [][]lg_f,double []vll,double []stationL,double []stationP){
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -2082,6 +2131,7 @@ public class Project extends Thread implements Serializable {
 
     //getHb即求Hb的方法；输入x是清管器位置，y是清管器速度,dv是速度变化量,dt是时步,s是水头位置（气液界面位置）,Pg是气相压力
     double getHb(double x,double y,double dv,double dt,double s,double Pg){
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -2101,6 +2151,7 @@ public class Project extends Thread implements Serializable {
     }
     //getHa，即求清管器上游纯液相区的压力Ha的方法；x是清管器位置，y是发球位置，dv是速度变化量；z是清管器速度,p是泵站的能头压力
     double getHa(double x,double y,double z,double dv,double dt,double p){
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -2124,7 +2175,7 @@ public class Project extends Thread implements Serializable {
     //shuntai为清管器的瞬态计算函数，x是上一时刻清管器后的压力，y是上一时刻清管器前的压力，z是上一时刻清管器的速度，a是清管器的位置，s是气液界面的位置
     //Pg是清管器后气段压力，p为投球位置提供的能头，f发球位置,phi管道夹角
     double[] getPigV(double x,double y,double z,double a,double s,double Pg,double p,double f,double phi){
-
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -2319,6 +2370,7 @@ public class Project extends Thread implements Serializable {
 
     //单位流量的水力坡降,稳态水力坡降为一个常数,局部损失按1%计算
     public double[] frictionLoss(double re) {
+        Pipeline pipeLine = pipeLines.get(0);
         Oil oil = oils.get(0);
         double a[] = new double[2];
         double m;
@@ -2606,6 +2658,7 @@ public class Project extends Thread implements Serializable {
 
     public double [] exitGas(int i,int num, int StationsNum,double Mg,double Pgk,double lgk,double h1,double h2){
         Oil oil = oils.get(0);
+        Pipeline pipeLine = pipeLines.get(0);
         double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
         double r=D/2;
         double A=Math.PI*D*D/4.0;
@@ -2707,15 +2760,13 @@ public class Project extends Thread implements Serializable {
         }
         return Q2;
     }
-    public Pipeline getPipeline() {
-        return pipeLine;
+
+    public List<Pipeline> getPipeLines() {
+        return pipeLines;
     }
-
-    public void setPipeline(Pipeline pipeline) {
-        this.pipeLine = pipeline;
+    public void setPipeLines(List<Pipeline> pipeLines) {
+        this.pipeLines = pipeLines;
     }
-
-
     public List<Pump> getPumps() {
         return pumps;
     }
@@ -2739,15 +2790,6 @@ public class Project extends Thread implements Serializable {
     public void setVarPara(Varpara varPara) {
         this.varPara = varPara;
     }
-
-    public Pipeline getPipeLine() {
-        return pipeLine;
-    }
-
-    public void setPipeLine(Pipeline pipeLine) {
-        this.pipeLine = pipeLine;
-    }
-
 
     public List<Oil> getOils() {
         return oils;

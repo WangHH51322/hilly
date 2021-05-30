@@ -10,6 +10,7 @@ import lombok.ToString;
 public class Station implements Comparable {
     private StationId stationId;
     private StationName stationName;
+    private OffLoadFlow OffLoadFlow;
     private StationType stationType;
     private StationPumps stationPumps;
     private StationValves stationValves;
@@ -19,6 +20,7 @@ public class Station implements Comparable {
     public Station() {
         this.stationId = new StationId();
         this.stationName = new StationName();
+        this.OffLoadFlow = new OffLoadFlow();
         this.stationType = new StationType();
 //        this.stationPumps = new StationPumps();
 //        this.stationValves = new StationValves();
