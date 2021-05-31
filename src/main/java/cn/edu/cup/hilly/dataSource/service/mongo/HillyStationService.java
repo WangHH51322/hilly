@@ -1,9 +1,6 @@
 package cn.edu.cup.hilly.dataSource.service.mongo;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.HillyDao;
-import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
-import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.Medium;
-import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
 import cn.edu.cup.hilly.dataSource.model.mongo.pumpList.Pump;
 import cn.edu.cup.hilly.dataSource.model.mongo.pumpList.PumpId;
 import cn.edu.cup.hilly.dataSource.model.mongo.stationList.*;
@@ -20,9 +17,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -275,16 +269,7 @@ public class HillyStationService {
         insertStationPump(id,sid);
         insertStationValve(id,sid);
         stations.add(station);
-        stations.sort(new Comparator<Station>() {
-            @Override
-            public int compare(Station station1, Station station2) {
-                String string1 = station1.getStationL().getValue();
-                String string2 = station2.getStationL().getValue();
-                Double double1 = Double.parseDouble(string1);
-                Double double2 = Double.parseDouble(string2);
-                return double1.compareTo(double2);
-            }
-        });
+        sortStations(stations);
         stationList.setValue(stations);
         return extracted(id, stationList);
     }
@@ -312,16 +297,7 @@ public class HillyStationService {
                 break;
             }
         }
-        stations.sort(new Comparator<Station>() {
-            @Override
-            public int compare(Station station1, Station station2) {
-                String string1 = station1.getStationL().getValue();
-                String string2 = station2.getStationL().getValue();
-                Double double1 = Double.parseDouble(string1);
-                Double double2 = Double.parseDouble(string2);
-                return double1.compareTo(double2);
-            }
-        });
+        sortStations(stations);
         stationList.setValue(stations);
         /**
          * 更新stationList
@@ -546,6 +522,7 @@ public class HillyStationService {
             }
         }
         StationList stationList = new StationList();
+        sortStations(stations);
         stationList.setValue(stations);
         /**
          * 删去泵和阀
@@ -558,6 +535,24 @@ public class HillyStationService {
          */
         return extracted(hid, stationList);
     }
+
+    /**
+     * 对全部的站点进行排序
+     * @param stations
+     */
+    private void sortStations(List<Station> stations) {
+        stations.sort(new Comparator<Station>() {
+            @Override
+            public int compare(Station station1, Station station2) {
+                String string1 = station1.getStationL().getValue();
+                String string2 = station2.getStationL().getValue();
+                Double double1 = Double.parseDouble(string1);
+                Double double2 = Double.parseDouble(string2);
+                return double1.compareTo(double2);
+            }
+        });
+    }
+
     /**
      * 抽取代码块
      * @param id

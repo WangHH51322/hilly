@@ -10,16 +10,18 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Pig {
     private PigId pigId;
-    private PigArea pigArea;
+//    private PigArea pigArea;
     private PigName pigName;
-    private PigDiameter pigDiameter;
+//    private PigDiameter pigDiameter;
     private PigMass pigMass;
+    private PigExtra pigExtra;
 
     public Pig() {
         this.pigId = new PigId();
-        this.pigArea = new PigArea();
+//        this.pigArea = new PigArea();
         this.pigName = new PigName();
-        this.pigDiameter = new PigDiameter();
+//        this.pigDiameter = new PigDiameter();
         this.pigMass = new PigMass();
+        this.pigExtra = new PigExtra();
     }
 }
