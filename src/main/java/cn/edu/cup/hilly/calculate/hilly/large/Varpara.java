@@ -19,6 +19,8 @@ public class Varpara {
     @InputField(name = "designFlow", unit = "m3/h")
     double Qh;           //设计投产流量，m3/h
 
+    @InputField(name = "putPigFlag", unit = "")
+    int pigFlag;        //投放清管器的标记,0是不投放,1是投放
 
     double deltaX = 500;    //其他流动时的空间步长1000m
     double hl;    //
@@ -151,7 +153,7 @@ public class Varpara {
 
     int num;        //
     int pigNum = 0;        //清管器计数
-    int pigflag = 0;        //清管器1标记
+
     int pigflag1 = 0;        //清管器1标记
     int flag0,flag1;        //
     double ipj;        //

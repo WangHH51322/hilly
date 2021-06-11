@@ -77,6 +77,4 @@ public class Stations {
     public void setStationType(int stationType) {
         this.stationType = stationType;
     }
-
-
 }

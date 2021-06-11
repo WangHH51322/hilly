@@ -81,6 +81,11 @@
 				"unit":"h",
 				"name":"totalTime",
 				"value":"160.00"
+			},
+			"putPigFlag":{
+				"unit":"",
+				"name":"putPigFlag",
+				"value":"0"
 			}
 		},
 		"stationList":{

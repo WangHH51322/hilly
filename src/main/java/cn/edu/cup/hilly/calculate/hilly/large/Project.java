@@ -285,7 +285,7 @@ public class Project extends Thread implements Serializable {
             varPara.stationListL.add(stations.get(u).getStationL());
         }
 
-        varPara.i= 25;
+        varPara.i= 37;
         varPara.setArr();       //通过get方法用i，k给varPara中的数组赋值
 
 
@@ -389,7 +389,7 @@ public class Project extends Thread implements Serializable {
                 }
             }
         }
-        for (int a=44;a< 68;a++){          ///////////全线
+        for (int a=44;a< 80;a++){          ///////////全线
             if (varPara.line_lll[a][1]!=0 || a==1){
                 System.out.print("第"+(a-43)+"管段"+"\t");
                 for (int b=0;b<4;b++){
@@ -691,7 +691,7 @@ public class Project extends Thread implements Serializable {
                             //停泵
                             stopPump1(varPara.num, varPara.waterL[varPara.num]);
                             //静压
-                            staticP(n, varPara.waterL[varPara.num], varPara.deltaX);
+                            staticP_new(n, varPara.waterL[varPara.num], varPara.deltaX);
                             varPara.kkstop = kk;//停输时刻记录
                             varPara.numstop = varPara.num;//停输时刻记录
                             varPara.rrstop = rr;//停输时刻记录
@@ -738,8 +738,8 @@ public class Project extends Thread implements Serializable {
 
                             if (varPara.waterL[varPara.num] > stations.get(stationNum00).getStationL() + 50000 &&
                                     stations.get(stationNum00).getStationL() > 248000 && stations.get(stationNum00).getStationL() < 400000  //临时限定为保山到弥渡站
-                                    && stations.get(stationNum00).getStationType() == 1.0 && varPara.pigflag == 0) {//水头流动至距泵站后50km
-                                varPara.pigflag1 = 1;
+                                    && stations.get(stationNum00).getStationType() == 1.0 && varPara.pigFlag == 1) {//水头流动至距泵站后50km
+                                varPara.pigflag1 = 0;
                                 if (flagpigT == 0) {
                                     flagpigT = varPara.num;
                                     System.out.println("清管器在" + flagpigT / 24.0 + "h," + "从" + stations.get(stationNum00).getStationL() + "m处投放");
@@ -770,7 +770,7 @@ public class Project extends Thread implements Serializable {
 
                                 for (int stationNum11 = stationNum00 + 1; stationNum11 < stations.size(); stationNum11++) {
                                     if (varPara.pigL[varPara.pigNum] > stations.get(stationNum11).getStationL() && stations.get(stationNum11).getStationType() == 1.0) {
-                                        varPara.pigflag = 1;
+                                        varPara.pigFlag = 1;
                                         varPara.pigflag1 = 0;
                                         System.out.println("清管器在" + (varPara.pigNum + flagpigT) / 24.0 + "h," + "从" + stations.get(stationNum11).getStationL() + "m处回收");
                                         //System.out.println("清管器在"+(varPara.pigNum+flagpigT)/12.0+"h," + "从"+stations.get(stationNum00+1).getStationL()+"m处回收");
@@ -820,14 +820,14 @@ public class Project extends Thread implements Serializable {
                 ttt++;
                 if (n == varPara.i - 1) {
                     if (ttt > 180000) {
-                        staticP(n, varPara.waterL[varPara.num], varPara.deltaX);
+                        staticP_new(n, varPara.waterL[varPara.num], varPara.deltaX);
                         System.out.println("水头到末点后，再运行10h，结束计算!");
                         break;
                     }
                 }
                 //结束处算一次静压
                 if (kk == varPara.kt) {
-                    staticP(n, varPara.waterL[varPara.num], varPara.deltaX);
+                    staticP_new(n, varPara.waterL[varPara.num], varPara.deltaX);
                 }
 
 
@@ -903,7 +903,7 @@ public class Project extends Thread implements Serializable {
          * Mg
          * 起始时刻:flagpigT
          */
-        SizeChange mGChange = new SizeChange(varPara.Mg,flagpigT/24,(1.0/24));
+        SizeChange mGChange = new SizeChange(varPara.Mg,0.0,(1.0/24));
         double[][] mGAfterChange = mGChange.ResultAfterChange2();
         setmG(mGAfterChange);
         SizeChange pigVChange = new SizeChange(varPara.pigV,flagpigT/24,(1.0/24));
@@ -2090,7 +2090,7 @@ public class Project extends Thread implements Serializable {
             if (xx <= (waterHeadLocation[kkk] - varPara.line_l[1][1]) / dx + 1)//遍历水头前的各点
             {
                 varPara.dHL[num][xx] = varPara.dHL[num][xx] / 9.81 / 1000;
-                varPara.dHL[num][xx] = varPara.dHL[num][xx] + 1720;
+                varPara.dHL[num][xx] = varPara.dHL[num][xx] + 1670;
             } else {
                 varPara.dHL[num][xx] = varPara.dHL[num][xx] / 9.81 / 1000;
                 varPara.dHL[num][xx] = varPara.dHL[num][xx] + varPara.dHL[varPara.dHL.length-2][xx];
@@ -2645,7 +2645,26 @@ public class Project extends Thread implements Serializable {
             System.out.println("静压计算 水头位置判定异常");
         }
     }
+    public void staticP_new(int n, double waterL,double dx) {
+        Oil oil= oils.get(0);
+        int i,ii=1; //
+        double Lx = waterL; //累计里程
+        varPara.allLineStaticP[0][(int)((waterL-varPara.line_l[1][1])/dx)]=(2520-getZ(varPara.line_l, varPara.line_d,waterL))*oil.getDensity()*9.81;
+        varPara.allLineStaticP[1][(int)((waterL-varPara.line_l[1][1])/dx)]=getZ(varPara.line_l, varPara.line_d,waterL);
 
+
+
+
+        //从水头至首站，依次计算静压
+        for (int x = (int) ((waterL - varPara.line_l[1][1]) / dx); x >= 1; x--)//遍历水头前的各点,从后往前
+        {
+            Lx = varPara.line_l[1][1] + x * dx;
+
+            varPara.allLineStaticP[0][x] = (2520 - getZ(varPara.line_l, varPara.line_d, Lx)) * oil.getDensity() * 9.81;
+
+
+        }
+    }
     /**
      * 求排气的质量和排气后的气段压力、长度变化
      * @param i 管段数

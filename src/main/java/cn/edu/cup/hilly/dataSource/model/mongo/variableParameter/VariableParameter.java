@@ -15,6 +15,7 @@ public class VariableParameter {
 //    private TimeStep timeStep;
     private TotalTime totalTime;
     private DesignFlow designFlow;
+    private PutPigFlag putPigFlag;
 
     public VariableParameter() {
 //        this.sections = new Sections();
@@ -22,5 +23,6 @@ public class VariableParameter {
 //        this.timeStep = new TimeStep();
         this.totalTime = new TotalTime();
         this.designFlow = new DesignFlow();
+        this.putPigFlag = new PutPigFlag();
     }
 }
