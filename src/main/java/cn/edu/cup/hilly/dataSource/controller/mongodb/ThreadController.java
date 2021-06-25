@@ -84,6 +84,15 @@ public class ThreadController {
                 } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            try {
+                Thread.sleep(1 * 1000); //设置暂停的时间 1 秒
+                    msg.setName("hello2");
+                    msg.setRoutingKey("rk_pushmsg2");
+                    msg.setMsg("这是一条来自后端的消息2");
+                    System.out.println("save data2");
+                } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             sender.send(msg);
         }
     }

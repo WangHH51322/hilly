@@ -27,13 +27,14 @@ import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Configuration
+@Configuration
 public class RabbitmqConfig {
     private static final Logger logger = LoggerFactory.getLogger(RabbitmqConfig.class);
+
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-        connectionFactory.setHost("192.168.136.128");
+        connectionFactory.setHost("192.168.136.134");
 //        connectionFactory.setHost("hillyrabbitmq");
 //        connectionFactory.setPort(5762);
         /*channel缓存的大小*/
@@ -156,15 +157,15 @@ public class RabbitmqConfig {
     /**
      * 创建一个ReceivePushMsgListener，监听routingKey为“rk_recivemsg”的队列实现客户端收到消息后向此队列发送确认收到消息
      */
-    @Bean
-    public Object declareDirectQueue() {
-        List<String> receiveQueueNames = new ArrayList<>();
-        String receive = "queue_pushmsg3";
-        declare(receive, directExchange(), "rk_recivemsg3");
-        receiveQueueNames.add(receive);
-        newListenerContainer(new ReceivePushMsgListener(), receiveQueueNames.toArray(new String[receiveQueueNames.size()]));
-        return null;
-    }
+//    @Bean
+//    public Object declareDirectQueue() {
+//        List<String> receiveQueueNames = new ArrayList<>();
+//        String receive = "queue_pushmsg3";
+//        declare(receive, directExchange(), "rk_recivemsg3");
+//        receiveQueueNames.add(receive);
+//        newListenerContainer(new ReceivePushMsgListener(), receiveQueueNames.toArray(new String[receiveQueueNames.size()]));
+//        return null;
+//    }
 
     private void declare(String queueName, DirectExchange exchange, String routingKey) {
         RabbitAdmin admin = rabbitAdmin();

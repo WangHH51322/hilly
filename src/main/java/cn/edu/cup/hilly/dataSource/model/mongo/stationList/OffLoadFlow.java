@@ -15,7 +15,7 @@ public class OffLoadFlow {
 
     public OffLoadFlow() {
         this.name = "分输流量";
-        this.unit = "m";
+        this.unit = "m³/h";
         this.value = "0.0";
     }
 }
