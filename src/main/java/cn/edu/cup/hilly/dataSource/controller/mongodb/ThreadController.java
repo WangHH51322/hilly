@@ -72,6 +72,8 @@ public class ThreadController {
     @GetMapping("/test/rabbit")
     public void rabbitTest() throws IOException {
         WiselyMessage msg = new WiselyMessage();
+        WiselyMessage msg2 = new WiselyMessage();
+        WiselyMessage msg3 = new WiselyMessage();
         int i = 5;
         while (i > 0) {
             i --;
@@ -86,14 +88,25 @@ public class ThreadController {
             }
             try {
                 Thread.sleep(1 * 1000); //设置暂停的时间 1 秒
-                    msg.setName("hello2");
-                    msg.setRoutingKey("rk_pushmsg2");
-                    msg.setMsg("这是一条来自后端的消息2");
+                    msg2.setName("hello2");
+                    msg2.setRoutingKey("rk_pushmsg2");
+                    msg2.setMsg("这是一条来自后端的消息2");
                     System.out.println("save data2");
                 } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            try {
+                Thread.sleep(1 * 1000); //设置暂停的时间 1 秒
+                    msg3.setName("hello3");
+                    msg3.setRoutingKey("rk_pushmsg");
+                    msg3.setMsg("这是一条来自后端的消息");
+                    System.out.println("save data3");
+                } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             sender.send(msg);
+            sender.send(msg2);
+            sender.send(msg3);
         }
     }
 
