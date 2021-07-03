@@ -272,7 +272,7 @@ public class SizeChange {
                 dPL[1] = dPLList[locationOut.get(i)];
                 results.put(j*skip*multiple,dPL);
             }
-            resultOut.put(stationName.get(locationIn.get(i)-1),results);
+            resultOut.put(stationName.get(locationIn.get(i)),results);
         }
         /**
          * 将Map排序并输出

@@ -40,6 +40,7 @@ public class Varpara {
     int kt;            //模拟总时步的计算
     double Lt;            //压降计算的水头标计长度
 
+    double sumTest;
     double[][] Y;          //矩阵计算历史数据存储
     double[][] Pg_his;     //气体压力  历史数据
     double[][] Deng_his;     //气体密度  历史数据
@@ -117,6 +118,7 @@ public class Varpara {
     double[] f_l;         //液壁摩阻系数
 
     double[][] dMg_p;         //排气参数存储
+    double dMg_sum=0;         //清管器推气量
     double[][] maxThree;         //最长的三个积气段数据存储
 
     double[] Hf_f;         //各段的分层流的摩阻水力损失
@@ -152,16 +154,18 @@ public class Varpara {
     int[] flag01;        //清管器导致水力紊乱的标志
 
     int num;        //
-    int pigNum = 0;        //清管器计数
+    int []pigNum;        //清管器计数
 
     int pigflag1 = 0;        //清管器1标记
+    int []pigflag2;        //清管器1标记
+    int []pigTflag;        //清管器1标记
     int flag0,flag1;        //
     double ipj;        //
 
     int startPumpFlag=0;        //启泵的标志
     int stopPumpFlag=0;        //停泵的标志
-    int []startPumpFlag1;        //调整变频泵的标志
-    double PumpRev=0.4;        //调整变频泵的标志,起始变频泵转速
+    int [][]startPumpFlag1;        //调整变频泵的标志
+    double [][]pumpRev;        //调整变频泵的标志,起始变频泵转速
     double [][]a;
     double [][]Hss;
     double []Hpump;
@@ -169,12 +173,14 @@ public class Varpara {
     int times=0;
     double []Hd;
     //清管器相关参数
-    double []pigV;//清管器速度
-    double []pigL;//清管器位置
-    double []pigZ;//清管器位置对应高程
+    double [][]pigV;//清管器速度
+    double [][]pigL;//清管器位置
+    double [][]pigZ;//清管器位置对应高程
     double []Mg;//积气总质量随时间变化，时步为2.5min
     double [][]allLine;//全线参数储存输出
     double [][]allLineFP;//全线流型随时间变化曲线
+    double [][]allLineDP;//全线摩阻压降
+    double [][]allLineLbz;//全线反算列宾宗系数b
 
     double [][] allLineStaticP;//全线静压
 
@@ -183,12 +189,15 @@ public class Varpara {
 
     List stationListL = new ArrayList();
     List stationListZ = new ArrayList();
+    List allLineLbzBs;
+    List allQ;
+    List pumpSta;
+    int p1=0;
+    int p=0;//水头过泵站的记录
 
 
     //泵相关
     double Hs;//随启泵条件变化的出站压力，压降计算处使用
-    double [][]allQ;//流量随时间变化曲线
-
 
 
 
@@ -198,21 +207,31 @@ public class Varpara {
 
     public void setArr(){
 
-        this.k = (int)(T*2*5*3600/300)+1002;      //300步一输出的存储序号
+        this.k = (int)(T*2*5*3600/300)+2002;      //300步一输出的存储序号
         this.kt = (int) Math.rint(T*2* 3600 / deltaT);            //模拟总时步的计算
 
-        this.pigV = new double[getK()];
+        this.pigV = new double[10][getK()];
+        this.pigNum = new int[10];
+        this.pigTflag = new int[10];
+        this.pigflag2 = new int[10];
         this.dMg_p = new double[5][getK()+1];
         this.maxThree = new double[3][2];
         this.flag01 = new int[getI()];
 
 
-        this.pigL = new double[getK()];
+        this.pigL = new double[10][getK()];
         this.Mg = new double[getK()];
-        this.pigZ = new double[getK()];
+        this.pigZ = new double[10][getK()];
         this.allLine = new double[5][getK()];
-        this.allLineFP = new double[(int)T*24+2+1][1000];
-        this.allLineStaticP = new double[(int)T*12+2+1][1000];
+        this.allLineFP = new double[(int)T*24+2+1][1300];
+        this.allLineStaticP = new double[(int)T*12+2+1][1300];
+        this.allLineLbz = new double[(int)T*24+2+1][1300];
+        this.allLineDP = new double[(int)T*24+2+1][1300];
+        this.allLineLbzBs = new ArrayList<List<Double>>();
+        this.allQ = new ArrayList<List<Double>>();
+        this.pumpSta = new ArrayList<List<Double>>();
+
+
         this.Hss=new double[getK()][100];
         this.Hs=50*9.81*1000;//初始值为首站进站压力
         this.a= new double[100][3];
@@ -292,7 +311,8 @@ public class Varpara {
         this.startPressure = new double[k];          //起点压头，随水头位置变化而变化
         this.flowPressure = new double[k][1];          //全过程，全地形的动压
         this.ssr = new int[i][2];
-        this.startPumpFlag1 = new int[100];
+        this.startPumpFlag1 = new int[100][100];
+        this.pumpRev = new double[100][100];
 
         this.backPressure = new double[i + 1]; //各管段的背压
         this.pre_back = new double[i + 1];     //破碎前的背压
@@ -320,8 +340,8 @@ public class Varpara {
         this.Hfk_jj = new double[i];
         this.Hf_j = new double[k];              //局部阻力
 
-        this.dPL=new double[(int)T*24+2+1][1000];       //全局压力
-        this.dHL=new double[(int)T*24+2+1][1000];       //全局压力
+        this.dPL=new double[(int)T*24+2+1][1300];       //全局压力
+        this.dHL=new double[(int)T*24+2+1][1300];       //全局压力
         this.lg_f = new double[i][k];   //各段分层流实时长度
         this.lp_b = new double[i][k];   //气泡流和气团流实时长度，下坡段部分
         this.lp_bU = new double[i][k];  //气泡流和气团流实时长度，上坡段部分

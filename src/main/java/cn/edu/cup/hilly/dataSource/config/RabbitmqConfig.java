@@ -157,15 +157,21 @@ public class RabbitmqConfig {
     /**
      * 创建一个ReceivePushMsgListener，监听routingKey为“rk_recivemsg”的队列实现客户端收到消息后向此队列发送确认收到消息
      */
-//    @Bean
-//    public Object declareDirectQueue() {
-//        List<String> receiveQueueNames = new ArrayList<>();
-//        String receive = "queue_pushmsg3";
-//        declare(receive, directExchange(), "rk_recivemsg3");
-//        receiveQueueNames.add(receive);
-//        newListenerContainer(new ReceivePushMsgListener(), receiveQueueNames.toArray(new String[receiveQueueNames.size()]));
-//        return null;
-//    }
+    @Bean
+    public Object declareDirectQueue() {
+        List<String> receiveQueueNames = new ArrayList<>();
+        String receive3 = "queue_pushmsg3";
+        declare(receive3, directExchange(), "rk_recivemsg3");
+        receiveQueueNames.add(receive3);
+        String receive2 = "queue_pushmsg2";
+        declare(receive2, directExchange(), "rk_recivemsg2");
+        receiveQueueNames.add(receive2);
+        String receive = "queue_pushmsg";
+        declare(receive, directExchange(), "rk_recivemsg");
+        receiveQueueNames.add(receive);
+        newListenerContainer(new ReceivePushMsgListener(), receiveQueueNames.toArray(new String[receiveQueueNames.size()]));
+        return null;
+    }
 
     private void declare(String queueName, DirectExchange exchange, String routingKey) {
         RabbitAdmin admin = rabbitAdmin();

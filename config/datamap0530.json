@@ -85,7 +85,7 @@
 			"putPigFlag":{
 				"unit":"",
 				"name":"putPigFlag",
-				"value":"0"
+				"value":"1"
 			}
 		},
 		"stationList":{

@@ -164,13 +164,6 @@ public class ThreadController {
         ExcelFile excelFile = fileService.find(id);
         double[][] lz = excelFile.getLz();  //三角式地形数据
         Integer inum = excelFile.getInum();
-//        System.out.println("lz : ");
-//        for (int i = 0; i < lz.length; i++) {
-//            System.out.println();
-//            for (int i1 = 0; i1 < lz[i].length; i1++) {
-//                System.out.print(lz[i][i1] + " ");
-//            }
-//        }
         try {
             Project project = new Project();
             project.setLz(lz);
@@ -215,62 +208,62 @@ public class ThreadController {
             ResultSimple resultSimple = new ResultSimple();
             resultSimple.set_id(id);
             boolean in = true;
-            while (thread.isAlive()) {
-                try {
-                    Thread.sleep(1 * 1000); //设置暂停的时间 1 秒
-                    if (!project.isLocked()) {
-                        //计算过程中的地形,用于数据展示的x轴
-                        if (in) {
-                            double[][] lz_out = project.getLz_out();
-                            if (lz_out != null) {
-                                resultDPL.setLz(lz_out);
-                                resultDPLService.add(resultDPL);
-                                resultDHL.setLz(lz_out);
-                                resultDHLService.add(resultDHL);
-                                resultAllLineFP.setLz(lz_out);
-                                resultALFPService.add(resultAllLineFP);
-                                System.out.println("进入成功!!!");
-                                in = false;
-                            }
-                        }
-
-                        /**
-                         * 传输数据
-                         */
-//                        msg.setName("hello");
-//                        msg.setRoutingKey("rk_pushmsg3");
-//                        msg.setMsg("这是一条来自后端的消息");
-                        /**
-                         * U型管段地形数据
-                         */
-                        double[] uLocation = project.getULocation();
-//                        if (uLocation != null) {
-                        resultULocation.setULocation(uLocation);
-                        resultULService.updateMap(resultULocation);
-//                        msg.setULocation(uLocation);
+//            while (thread.isAlive()) {
+//                try {
+//                    Thread.sleep(10 * 1000); //设置暂停的时间 1 秒
+//                    if (!project.isLocked()) {
+//                        //计算过程中的地形,用于数据展示的x轴
+//                        if (in) {
+//                            double[][] lz_out = project.getLz_out();
+//                            if (lz_out != null) {
+//                                resultDPL.setLz(lz_out);
+//                                resultDPLService.add(resultDPL);
+//                                resultDHL.setLz(lz_out);
+//                                resultDHLService.add(resultDHL);
+//                                resultAllLineFP.setLz(lz_out);
+//                                resultALFPService.add(resultAllLineFP);
+////                                System.out.println("进入成功!!!");
+//                                in = false;
+//                            }
 //                        }
-
-                        Map<Double, double[]> dpl = project.getDPL();
-                        resultDPL.setDPLMap(dpl);
-                        resultDPLService.updateMap(resultDPL);
-//                        msg.setObject(resultDPL);
-//                        System.out.println("save data");
-
-                        Map<Double, double[]> dhl = project.getDHL();
-                        resultDHL.setDHLMap(dhl);
-                        resultDHLService.updateMap(resultDHL);
-
-                        Map<Double, double[]> aLineFP = project.getALineFP();
-                        resultAllLineFP.setAllLineFPMap(aLineFP);
-                        resultALFPService.updateMap(resultAllLineFP);
-
-//                        System.out.println("save data");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-//                sender.send(msg);
-            }
+//
+//                        /**
+//                         * 传输数据
+//                         */
+////                        msg.setName("hello");
+////                        msg.setRoutingKey("rk_pushmsg3");
+////                        msg.setMsg("这是一条来自后端的消息");
+//                        /**
+//                         * U型管段地形数据
+//                         */
+//                        double[] uLocation = project.getULocation();
+////                        if (uLocation != null) {
+//                        resultULocation.setULocation(uLocation);
+//                        resultULService.updateMap(resultULocation);
+////                        msg.setULocation(uLocation);
+////                        }
+//
+//                        Map<Double, double[]> dpl = project.getDPL();
+//                        resultDPL.setDPLMap(dpl);
+//                        resultDPLService.updateMap(resultDPL);
+////                        msg.setObject(resultDPL);
+////                        System.out.println("save data");
+//
+//                        Map<Double, double[]> dhl = project.getDHL();
+//                        resultDHL.setDHLMap(dhl);
+//                        resultDHLService.updateMap(resultDHL);
+//
+//                        Map<Double, double[]> aLineFP = project.getALineFP();
+//                        resultAllLineFP.setAllLineFPMap(aLineFP);
+//                        resultALFPService.updateMap(resultAllLineFP);
+//
+////                        System.out.println("save data");
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+////                sender.send(msg);
+//            }
             /**
              * 计算结束后存储数据
              */

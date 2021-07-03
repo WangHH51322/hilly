@@ -272,7 +272,7 @@ public class Project extends Thread implements Serializable {
 //        lz = ExcelData.Graphic();       //运用地形简化程序得到的三点式地形
         System.out.println("lz : ");
         for (int i = 0; i < lz.length; i++) {
-            System.out.println();
+//            System.out.println();
             for (int i1 = 0; i1 < lz[i].length; i1++) {
                 System.out.print(lz[i][i1] + " ");
             }
@@ -285,13 +285,16 @@ public class Project extends Thread implements Serializable {
             varPara.stationListL.add(stations.get(u).getStationL());
         }
 
-        varPara.i= 37;
+        varPara.i= lz.length+varPara.stationListZ.size()-1;
+        //varPara.i= 37;
         varPara.setArr();       //通过get方法用i，k给varPara中的数组赋值
 
 
         double t_all,dt=0.2;
         int tt=0,rr=0,pp=0,ff=0,ttt=0,uyt=0;      //时步切换标准
-        int o;   //破碎结束的段数
+        int rrr0=0;   //破碎结束的段数
+        int o,op=0;   //破碎结束的段数
+        int []p={1,1,1,1,1,1,1,1,1,1};   //清管器的过站记录,水头过泵站的过站记录
         varPara.num=0;
         double ssr=0,ssr1=0,ssr2=0,ssr3=0;  //累计压降
         double wL=0;  //水头尾部处理
@@ -304,9 +307,12 @@ public class Project extends Thread implements Serializable {
 
         LLt=varPara.line_l[1][1]+500;
 
-        int i,n=1,num0,num1=1,num2,flagpigT=0; //i为水头所在段，n为当前计算管段编号
+        int i,n=1,num0,num1=1,num2; //i为水头所在段，n为当前计算管段编号
 
-        double Ha,Hb;
+        double []Ha=new double[10];
+        double []Hb=new double[10];
+        double []flagpigT=new double[10];
+
         //加入固定地形点位
 
         for (num2 = 1; num2 < inum/2+1; num2++) {     //原管道地形的所有管段
@@ -320,19 +326,19 @@ public class Project extends Thread implements Serializable {
         for (int num=1;num<=varPara.stationListZ.size()-1;num++) {      //插入点数量    、、、、、、、、、、、、插入点限制，两点间距不小于10km
 
             for (num0 = num1-1; num0 < inum/2+1; num0++) {     //原管道地形的所有管段
-                if (lz[num0][1] < (double)varPara.stationListL.get(num) && lz[num0][2] > (double)varPara.stationListL.get(num)) {//插入点在下坡段
+                if (lz[num0][1] < (Double)varPara.stationListL.get(num) && lz[num0][2] > (Double)varPara.stationListL.get(num)) {//插入点在下坡段
                     num0=num0+num-1;
                     varPara.line_lll[num0][1] = lz[num0-num+1][1];
-                    varPara.line_lll[num0][2] = (double)varPara.stationListL.get(num);
+                    varPara.line_lll[num0][2] = (Double)varPara.stationListL.get(num);
 
-                    varPara.line_lll[num0][3] = 0.5*((double)varPara.stationListL.get(num) + lz[num0-num+1][2]);
+                    varPara.line_lll[num0][3] = 0.5*((Double)varPara.stationListL.get(num) + lz[num0-num+1][2]);
 
-                    varPara.line_lll[num0 + 1][1] = 0.5*((double)varPara.stationListL.get(num) + lz[num0-num+1][2]);
+                    varPara.line_lll[num0 + 1][1] = 0.5*((Double)varPara.stationListL.get(num) + lz[num0-num+1][2]);
 
                     varPara.line_lll[num0 + 1][2] = lz[num0-num+1][2];
                     varPara.line_lll[num0 + 1][3] = lz[num0-num+1][3];
                     varPara.line_ddd[num0][1] = lz[num0-num+1][5];
-                    varPara.line_ddd[num0][2] = (double)varPara.stationListZ.get(num);
+                    varPara.line_ddd[num0][2] = (Double)varPara.stationListZ.get(num);
 
                     if (varPara.line_ddd[num0][1]<varPara.line_ddd[num0][2])//插入点高于高点的处理方法，调高插入点前一点的高程
                     {
@@ -340,9 +346,9 @@ public class Project extends Thread implements Serializable {
                         varPara.line_ddd[num0-1][3]=varPara.line_ddd[num0][2]+50;
                     }
 
-                    varPara.line_ddd[num0][3] = (double)varPara.stationListZ.get(num) + 50;
+                    varPara.line_ddd[num0][3] = (Double)varPara.stationListZ.get(num) + 50;
 
-                    varPara.line_ddd[num0 + 1][1] = (double)varPara.stationListZ.get(num) + 50;
+                    varPara.line_ddd[num0 + 1][1] = (Double)varPara.stationListZ.get(num) + 50;
                     varPara.line_ddd[num0 + 1][2] = lz[num0-num+1][6];
                     varPara.line_ddd[num0 + 1][3] = lz[num0-num+1][7];
                     num1=num0;
@@ -356,25 +362,25 @@ public class Project extends Thread implements Serializable {
                     }
 
                     break;
-                } else if (lz[num0][3] > (double)varPara.stationListL.get(num) && lz[num0][2] < (double)varPara.stationListL.get(num)) {//插入点在上坡段
+                } else if (lz[num0][3] > (Double)varPara.stationListL.get(num) && lz[num0][2] < (Double)varPara.stationListL.get(num)) {//插入点在上坡段
                     num0=num0+num-1;
                     varPara.line_lll[num0][1] = lz[num0-num+1][1];
                     varPara.line_lll[num0][2] = lz[num0-num+1][2];
-                    varPara.line_lll[num0][3] = (double)varPara.stationListL.get(num);
+                    varPara.line_lll[num0][3] = (Double)varPara.stationListL.get(num);
 
-                    varPara.line_lll[num0 + 1][1] = (double)varPara.stationListL.get(num);
-                    varPara.line_lll[num0 + 1][2] = 0.5*((double)varPara.stationListL.get(num) + lz[num0-num+1][3]);
+                    varPara.line_lll[num0 + 1][1] = (Double)varPara.stationListL.get(num);
+                    varPara.line_lll[num0 + 1][2] = 0.5*((Double)varPara.stationListL.get(num) + lz[num0-num+1][3]);
                     varPara.line_lll[num0 + 1][3] = lz[num0-num+1][3];
 
                     varPara.line_ddd[num0][1] = lz[num0-num+1][5];
                     varPara.line_ddd[num0][2] = lz[num0-num+1][6];
-                    varPara.line_ddd[num0][3] = (double)varPara.stationListZ.get(num);
+                    varPara.line_ddd[num0][3] = (Double)varPara.stationListZ.get(num);
 
-                    varPara.line_ddd[num0 + 1][1] = (double)varPara.stationListZ.get(num);
-                    varPara.line_ddd[num0 + 1][2] = (double)varPara.stationListZ.get(num) - 50;
+                    varPara.line_ddd[num0 + 1][1] = (Double)varPara.stationListZ.get(num);
+                    varPara.line_ddd[num0 + 1][2] = (Double)varPara.stationListZ.get(num) - 50;
                     varPara.line_ddd[num0 + 1][3] = lz[num0-num+1][7];
                     num1=num0;
-                    for (num2 = num0+2; num2 < (inum/2+(double)varPara.stationListZ.size()); num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
+                    for (num2 = num0+2; num2 < (inum/2+varPara.stationListZ.size()); num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
                         for (int b=0;b<4;b++){
                             if (num2-num<inum/2+1){
                                 varPara.line_lll[num2][b] = lz[num2-num][b];
@@ -384,19 +390,20 @@ public class Project extends Thread implements Serializable {
                         }
                     }
                     break;
-                } else if (lz[num0][1] == (double)varPara.stationListL.get(num) || lz[num0][2] == (double)varPara.stationListL.get(num) || lz[num0][3] == (double)varPara.stationListL.get(num)) {//插入点与原点重合
+                } else if (lz[num0][1] == (Double)varPara.stationListL.get(num) || lz[num0][2] == (Double)varPara.stationListL.get(num) || lz[num0][3] == (Double)varPara.stationListL.get(num)) {//插入点与原点重合
                     System.out.println("里程高程插入异常！");
                 }
             }
         }
-        for (int a=44;a< 80;a++){          ///////////全线
+        //for (int a=44;a< 80;a++){          ///////////全线
+        for (int a=1;a< varPara.line_l.length;a++){          ///////////全线
             if (varPara.line_lll[a][1]!=0 || a==1){
-                System.out.print("第"+(a-43)+"管段"+"\t");
+                System.out.print("第"+(a)+"管段"+"\t");
                 for (int b=0;b<4;b++){
-                    varPara.line_l[a-43][b]=varPara.line_lll[a][b];
-                    System.out.print(varPara.line_l[a-43][b]+"\t");
-                    varPara.line_d[a-43][b]=varPara.line_ddd[a][b];
-                    System.out.print(varPara.line_d[a-43][b]+"\t");
+                    varPara.line_l[a][b]=varPara.line_lll[a][b];
+                    System.out.print(varPara.line_l[a][b]+"\t");
+                    varPara.line_d[a][b]=varPara.line_ddd[a][b];
+                    System.out.print(varPara.line_d[a][b]+"\t");
                 }
                 System.out.println();
             }
@@ -437,11 +444,19 @@ public class Project extends Thread implements Serializable {
             //System.out.println(varpara.Hgk[i]);
         }
 
-        varPara.waterHeadLocation[0]=varPara.line_l[1][1];   //水头初始位置等于首个下坡段低点
+//
 
+        //初始化站点泵的起始频率
+        for (int j = 0; j < stations.size(); j++) {
+            if (stations.get(j).getStationType()==1||stations.get(j).getStationType()==4){
+                for (int pumpNum0 = 0; pumpNum0 < 10; pumpNum0++) {
+                    varPara.pumpRev[j][pumpNum0]=0.4;
+                }
+            }
+        }
         /**
-         * dHL的第0列未被输出，txt中开始于248.5
-         * lz_new的第0行是248.第一行是248.5
+         * dHL的第0列未被输出，txt中开始于0.5
+         * lz_new的第0行是0.第一行是0.5
          */
         double [][] lz_new = new double[(int)((varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/500+1)][2];
         lz_new[0][0]=varPara.line_l[1][1];
@@ -466,8 +481,17 @@ public class Project extends Thread implements Serializable {
 //                System.out.print(lz_out[ii][j] + " // ");
 //            }
 //        }
-
+        varPara.waterHeadLocation[0]=varPara.line_l[1][1];   //水头初始位置等于首个下坡段低点
         System.out.println("总模拟长度："+(varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/1000+"km");
+
+        //初始化泵站列表
+        for (int s = 0; s < stations.size(); s++) {
+            if (stations.get(s).getStationType()==1){
+                varPara.pumpSta.add(stations.get(s).getStationL());
+            }else{
+                varPara.pumpSta.add(0.0);
+            }
+        }
         cal_l0();//计算各管段的气段尾部估计位置，也计算了满管流动的水力坡降
         varPara.Time[0] = t_all;       //时步与时间的整合对应
         double timeStop=0;
@@ -475,7 +499,7 @@ public class Project extends Thread implements Serializable {
         //1、从第一个U型管段的低点开始进行时间循环
         long start1,end1,end3;
         start1 = System.currentTimeMillis();        //开始计算的时间标记
-
+        conPara.Ql = varPara.Qh/3600.0;
         /**
          * 开始时间循环
          */
@@ -500,7 +524,7 @@ public class Project extends Thread implements Serializable {
                 //时间循环，从第一个u型管低点开始，到水头遇终点结束。
 
                 //计算水头位置
-                conPara.Ql = varPara.Qh / 3600.0;
+//                conPara.Ql = varPara.Qh / 3600.0;
                 uyt++;
                 if (uyt % 360000 == 0) {
                     System.out.println(0.2 * kk / 7200.0 + "h的流量为" + varPara.Qh);
@@ -511,14 +535,14 @@ public class Project extends Thread implements Serializable {
                     //破碎的计算，运行得到一个时步的破碎结果,返回修正后的Lg、Pg、Hg的值
                     if (varPara.ssr[i][0] != 1) {     //20201105加入后半个判定条件，让破碎结束后不再运行，前半个条件是预设的破碎开始情况
                         if (varPara.Pgk[i] < 0.1 * oil.getDensity() * conPara.g * (varPara.line_l[i][3] - varPara.line_l[i][2]) && varPara.Pgk[i] < 200000) {
-                             YaSuo(i, varPara.lgk[i] + varPara.lgk[i] * (varPara.dMg_in[i] - varPara.dMg_out[i] - AddMg[i] / 1500.0) / varPara.MGk[i], varPara.Pgk[i], varPara.Hgk[i], varPara.slopeU[i][0],
+                             YaSuo(i, varPara.lgk[i] + varPara.lgk[i] * (varPara.dMg_in[i] - varPara.dMg_out[i] - AddMg[i]) / varPara.MGk[i], varPara.Pgk[i], varPara.Hgk[i], varPara.slopeU[i][0],
                                     varPara.slopeD[i][0], varPara.uk[i], varPara.h1k[i], varPara.h2k[i], varPara.backPressure[i],
-                                    varPara.dMg_in[i] - varPara.dMg_out[i] - AddMg[i] / 1500.0);
+                                    varPara.dMg_in[i] - varPara.dMg_out[i] - AddMg[i]);
 
                             varPara.Dengk[i] = 1.205 / 1.01e5 * varPara.Pgk[i];
                             try {
                                 dtPosui(kk, i, varPara.l0[i], varPara.line_l[i][1], varPara.line_d[i][1], varPara.line_l[i][2], varPara.line_d[i][2],
-                                        conPara.Ql, D, 1.205, varPara.MGk[i] - AddMg[i] / 1500.0, varPara.Pgk[i], varPara.lgk[i],
+                                        conPara.Ql, D, 1.205, varPara.MGk[i] - AddMg[i], varPara.Pgk[i], varPara.lgk[i],
                                         varPara.Dengk[i], varPara.Hgk[i], varPara.MM, varPara.Pgk, varPara.lgk, varPara.Dengk, varPara.Hgk,
                                         oil.density, 1e-6);//
                             } catch (IOException e) {
@@ -557,7 +581,7 @@ public class Project extends Thread implements Serializable {
                     }
                     if (i > 1 && varPara.ssr[i][0] == 0) {
                         varPara.backPressure[i - 1] = varPara.Pgk[i];                          //开始封闭后才有这个关系，要考虑明渠流动的时间
-                        varPara.dMg_in[i] = varPara.dMg_out[i - 1] + AddMg[i - 1] / 1500;           //上游段的净流出等于下游段的净流入
+                        varPara.dMg_in[i] = varPara.dMg_out[i - 1] + AddMg[i - 1];           //上游段的净流出等于下游段的净流入
                     }
 
                     for (o = 0; o < n - i; o++) {
@@ -663,6 +687,9 @@ public class Project extends Thread implements Serializable {
                             varPara.Mg[varPara.num]=(varPara.M_his[cc][varPara.num * 5]-varPara.M_his[cc][varPara.num * 5 - 5])+varPara.Mg[varPara.num-1];
                             if (cc==n){
                                 varPara.Mg[varPara.num]=(varPara.M_his[cc][varPara.num * 5]-varPara.M_his[cc][varPara.num * 5 - 5])+varPara.Mg[varPara.num-1]-varPara.dMg_out[n]*1000*30;
+                                if (varPara.dMg_out[n]==0){
+                                    varPara.Mg[varPara.num]=(varPara.M_his[cc][varPara.num * 5]*0.003)+varPara.Mg[varPara.num-1];
+                                }
                             }
                             if (varPara.Mg[varPara.num]<0) varPara.Mg[varPara.num]=varPara.Mg[varPara.num-1];
                         }
@@ -685,7 +712,7 @@ public class Project extends Thread implements Serializable {
                         setDHL(dHLAfterChange);
 
                         ff = 0;
-                        startPump(varPara.num, varPara.dPL[varPara.num], varPara.waterL[varPara.num]);
+                        startPump(varPara.num, varPara.dHL[varPara.num], varPara.waterL[varPara.num]);
                         if (varPara.checkP != 0 && message == 0) {       //气段超压或者全线某点超压后，开始停泵、计算静压、高点排气
                             //do{//记录停输时间
                             //停泵
@@ -720,11 +747,22 @@ public class Project extends Thread implements Serializable {
                             System.out.println("最长积气段为第" + varPara.maxThree[0][0] + "段,长度为" + varPara.maxThree[0][1]);
                             System.out.println("第二长的积气段为第" + varPara.maxThree[1][0] + "段,长度为" + varPara.maxThree[1][1]);
                             System.out.println("第三长的积气段为第" + varPara.maxThree[2][0] + "段,长度为" + varPara.maxThree[2][1]);
-                            timeStop = exitGas((int) varPara.maxThree[0][0], varPara.num, 0, varPara.M_his[(int) varPara.maxThree[0][0]][rr - 2],
-                                    1000000 * varPara.Pg_his[(int) varPara.maxThree[0][0]][rr - 2],
-                                    1000 * varPara.lg_his[(int) varPara.maxThree[0][0]][rr - 2],
-                                    varPara.h1_his[(int) varPara.maxThree[0][0]][rr - 2],
-                                    varPara.h2_his[(int) varPara.maxThree[0][0]][rr - 2])[2];
+                            if (varPara.Pg_his[(int)varPara.maxThree[0][0]][rr-2]==0.0){
+                                for (rrr0=0; rrr0<varPara.Pg_his[0].length-2;rrr0++){
+                                    if (varPara.Pg_his[(int)varPara.maxThree[0][0]][rrr0]==0.0 && varPara.Pg_his[(int)varPara.maxThree[0][0]][rrr0+1]>0){
+                                        System.out.println("成功1111111111111111111111111111111111111111111111111111");
+                                        break;
+                                    }
+                                }
+                            }else{
+                                rrr0=rr-3;
+                                System.out.println("成功2222222222222");
+                            }
+                            timeStop = exitGas((int) varPara.maxThree[0][0], varPara.num, 0, varPara.M_his[(int) varPara.maxThree[0][0]][rrr0+1],
+                                    1000000 * varPara.Pg_his[(int) varPara.maxThree[0][0]][rrr0+1],
+                                    1000 * varPara.lg_his[(int) varPara.maxThree[0][0]][rrr0+1],
+                                    varPara.h1_his[(int) varPara.maxThree[0][0]][rrr0+1],
+                                    varPara.h2_his[(int) varPara.maxThree[0][0]][rrr0+1])[2];
                             message++;
 
                             startPumpAgain(varPara.num, timeStop);
@@ -734,56 +772,204 @@ public class Project extends Thread implements Serializable {
                         }
 
 
-                        for (int stationNum00 = 0; stationNum00 < stations.size(); stationNum00++) {//查询当前点所处的站点位置
-
-                            if (varPara.waterL[varPara.num] > stations.get(stationNum00).getStationL() + 50000 &&
-                                    stations.get(stationNum00).getStationL() > 248000 && stations.get(stationNum00).getStationL() < 400000  //临时限定为保山到弥渡站
-                                    && stations.get(stationNum00).getStationType() == 1.0 && varPara.pigFlag == 1) {//水头流动至距泵站后50km
-                                varPara.pigflag1 = 0;
-                                if (flagpigT == 0) {
-                                    flagpigT = varPara.num;
-                                    System.out.println("清管器在" + flagpigT / 24.0 + "h," + "从" + stations.get(stationNum00).getStationL() + "m处投放");
+                        //清管器投放
+                        for (int pigNumber=0;pigNumber<pigs.size();pigNumber++){
+                            if (pigNumber==0 && varPara.waterL[varPara.num] > stations.get(0).getStationL()+50000
+                                    && stations.get(0).getStationType()==1.0 && varPara.pigFlag==1 && varPara.pigflag2[pigNumber]==0)
+                            {//水头流动至距首站后50km
+                                varPara.pigflag1=1;
+                                if (flagpigT[pigNumber]==0)
+                                {
+                                    flagpigT[pigNumber]=varPara.num;
+                                    System.out.println("清管器在"+flagpigT[pigNumber]/24.0+"h," + "从"+stations.get(0).getStationName()+stations.get(0).getStationL()+"m处投放1");
                                     //System.out.println("清管器在"+flagpigT/12.0+"h," + "从"+stations.get(stationNum00).getStationL()+"m处投放");
                                 }
 
-                                varPara.pigV[0] = conPara.Ql / A;      //初始速度设为水头速度
-                                varPara.pigL[0] = stations.get(stationNum00).getStationL();  //初始位置设为站点位置
+                                varPara.pigV[0][0]=conPara.Ql/A;      //初始速度设为水头速度
+                                varPara.pigL[0][0]=stations.get(0).getStationL();  //初始位置设为站点位置
 
 
                                 //double []dPLLL=varPara.dPL[varPara.num];//传递当前时步的压力值，进行插值
-                                double[] dPLLL = chazhi(varPara.dPL[varPara.num], 499);//传递当前时步的压力值，进行插值
+                                double []dPLLL=chazhi(varPara.dPL[varPara.num],499);//传递当前时步的压力值，进行插值
 
-                                varPara.pigNum++;
-                                //Ha
-                                Ha = dPLLL[(int) (varPara.pigL[varPara.pigNum - 1] - LLt) - 1];
-                                //Hb
-                                Hb = dPLLL[(int) (varPara.pigL[varPara.pigNum - 1] - LLt)];
-                                //                            }
-                                varPara.pigV[varPara.pigNum] = getPigV(Ha, Hb, varPara.pigV[varPara.pigNum - 1], varPara.pigL[varPara.pigNum - 1]
-                                        , varPara.pigL[varPara.pigNum - 1] + 500, varPara.getPgk()[i], 3000, varPara.pigL[0], getPhi(varPara.line_l, varPara.line_d, varPara.pigL[varPara.pigNum - 1]))[2];
+                                varPara.pigNum[pigNumber]++;
 
-                                varPara.pigL[varPara.pigNum] = varPara.pigL[varPara.pigNum - 1] + 0.5 * (varPara.pigV[varPara.pigNum - 1] + varPara.pigV[varPara.pigNum]) * 200;/////////////////原本是300
-                                varPara.pigZ[varPara.pigNum] = getZ(varPara.line_l, varPara.line_d, varPara.pigL[varPara.pigNum]);
 
-                                if (varPara.pigL[varPara.pigNum] > varPara.waterL[varPara.num] - 5000)
-                                    varPara.pigV[varPara.pigNum] = conPara.Ql / A;
+                                if ((int)(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]-LLt)<0||(int)(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]-LLt)>500){
+                                    Ha[pigNumber] = 1e5+5000;
+                                    Hb[pigNumber] = 1e5;
+                                }else{
+                                    //Ha
+                                    Ha[pigNumber] = dPLLL[(int)(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]-LLt)-1];
+                                    //Hb
+                                    Hb[pigNumber] = dPLLL[(int)(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]-LLt)];
+                                }
 
-                                for (int stationNum11 = stationNum00 + 1; stationNum11 < stations.size(); stationNum11++) {
-                                    if (varPara.pigL[varPara.pigNum] > stations.get(stationNum11).getStationL() && stations.get(stationNum11).getStationType() == 1.0) {
-                                        varPara.pigFlag = 1;
-                                        varPara.pigflag1 = 0;
-                                        System.out.println("清管器在" + (varPara.pigNum + flagpigT) / 24.0 + "h," + "从" + stations.get(stationNum11).getStationL() + "m处回收");
-                                        //System.out.println("清管器在"+(varPara.pigNum+flagpigT)/12.0+"h," + "从"+stations.get(stationNum00+1).getStationL()+"m处回收");
+
+                                //
+                                varPara.pigV[pigNumber][varPara.pigNum[pigNumber]]=getPigV(Ha[pigNumber],Hb[pigNumber],varPara.pigV[pigNumber][varPara.pigNum[pigNumber]-1],varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]
+                                        ,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]+500,varPara.getPgk()[i],
+                                        3000,varPara.pigL[0][0],getPhi(varPara.line_l,varPara.line_d,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]))[2];
+
+                                varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]= varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]+
+                                        0.5*(varPara.pigV[pigNumber][varPara.pigNum[pigNumber]-1]+varPara.pigV[pigNumber][varPara.pigNum[pigNumber]-1])*200;/////////////////原本是300
+                                varPara.pigZ[pigNumber][varPara.pigNum[pigNumber]]= getZ(varPara.line_l,varPara.line_d,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]);
+
+                                if(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>varPara.waterL[varPara.num]-5000){
+                                    varPara.pigV[pigNumber][varPara.pigNum[pigNumber]]=0.95*conPara.Ql/A;
+                                }else if (varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>varPara.waterL[varPara.num]-10000) {
+                                    varPara.pigV[pigNumber][varPara.pigNum[pigNumber]]=conPara.Ql/A;
+                                }
+
+                                for (int stationNum11=p[pigNumber];stationNum11<varPara.pumpSta.size();stationNum11++){
+                                    if ((Double)varPara.pumpSta.get(stationNum11)!=0 && varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>
+                                            (Double)varPara.pumpSta.get(stationNum11))
+                                    {
+                                        p[pigNumber]++;
+                                        if (varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>(Double)varPara.pumpSta.get(stationNum11)){//清管器到达末站后的处理
+                                            //varPara.pigFlag=1;//全线清管器投放结束标记
+                                            varPara.pigflag1=0;//压缩模型的调试标记，在save方法中使用
+                                        }
+                                        varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]=(Double)varPara.pumpSta.get(stationNum11);
+                                        varPara.pigZ[pigNumber][varPara.pigNum[pigNumber]]= getZ(varPara.line_l,varPara.line_d,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]);
+                                        //清管器到达某站的处理，收球再新发，预设停留时间为1h，20210617
+                                        varPara.pigflag2[pigNumber]=1;
+                                        System.out.println("清管器在"+(varPara.pigNum[pigNumber]+flagpigT[pigNumber])/24.0+"h," + "从"+stations.get(stationNum11).getStationL()+"m处回收");
+                                        //System.out.println("清管器在"+(varPara.pigNum[pigNumber+flagpigT)/12.0+"h," + "从"+stations.get(stationNum00+1).getStationL()+"m处回收");
+                                        break;
+                                    }else if( stationNum11==varPara.pumpSta.size()-1 && varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>(Double)varPara.pumpSta.get(stationNum11)-1000){
+                                        //末站的处理
+                                        p[pigNumber]++;
+                                        varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]=(Double)varPara.pumpSta.get(stationNum11);
+                                        //清管器到达某站的处理，收球再新发，预设停留时间为1h，20210617
+                                        //varPara.pigflag2=1;
+                                        System.out.println("清管器在"+(varPara.pigNum[pigNumber]+flagpigT[pigNumber])/24.0+"h," + "从"+stations.get(stationNum11).getStationL()+"m处回收");
+                                        //System.out.println("清管器在"+(varPara.pigNum[pigNumber+flagpigT)/12.0+"h," + "从"+stations.get(stationNum00+1).getStationL()+"m处回收");
+
+                                        varPara.pigFlag=1;
                                         break;
                                     }
                                 }
+                            }else if(varPara.pigflag2[pigNumber]==1)
+                            {
+                                flagpigT[pigNumber]++;
+                                varPara.pigNum[pigNumber]++;
+                                varPara.pigTflag[pigNumber]++;
+                                varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]=varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1];
+                                varPara.pigZ[pigNumber][varPara.pigNum[pigNumber]]= getZ(varPara.line_l,varPara.line_d,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]);
+                                varPara.pigV[pigNumber][varPara.pigNum[pigNumber]]=0;
+                                if (varPara.pigTflag[pigNumber]>5){
+                                    varPara.pigTflag[pigNumber]=0;
+                                    varPara.pigflag2[pigNumber]=0;//在站内换清管器，停留5个时步，后继续发向下游
+                                    System.out.println("清管器在"+(varPara.pigNum[pigNumber]+flagpigT[pigNumber])/24.0+"h," + "从"+varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]+"m处投放");
+                                }
                             }
+
+
+
+                            if (pigNumber>0 && varPara.pigNum[pigNumber-1]>1200 && varPara.pigFlag==1)
+                            {
+
+                                if (varPara.pigNum[pigNumber]==0)
+                                {
+                                    varPara.pigNum[pigNumber]=varPara.num;
+                                    System.out.println("清管器" +(pigNumber+1)+"在"+varPara.pigNum[pigNumber]/24.0+"h," + "从"+stations.get(0).getStationName()+stations.get(0).getStationL()+"m处投放1");
+                                    //System.out.println("清管器在"+flagpigT/12.0+"h," + "从"+stations.get(stationNum00).getStationL()+"m处投放");
+                                }
+
+                                varPara.pigV[0][0]=conPara.Ql/A;      //初始速度设为水头速度
+                                varPara.pigL[0][0]=stations.get(0).getStationL();  //初始位置设为站点位置
+
+
+                                //double []dPLLL=varPara.dPL[varPara.num];//传递当前时步的压力值，进行插值
+                                double []dPLLL=chazhi(varPara.dPL[varPara.num],499);//传递当前时步的压力值，进行插值
+
+                                varPara.pigNum[pigNumber]++;
+
+
+                                if ((int)(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]-LLt)<0||(int)(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]-LLt)>500){
+                                    Ha[pigNumber] = 1e5+5000;
+                                    Hb[pigNumber] = 1e5;
+                                }else{
+                                    //Ha
+                                    Ha[pigNumber] = dPLLL[(int)(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]-LLt)-1];
+                                    //Hb
+                                    Hb[pigNumber] = dPLLL[(int)(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]-LLt)];
+                                }
+
+
+                                //
+                                varPara.pigV[pigNumber][varPara.pigNum[pigNumber]]=getPigV(Ha[pigNumber],Hb[pigNumber],varPara.pigV[pigNumber][varPara.pigNum[pigNumber]-1],varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]
+                                        ,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]+500,varPara.getPgk()[i],
+                                        3000,varPara.pigL[0][0],getPhi(varPara.line_l,varPara.line_d,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]))[2];
+
+                                varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]= varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1]+
+                                        0.5*(varPara.pigV[pigNumber][varPara.pigNum[pigNumber]-1]+varPara.pigV[pigNumber][varPara.pigNum[pigNumber]-1])*200;/////////////////原本是300
+                                varPara.pigZ[pigNumber][varPara.pigNum[pigNumber]]= getZ(varPara.line_l,varPara.line_d,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]);
+
+                                if(varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>varPara.waterL[varPara.num]-5000){
+                                    varPara.pigV[pigNumber][varPara.pigNum[pigNumber]]=0.95*conPara.Ql/A;
+                                }else if (varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>varPara.waterL[varPara.num]-10000) {
+                                    varPara.pigV[pigNumber][varPara.pigNum[pigNumber]]=conPara.Ql/A;
+                                }
+
+                                for (int stationNum11=p[pigNumber];stationNum11<varPara.pumpSta.size();stationNum11++){
+                                    if ((Double)varPara.pumpSta.get(stationNum11)!=0 && varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>
+                                            (Double)varPara.pumpSta.get(stationNum11))
+                                    {
+                                        p[pigNumber]++;
+                                        if (varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>(Double)varPara.pumpSta.get(stationNum11)){//清管器到达末站后的处理
+                                            //varPara.pigFlag=1;//全线清管器投放结束标记
+                                            varPara.pigflag1=0;//压缩模型的调试标记，在save方法中使用
+                                        }
+                                        varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]=(Double)varPara.pumpSta.get(stationNum11);
+                                        varPara.pigZ[pigNumber][varPara.pigNum[pigNumber]]= getZ(varPara.line_l,varPara.line_d,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]);
+                                        //清管器到达某站的处理，收球再新发，预设停留时间为1h，20210617
+                                        varPara.pigflag2[pigNumber]=1;
+                                        System.out.println("清管器" +(pigNumber+1)+"在"+(varPara.pigNum[pigNumber])/24.0+"h," + "从"+stations.get(stationNum11).getStationL()+"m处回收");
+                                        //System.out.println("清管器在"+(varPara.pigNum[pigNumber+flagpigT)/12.0+"h," + "从"+stations.get(stationNum00+1).getStationL()+"m处回收");
+                                        break;
+                                    }else if( stationNum11==varPara.pumpSta.size()-1 && varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>(Double)varPara.pumpSta.get(stationNum11)-1000){
+                                        //末站的处理
+                                        p[pigNumber]++;
+                                        varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]=(Double)varPara.pumpSta.get(stationNum11);
+                                        //清管器到达某站的处理，收球再新发，预设停留时间为1h，20210617
+                                        //varPara.pigflag2=1;
+                                        System.out.println("清管器" +(pigNumber+1)+"在"+(varPara.pigNum[pigNumber])/24.0+"h," + "从"+stations.get(stationNum11).getStationL()+"m处回收");
+                                        //System.out.println("清管器在"+(varPara.pigNum[pigNumber+flagpigT)/12.0+"h," + "从"+stations.get(stationNum00+1).getStationL()+"m处回收");
+
+                                        varPara.pigFlag=1;
+                                        break;
+                                    }
+                                }
+                                if (pigNumber>0){
+                                    varPara.Mg[varPara.num] = varPara.Mg[varPara.num]-varPara.Mg[varPara.num]*(varPara.pigL[pigNumber][varPara.num]-varPara.pigL[pigNumber][varPara.num-1])/(varPara.line_l[varPara.line_l.length-1][3]-varPara.line_l[1][1]);
+                                }
+                            }else if(varPara.pigflag2[pigNumber]==1)
+                            {
+                                flagpigT[pigNumber]++;
+                                varPara.pigNum[pigNumber]++;
+                                varPara.pigTflag[pigNumber]++;
+                                varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]=varPara.pigL[pigNumber][varPara.pigNum[pigNumber]-1];
+                                varPara.pigZ[pigNumber][varPara.pigNum[pigNumber]]= getZ(varPara.line_l,varPara.line_d,varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]);
+                                varPara.pigV[pigNumber][varPara.pigNum[pigNumber]]=0;
+                                if (varPara.pigTflag[pigNumber]>5){
+                                    varPara.pigTflag[pigNumber]=0;
+                                    varPara.pigflag2[pigNumber]=0;//在站内换清管器，停留5个时步，后继续发向下游
+                                    System.out.println("清管器" +(pigNumber+1)+"在"+(varPara.pigNum[pigNumber])/24.0+"h," + "从"+varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]+"m处投放");
+                                }
+                            }
+
+
+
+
+
                         }
-                        //清管器投放
+
 
                         for (int rrr = 1; rrr <= n; rrr++) {
-                            if (varPara.MGk[rrr] > 1.0 && varPara.pigL[varPara.pigNum] >= varPara.line_l[rrr][1] && varPara.pigL[varPara.pigNum] < varPara.line_l[rrr][2]) {//当积气段气体质量剩余，且清管器位于积气段10km内时
-                                AddMg[rrr] = varPara.MGk[rrr] * (varPara.pigL[varPara.pigNum] - varPara.line_l[rrr][1]) / (varPara.line_l[rrr][2] - varPara.line_l[rrr][1]);       //添加清管器赶气的附加破碎质量流量
+                            if (varPara.MGk[rrr] > 1.0 && varPara.pigL[0][varPara.pigNum[0]] >= varPara.line_l[rrr][1] && varPara.pigL[0][varPara.pigNum[0]] < varPara.line_l[rrr][2]) {//当积气段气体质量剩余，且清管器位于积气段10km内时
+                                AddMg[rrr] = varPara.MGk[rrr] * (varPara.pigL[0][varPara.pigNum[0]] - varPara.line_l[rrr][1]) / (varPara.line_l[rrr][2] - varPara.line_l[rrr][1]);       //添加清管器赶气的附加破碎质量流量
                             }
                             AddMg_his[rrr][varPara.num] = AddMg[rrr];
                         }
@@ -792,7 +978,7 @@ public class Project extends Thread implements Serializable {
                         //全线流型计算
                         flagFP = varPara.line_l[1][1] + 500;
                         for (int xNum = 1; flagFP < varPara.waterL[varPara.num]; xNum++) {
-                           varPara.allLineFP[varPara.num][xNum] = getFlowPattern(getI(varPara.line_l, flagFP), flagFP, varPara.pigL[0], varPara.pigL[varPara.pigNum], flagpigT);       //当前点流型1为分层流，0为满管流，2为气泡流，3为段塞或气泡流
+                           varPara.allLineFP[varPara.num][xNum] = getFlowPattern(getI(varPara.line_l, flagFP), flagFP, varPara.pigL[0][0], varPara.pigL[0][varPara.pigNum[0]], flagpigT[0]);       //当前点流型1为分层流，0为满管流，2为气泡流，3为段塞或气泡流
                             flagFP = flagFP + 500;
                             /**
                              * 存储allLineFP
@@ -803,9 +989,21 @@ public class Project extends Thread implements Serializable {
                             setAllLineFP(allLineFPAfterChange);
                         }
 
-                        if (flag05 < timeStop){
+//                        if (flag05 < timeStop){
+//                            flag05=299+flag05;
+//                            varPara.Mg[varPara.num] = varPara.Mg[varPara.num]-(varPara.dMg_p[1][flag05/300+1]-varPara.dMg_p[1][flag05/300])*20;
+//                        }
+
+                        for (int ii = 0; ii <= n; ii++) {
+                            varPara.dMg_sum=AddMg[ii]+varPara.dMg_sum;
+                        }
+
+
+                        if (timeStop!=0){
                             flag05=299+flag05;
-                            varPara.Mg[varPara.num] = varPara.Mg[varPara.num]-(varPara.dMg_p[1][flag05/300+1]-varPara.dMg_p[1][flag05/300])*20;
+                            if (varPara.dMg_p[1][flag05/300+1]!=0){
+                                varPara.Mg[varPara.num] = varPara.Mg[varPara.num]-(varPara.dMg_p[1][flag05/300+1]-varPara.dMg_p[1][flag05/300])*5;
+                            }
                         }
 
 
@@ -840,7 +1038,38 @@ public class Project extends Thread implements Serializable {
                 break;
             }
         }
+        for (int j = 0; j < varPara.num+2500; j++) {
+            if (varPara.Mg[varPara.num]!=0&&varPara.Mg[varPara.num+1]==0){
+                op=varPara.num+1;
+                System.out.println("op ============================= " + op);
+                break;
+            }
+        }
+        for (int j = op/4+1; j < varPara.num+2500; j++) {
+            if(j>op-1){
+                if (varPara.Mg[j-1]>0.1*conPara.Ql*3600/869.0*varPara.Mg[op-1]){
+                    if (varPara.Mg[j-1]>0&&varPara.Mg[j-1]<180000){
+                        varPara.Mg[j] = varPara.Mg[j-1]*0.9995;
+                    }else{
+                        varPara.Mg[j] = varPara.Mg[j-2]*0.9995;
+                    }
+                }else{
+                    varPara.Mg[j]=varPara.Mg[j-1];
+                }
 
+
+            }
+            if (varPara.pigL[0][j-op/4]>0){
+                if (varPara.Mg[j-1]>0&&varPara.Mg[j-1]<180000){
+                    varPara.Mg[j] = varPara.Mg[j]-varPara.Mg[j]*(varPara.pigL[0][j-op/4]-varPara.pigL[0][j-op/4-1])/(varPara.line_l[varPara.line_l.length-1][3]-varPara.line_l[1][1]);
+                }else{
+                    varPara.Mg[j] = varPara.Mg[j]-varPara.Mg[j]*(varPara.pigL[0][j-op/4]-varPara.pigL[0][j-op/4-1])/(varPara.line_l[varPara.line_l.length-1][3]-varPara.line_l[1][1]);
+                }
+
+            }
+
+
+        }
         varPara.dPL[0][0]=varPara.line_l[1][1]/1000;
         varPara.allLineFP[0][0]=varPara.line_l[1][1]/1000;
         for (int x = 1; x <=(varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/500+1; x++) {
@@ -859,13 +1088,14 @@ public class Project extends Thread implements Serializable {
             Output.OutToTXTFP(varPara.allLineFP, "allLineFP");
             Output.OutToTXT1(varPara.lg_his, "lg_his");
             Output.OutToTXT1(varPara.M_his, "M_his");
-            Output.OutToTXTLLL(varPara.pigL, "pigL", flagpigT);
+            Output.OutToTXTLLL(varPara.pigL[0], "pigL", flagpigT[0]);
             Output.OutToTXT123(varPara.dMg_p, "dMg_p");
-            Output.OutToTXTLLL(varPara.pigV, "pigV", flagpigT);
-            Output.OutToTXTLLL(varPara.pigZ, "pigZ", flagpigT);
+            Output.OutToTXTLLL(varPara.pigV[0], "pigV", flagpigT[0]);
+            Output.OutToTXTLLL(varPara.pigZ[0], "pigZ", flagpigT[0]);
             Output.OutToTXTPPP(varPara.allLineStaticP[0], "allLineStaticP", varPara.line_l[1][1]);
             Output.OutToTXTZZZ(varPara.allLineStaticP[1], "allLineZ", varPara.line_l[1][1]);
-
+            Output.OutToTXT1(AddMg_his,"AddMg_his");
+            Output.OutToTXTLLL(varPara.Mg,"Mg",0);
         }catch (Exception e) {
                 e.printStackTrace();
         }
@@ -906,10 +1136,10 @@ public class Project extends Thread implements Serializable {
         SizeChange mGChange = new SizeChange(varPara.Mg,0.0,(1.0/24));
         double[][] mGAfterChange = mGChange.ResultAfterChange2();
         setmG(mGAfterChange);
-        SizeChange pigVChange = new SizeChange(varPara.pigV,flagpigT/24,(1.0/24));
+        SizeChange pigVChange = new SizeChange(varPara.pigV[0],flagpigT[0]/24,(1.0/24));
         double[][] pigVAfterChange = pigVChange.ResultAfterChange2();
         setPigV(pigVAfterChange);
-        SizeChange pigLChange = new SizeChange(varPara.pigL,flagpigT/24,(1.0/24));
+        SizeChange pigLChange = new SizeChange(varPara.pigL[0],flagpigT[0]/24,(1.0/24));
         double[][] pigLAfterChange = pigLChange.ResultAfterChange2();
         setPigL(pigLAfterChange);
         SizeChange dMgPChange = new SizeChange(varPara.dMg_p);
@@ -1150,12 +1380,12 @@ public class Project extends Thread implements Serializable {
 
         for (i=1;i<=n;i++){
             varPara.Pg_his[i][k] = varPara.Pgk[i]/1000000.0;           //气体压力，Pa,转化为MPa
-            if (varPara.Pg_his[i][k]!=0 && varPara.pigflag1==1 &&
-                    (varPara.Pg_his[i][k]/varPara.Pg_his[i][k-1]>5||varPara.Pg_his[i][k]/varPara.Pg_his[i][k-1]<-5))  {
-                varPara.Pg_his[i][k]=varPara.Pg_his[i][k-1];
-                //varPara.Pgk[i]=1000000*varPara.Pg_his[i][k-1];
-                varPara.flag01[i]=1;
-            }
+//            if (varPara.Pg_his[i][k]!=0 && varPara.pigflag1==1 &&
+//                    (varPara.Pg_his[i][k]/varPara.Pg_his[i][k-1]>5||varPara.Pg_his[i][k]/varPara.Pg_his[i][k-1]<-5))  {
+//                varPara.Pg_his[i][k]=varPara.Pg_his[i][k-1];
+//                //varPara.Pgk[i]=1000000*varPara.Pg_his[i][k-1];
+//                varPara.flag01[i]=1;
+//            }
             if (varPara.Pg_his[i][k]>0.5e6)  varPara.Pg_his[i][k]=0.5e6;
             varPara.lg_his[i][k]= varPara.lgk[i]/1000.0;             //下坡段气段长度，m，转化为km
 //            if (varPara.lg_his[i][k]!=0 && varPara.pigflag1==1 &&
@@ -1417,7 +1647,20 @@ public class Project extends Thread implements Serializable {
             //dM=0.002*pgw*A*hg*(hgw-hgs)*vgw*dt/conPara.R/oil.temperature;         //计算dM,pc   //dgw长气泡尾部密度   hgw截面含气率  vgw尾部气体速度  dt计算时间步长
             //dM=0;         //计算dM,pc   //dgw长气泡尾部密度   hgw截面含气率  vgw尾部气体速度  dt计算时间步长
             varPara.dMg_out[kkk]=dM;                    //净流出的质量
-            lg=lg-(dM-varPara.dMg_in[kkk])/Mg*lg;
+            if (varPara.dMg_out[kkk]<0){
+                varPara.dMg_out[kkk]=0.0002;
+            }
+
+            if (dM-varPara.dMg_in[kkk]<0) {
+                if (lg<varPara.line_l[kkk][2]-varPara.line_l[kkk][1]){
+                    lg=lg*1.003;
+                }else{
+                    lg=varPara.line_l[kkk][2]-varPara.line_l[kkk][1];
+                }
+            }else{
+                lg=lg-(dM-varPara.dMg_in[kkk])/Mg*lg;
+            }
+//            lg=lg-(dM-varPara.dMg_in[kkk])/Mg*lg;
             dg=Mg/(lg*A*hg);
             //dg=dg-dM/Mg*dg;
             //lg=lg-dM/Mg*lg;
@@ -2007,7 +2250,7 @@ public class Project extends Thread implements Serializable {
         //{
         varPara.dHL[kkk][0]=varPara.Hs;
         varPara.Lt=varPara.line_l[1][1];
-
+        List<Double> allLineLbzB = new ArrayList<>();
         for (int x=1;x<=(waterHeadLocation[kkk]-varPara.line_l[1][1])/dx+1;x++)//遍历水头前的各点
         {
             varPara.Lt=varPara.Lt+dx;
@@ -2083,14 +2326,52 @@ public class Project extends Thread implements Serializable {
                 varPara.dHL[num][x]=101325;
             }
 
+            varPara.allLineLbz[num][x]=pow(D,4.75)*(varPara.dHL[num][x]-varPara.dHL[num][x-1])/9.81/1000.0/500.0/ pow(conPara.Ql,1.75)/pow(0.000001,0.25);
+            varPara.allLineDP[num][x]=varPara.dHL[num][x-1]-varPara.dHL[num][x];
 
+
+            allLineLbzB.add(-varPara.allLineLbz[num][x]);
+            //System.out.println(varPara.allLineLbzB[num].get(x-1));
+
+
+
+
+            for (int pipeNum = 1; varPara.line_l[pipeNum][1]<waterHeadLocation[kkk] ; pipeNum++) {
+
+
+            }
+            varPara.allLineLbzBs.add(allLineLbzB);
         }
 
-        for (int xx = 0; xx <(varPara.line_l[varPara.i-1][2]-varPara.line_l[1][1])/dx; xx++) {
+        double Lxx;
+        int x1=0;
+        double []yy=new double[stationL.length];
+        double []zz=new double[stationL.length];
+        for (int xx = 0; xx <(varPara.line_l[varPara.i-1][3]-varPara.line_l[1][1])/dx; xx++) {
+            Lxx=varPara.line_l[1][1]+xx*500;
             if (xx <= (waterHeadLocation[kkk] - varPara.line_l[1][1]) / dx + 1)//遍历水头前的各点
             {
+                for (int s=0;s<stationL.length-1;s++){        //改变各站间的水力坡降起点计算高度
+                    if (Lxx>stationL[s] && Lxx <=stationL[s+1] && stationL[s]!=0 && stations.get(s).getPumps().size()!=0){
+                        x1=s;
+//                        for (int i = 0; varPara.line_l[i][1] < stationL[s+1]; i++) {
+//                        }
+//                        if (varPara.dHL[num][xx]-varPara.dHL[varPara.dHL.length-2][xx]>50){
+//                            yy[s]=varPara.dHL[num][xx]-varPara.dHL[varPara.dHL.length-2][xx];
+//                            if (yy[s]>zz[s]){
+//                                zz[s]=yy[s];
+//                            }
+//                        }
+                    }
+                }
                 varPara.dHL[num][xx] = varPara.dHL[num][xx] / 9.81 / 1000;
-                varPara.dHL[num][xx] = varPara.dHL[num][xx] + 1670;
+                if (x1==0){
+                    varPara.dHL[num][xx] = varPara.dHL[num][xx] + varPara.line_d[1][1];
+                }else{
+                    varPara.dHL[num][xx] = varPara.dHL[num][xx] + stations.get(x1).getStationZ();
+                }
+
+
             } else {
                 varPara.dHL[num][xx] = varPara.dHL[num][xx] / 9.81 / 1000;
                 varPara.dHL[num][xx] = varPara.dHL[num][xx] + varPara.dHL[varPara.dHL.length-2][xx];
@@ -2451,18 +2732,39 @@ public class Project extends Thread implements Serializable {
         //for (int x=0;x<=(waterL-varPara.line_l[1][1])/500.0+1;x++)//遍历水头前的各点，500m一步
         //{
 
+        varPara.startPumpFlag=0;
+        //if (num%10==0)
 
-        if (num%10==0)  varPara.startPumpFlag=0;
-        for (int stationNum=0;stationNum<stations.size();stationNum++){//查询当前点所处的站点位置
-            if (stations.get(stationNum).getStationType()==1.0 && waterL >= varPara.stationLLL[stationNum] && waterL <= varPara.stationLLL[stationNum+1]){
+        for (int stationNum=varPara.p;stationNum<=varPara.pumpSta.size()-1;stationNum++){//查询当前点所处的站点位置
+            if ((Double)varPara.pumpSta.get(stationNum)!=0 && stations.get(stationNum).getStationType()==1 &&
+                    waterL >= (Double)varPara.pumpSta.get(stationNum)){
+                //waterL <= (double)varPara.pumpSta.get(stationNum+1)){
+//                    if (varPara.p!=stationNum) {
+//                        varPara.p1=0;
+//                    }
+//                    if (varPara.p1==0) {
+//                        varPara.p1++;
+//                        varPara.p++;
+//                    }
                 //采用就近启泵原则，优先启离水头近的泵站的泵
                 stationNow=stationNum;
+//                    if (stationNum==2){
+//                        stationNow=4;
+//                    }else if (stationNum==3){
+//                        stationNow=6;
+//                    }
+                //break;
 
 //                    for (int iu=0;iu<varPara.Hpump.length;iu++){
 //                        varPara.Hpump[iu]=0.0;
 //                    }
 
             }
+//                else if(waterL > (double)varPara.pumpSta.get(varPara.pumpSta.size()-1)){
+//                    stationNow=6;
+//                }
+
+
         }
 
 
@@ -2470,30 +2772,49 @@ public class Project extends Thread implements Serializable {
 
 
 
-        if (dpL[(int)((waterL-varPara.line_l[1][1])/500.0)] < 500000  && varPara.startPumpFlag ==0) {         //计算点处压头小于0.5MPa，需要启泵
+//        if ((int)((waterL-varPara.line_l[1][1])/500.0)<0) {
+//            System.out.println(waterL);
+//            System.out.println(num/24.0);
+//        }
+        //if (varPara.startPumpFlag ==0) {         //计算点处压头小于0.5MPa，需要启泵
+        if (dpL[(int)((waterL-varPara.line_l[1][1])/500.0)-1]-getZ(varPara.line_l,varPara.line_d,waterL) < 80 && varPara.startPumpFlag ==0) {         //计算点处压头小于0.5MPa，需要启泵
+            if (getStations().get(stationNow).getPumps().size()>=1&&varPara.startPumpFlag1[stationNow][getStations().get(stationNow).getPumps().size()-1]==1 && stationNow>=1){
+                stationNow--;
+                System.out.println(getStations().get(stationNow+1).getStationName()+"能头不足，尝试启前一站的泵");
+                if (getStations().get(stationNow).getPumps().size()>=1&&varPara.startPumpFlag1[stationNow][getStations().get(stationNow).getPumps().size()-1]==1 && stationNow>=1){
+                    stationNow--;
+                    System.out.println(getStations().get(stationNow+1).getStationName()+"已完全启泵，尝试再启前一站的泵");
+                }
+            }
             for (int pumpNum=0;pumpNum<getStations().get(stationNow).getPumps().size();pumpNum++){          //遍历当前站点的所有泵
-                if (getStations().get(stationNow).getPumps().get(pumpNum).getPumpType()==2 && varPara.startPumpFlag1[stationNow]==0){        //存在变频泵且未完全打开
+                if ((getStations().get(stationNow).getPumps().get(pumpNum).getPumpType()==2||getStations().get(stationNow).getPumps().get(pumpNum).getPumpType()==1) && varPara.startPumpFlag1[stationNow][pumpNum]==0){        //存在变频泵且未完全打开
                     getStations().get(stationNow).getPumps().get(pumpNum).setState(1);            //打开变频泵
                     varPara.startPumpFlag=1;
-                    //PumpRev = getStations().get(stationNow).getPumps().get(pumpNum).getRev();     //获取变频泵额定转速
-                    varPara.PumpRev = 0.05+varPara.PumpRev;
+                    //pumpRev[stationNow][pumpNum] = getStations().get(stationNow).getPumps().get(pumpNum).getRev();     //获取变频泵额定转速
+                    varPara.pumpRev[stationNow][pumpNum] = 0.05+varPara.pumpRev[stationNow][pumpNum];
 
                     getStations().get(stationNow).getPumps().get(pumpNum).initPumpFunction();
                     varPara.a[pumpNum]=getStations().get(stationNow).getPumps().get(pumpNum).getHead();
-                    varPara.Hpump[stationNow]=varPara.Hpump[stationNow]+(varPara.a[pumpNum][0]*pow(varPara.PumpRev,2) + varPara.a[pumpNum][1]*pow(varPara.PumpRev,2) * conPara.Ql*3600 + varPara.a[pumpNum][2] *pow(varPara.PumpRev,2)* Math.pow(conPara.Ql*3600, 2))
-                            -(varPara.a[pumpNum][0]*pow(varPara.PumpRev-0.05,2) + varPara.a[pumpNum][1]*pow(varPara.PumpRev-0.05,2) * conPara.Ql*3600 + varPara.a[pumpNum][2] *pow(varPara.PumpRev-0.05,2)* Math.pow(conPara.Ql*3600, 2));
+
+                    varPara.Hpump[stationNow]=varPara.Hpump[stationNow]+(varPara.a[pumpNum][0]*pow(varPara.pumpRev[stationNow][pumpNum],2) + varPara.a[pumpNum][1]*pow(varPara.pumpRev[stationNow][pumpNum],2) * conPara.Ql*3600 + varPara.a[pumpNum][2] *pow(varPara.pumpRev[stationNow][pumpNum],2)* Math.pow(conPara.Ql*3600, 2))
+                            -(varPara.a[pumpNum][0]*pow(varPara.pumpRev[stationNow][pumpNum]-0.05,2) + varPara.a[pumpNum][1]*pow(varPara.pumpRev[stationNow][pumpNum]-0.05,2) * conPara.Ql*3600 + varPara.a[pumpNum][2] *pow(varPara.pumpRev[stationNow][pumpNum]-0.05,2)* Math.pow(conPara.Ql*3600, 2));
+
                     //dpL[(int)(varPara.stationLLL[stationNow]/0.5)]=varPara.Hpump[stationNow]*oils.get(0).getDensity()*conPara.g+dpL[(int)(varPara.stationLLL[stationNow]/0.5)];
                     //varPara.Hs=dpL[(int)(station.getStationL()[stationNow]/0.5)];
                     //varPara.Hd[stationNow]=dpL[(int)(station.getStationL()[stationNow]/0.5)];
                     varPara.Hd[stationNow]=varPara.Hpump[stationNow]*oils.get(0).getDensity()*conPara.g;
-                    System.out.println("在"+num/24.0+"h,启"+(stationNow+1)+"号泵站的"+(pumpNum+1)+"号泵,"+ (int)(varPara.PumpRev/0.01)+"%转速");
-                    //System.out.println("在"+num/12.0+"h,启"+(stationNow+1)+"号泵站的"+(pumpNum+1)+"号泵,"+ (int)(varPara.PumpRev/0.01)+"%转速");
-                    if (varPara.PumpRev >1.0){
-                        varPara.startPumpFlag1[stationNow]=1;
-                        varPara.PumpRev = 0.4;
+                    System.out.println("在"+num/24.0+"h,启"+stationNow+"号站，此时水头位置在"+waterL/1000.0+"km处，启动了"+stations.get(stationNow).getStationName()+"的"+(pumpNum+1)+"号泵,"+ (int)(varPara.pumpRev[stationNow][pumpNum]/0.01)+"%转速");
+                    //System.out.println("在"+num/12.0+"h,启"+(stationNow+1)+"号泵站的"+(pumpNum+1)+"号泵,"+ (int)(varPara.pumpRev[stationNow][pumpNum]/0.01)+"%转速");
+                    if (varPara.pumpRev[stationNow][pumpNum] >1.0){
+                        varPara.startPumpFlag1[stationNow][pumpNum]=1;
+//                            varPara.pumpRev[stationNow][pumpNum] = 0.4;
                     }
                     break;
-                }else if(getStations().get(stationNow).getPumps().get(pumpNum).getPumpType()==1 && getStations().get(stationNow).getPumps().get(pumpNum).getState()==0){        //存在主泵且未打开
+                }
+                /**
+                 * 此处原为type等于1，用于描述工频泵的启动
+                 */
+                else if(getStations().get(stationNow).getPumps().get(pumpNum).getPumpType()==5 && getStations().get(stationNow).getPumps().get(pumpNum).getState()==0){        //存在主泵且未打开
                     getStations().get(stationNow).getPumps().get(pumpNum).setState(1);      //打开泵
                     varPara.startPumpFlag=1;
                     getStations().get(stationNow).getPumps().get(pumpNum).initPumpFunction();
@@ -2503,16 +2824,29 @@ public class Project extends Thread implements Serializable {
                     //varPara.Hd[stationNow]=dpL[(int)(varPara.stationLLL[stationNow]/0.5)];
                     varPara.Hd[stationNow]=varPara.Hpump[stationNow]*oils.get(0).getDensity()*conPara.g;
                     //varPara.Hs=dpL[(int)(station.getStationL()[stationNow]/0.5)];
-                    System.out.println("在"+num/24.0+"h,启"+(stationNow+1)+"号泵站的"+(pumpNum+1)+"号泵");
+                    System.out.println("在"+num/24.0+"h,启"+stations.get(stationNow).getStationName()+"的工频"+(pumpNum+1)+"号泵");
                     //System.out.println("在"+num/12.0+"h,启"+(stationNow+1)+"号泵站的"+(pumpNum+1)+"号泵");
                     break;
                 }else {
 //
                 }
+
+
             }
 
-//
+            /**
+             * 启泵后加入
+             */
+
+
+
         }
+//        varPara.allQ.add(conPara.Ql);
+//        conPara.Ql=pow((varPara.Hpump[stationNow]*1000.0/9.81-(getZ(varPara.line_l,varPara.line_d,waterL)-
+//                getStations().get(stationNow).getStationZ()))/(waterL-varPara.line_l[1][1])/5,1/1.75);
+        //varPara.allQ.add(pow((varPara.Hpump[stationNow]-(getZ(varPara.line_l,varPara.line_d,waterL)- getStations().get(stationNow).getStationZ()))/(waterL-varPara.line_l[1][1])/0.008,1/1.75));
+//
+        //varPara.allQ.add(0.01);
     }
 
 
