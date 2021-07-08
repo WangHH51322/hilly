@@ -470,6 +470,32 @@ public class ExcelData {
                 lj[ui][uii]=lll_new1[ui][uii];
             }
         }
+
+        for (int iii = 1; iii < lll_new1.length - 2; iii++) {
+            if (lj[iii-1][0] != 0 && lj[iii][0] == 0)
+            {
+                break;
+            }
+            lll_new1[iii+1][0] = lj[iii][0];//从第二点起，各自向后移动一位，里程
+            lll_new1[iii+1][1] = lj[iii][1];//从第二点起，各自向后移动一位，高程
+        }
+        lll_new1[1][0] = 0.5*(lll_new1[0][0]+lll_new1[2][0]);
+        if (0.5*(lll_new1[0][1]+lll_new1[2][1])-20>0){
+            lll_new1[1][1] = 0.5*(lll_new1[0][1]+lll_new1[2][1])-20;//插入首点至第二点间的点的高程
+        }else if(0.5*(lll_new1[0][1]+lll_new1[2][1])-5>0){
+            lll_new1[1][1] = 0.5*(lll_new1[0][1]+lll_new1[2][1])-5;//插入首点至第二点间的点的高程,防止地形高程变为负值
+        }else if(0.5*(lll_new1[0][1]+lll_new1[2][1])-1>0){
+            lll_new1[1][1] = 0.5*(lll_new1[0][1]+lll_new1[2][1])-1;//插入首点至第二点间的点的高程
+        }
+
+
+//        for (int ui=0;ui<lll_new1.length;ui++){
+//            for (int uii=0;uii<lll_new1[0].length;uii++){
+//                System.out.print(lll_new1[ui][uii]+"\t");
+//            }
+//            System.out.println();
+//        }
+
         inum = 1;
         for (int iii = 0; iii < lll_new1.length - 1; iii++) {
             if (lll_new1[iii][0] != 0 && lll_new1[iii + 1][0] == 0)
@@ -492,19 +518,37 @@ public class ExcelData {
                 break;
             }
         }
+//        int iii=0;
+//        double[][] lll_stb = new double[lll_st.length*2-1][2];   //*****当原始地形首末点为整数时，z_st倒数第二个数空值
+//        for (int i = 0; i < lll_stb.length; i++) {
+//            lll_stb[i][0]=lll_st[iii][0];
+//            lll_stb[i][1]=lll_st[iii][1];
+//            i++;
+//            iii++;
+//        }
+//        for (int ii = 1; ii < lll_stb.length; ii++) {
+//            lll_stb[ii][0] = 0.5*lll_stb[ii-1][0]+0.5*lll_stb[ii+1][0];
+//            lll_stb[ii][1] = 0.5*lll_stb[ii-1][1]+0.5*lll_stb[ii+1][1];
+//            ii++;
+//        }
 
-        ///////////20210519补充////如果最后一段是下坡，插入一个点
-        for (int iii = 2; iii < lll_new1.length - 1; iii++) {
-            if(lll_new1[iii-2][1]-lll_new1[iii-1][1]>0 && lll_new1[iii-1][0]!=0 &&  lll_new1[iii][0]==0 ){
-                lll_new1[iii-2][1] = (lll_new1[iii-1][1])-10;//末点里程修改///////////////或者选择加一个点更好
-            }
-        }
+
+
+
+//        //导出到excel中
+//        writeArrayToExcel(lll_st, "config/lll_st.xls");
+////        writeArrayToExcel(lll_stb, "config/lll_stb.xls");
+//        writeArrayToExcel(lll_new, "config/lll_new.xls");
+//        writeArrayToExcel(lll_new1, "config/lll_new1.xls");
 
         if(inum%2==1) inum++;
 
         double[][] ll = new double[(inum) / 2+1][4];
         double[][] zz = new double[(inum) / 2+1][4];
         double[][] lz = new double[(inum) / 2+1][8];
+//        double[][] ll = new double[inum+1][4];
+//        double[][] zz = new double[inum+1][4];
+//        double[][] lz = new double[inum+1][8];
 
         ll[1][1] = lll_new1[0][0];
         zz[1][1] = lll_new1[0][1];

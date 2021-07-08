@@ -18,6 +18,7 @@ public class ResultDPL {
     private String _id;
     private Integer segments;
     private Double singleLength;
+    private Double timeFrame;
 //    private String projectId;
     private double[][] dPL;
     private double[][] lz;

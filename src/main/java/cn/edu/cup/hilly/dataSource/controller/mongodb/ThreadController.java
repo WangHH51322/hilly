@@ -17,6 +17,7 @@ import cn.edu.cup.hilly.dataSource.service.mongo.HillyStationPumpsService;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyStationService;
 import cn.edu.cup.hilly.dataSource.service.mongo.result.*;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
+import cn.edu.cup.hilly.dataSource.utils.SizeChange;
 import com.mongodb.BasicDBObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -160,13 +161,15 @@ public class ThreadController {
 
     @GetMapping("/run2")
     public RespBean run2(@RequestParam("id") String id){
-//        WiselyMessage msg = new WiselyMessage();
+        WiselyMessage msg = new WiselyMessage();
+        WiselyMessage msg2 = new WiselyMessage();
+        WiselyMessage msg3 = new WiselyMessage();
         ExcelFile excelFile = fileService.find(id);
-        double[][] lz = excelFile.getLz();  //三角式地形数据
+//        double[][] lz = excelFile.getLz();  //三角式地形数据
         Integer inum = excelFile.getInum();
         try {
             Project project = new Project();
-            project.setLz(lz);
+//            project.setLz(lz);
             project.setInum(inum);
             Thread thread = new Thread(project);
             Map<String, Object> data = dataMap.convertDataMap(id);
@@ -186,14 +189,14 @@ public class ThreadController {
             resultDPL.set_id(id);
 //            resultDPL.setLz(lz_out);
 //            resultDPLService.add(resultDPL);
-
+//
             ResultDHL resultDHL = new ResultDHL();
             resultDHL.set_id(id);
 //            resultDHL.setLz(lz_out);
 //            resultDHLService.add(resultDHL);
-
+//
             ResultAllLineFP resultAllLineFP = new ResultAllLineFP();
-            resultAllLineFP.set_id(id);
+            resultAllLineFP.setProjectId(id);
 //            resultAllLineFP.setLz(lz_out);
 //            resultALFPService.add(resultAllLineFP);
 
@@ -208,11 +211,15 @@ public class ThreadController {
             ResultSimple resultSimple = new ResultSimple();
             resultSimple.set_id(id);
             boolean in = true;
-//            while (thread.isAlive()) {
-//                try {
-//                    Thread.sleep(10 * 1000); //设置暂停的时间 1 秒
-//                    if (!project.isLocked()) {
-//                        //计算过程中的地形,用于数据展示的x轴
+            while (thread.isAlive()) {
+                if (!project.isLocked()) {
+                    try {
+                        Thread.sleep(5 * 1000); //设置暂停的时间 1 秒
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    //计算过程中的地形,用于数据展示的x轴
 //                        if (in) {
 //                            double[][] lz_out = project.getLz_out();
 //                            if (lz_out != null) {
@@ -221,11 +228,43 @@ public class ThreadController {
 //                                resultDHL.setLz(lz_out);
 //                                resultDHLService.add(resultDHL);
 //                                resultAllLineFP.setLz(lz_out);
-//                                resultALFPService.add(resultAllLineFP);
-////                                System.out.println("进入成功!!!");
+////                                resultALFPService.add(resultAllLineFP,100.00);   // 每隔100h存一个collection
+//                                System.out.println("进入成功!!!");
 //                                in = false;
 //                            }
 //                        }
+                    double[][] varPara_allLineFP = project.getVarPara_allLineFP();
+                    SizeChange allLineFPChange = new SizeChange(varPara_allLineFP);
+                    Map<Double, double[]> allLineFPAfterChange = allLineFPChange.ResultAfterChange(4,2.5);
+                    resultAllLineFP.setAllLineFPMap(allLineFPAfterChange);
+                    msg.setName("allLineFP");
+                    msg.setRoutingKey("rk_pushmsg");
+                    msg.setMsg("这是一条来自后端的resultAllLineFP");
+                    msg.setObject(resultAllLineFP);
+                    resultALFPService.updateMap(resultAllLineFP);
+
+                    double[][] varPara_dPL = project.getVarPara_dPL();
+                    SizeChange dPLChange = new SizeChange(varPara_dPL);
+                    Map<Double, double[]> dPLAfterChange = dPLChange.ResultAfterChange(4,2.5);
+                    resultDPL.setDPLMap(dPLAfterChange);
+                    msg2.setName("dPL");
+                    msg2.setRoutingKey("rk_pushmsg2");
+                    msg2.setMsg("这是一条来自后端的resultDPL");
+                    msg2.setObject(resultDPL);
+//                        resultDPLService.updateMap(resultDPL);
+//                        msg.setObject(resultDPL);
+//                        System.out.println("save data");
+
+                    double[][] varPara_dHL = project.getVarPara_dHL();
+                    SizeChange dHLChange = new SizeChange(varPara_dHL);
+                    Map<Double, double[]> dHLAfterChange = dHLChange.ResultAfterChange(4, 2.5);
+                    resultDHL.setDHLMap(dHLAfterChange);
+                    msg3.setName("dHL");
+                    msg3.setRoutingKey("rk_pushmsg3");
+                    msg3.setMsg("这是一条来自后端的resultDHL");
+                    msg3.setObject(resultDHL);
+//                        resultDHLService.updateMap(resultDHL);
+
 //
 //                        /**
 //                         * 传输数据
@@ -258,12 +297,11 @@ public class ThreadController {
 //                        resultALFPService.updateMap(resultAllLineFP);
 //
 ////                        System.out.println("save data");
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-////                sender.send(msg);
-//            }
+                    sender.send(msg);
+                    sender.send(msg2);
+                    sender.send(msg3);
+                }
+            }
             /**
              * 计算结束后存储数据
              */

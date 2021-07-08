@@ -9,16 +9,16 @@ import java.util.*;
 @NoArgsConstructor
 @ToString
 public class SizeChange {
-    public static void main(String[] args) {
-        double[][] d = new double[3][2];
-        double[][] reverse = reverse(d);
-        for (int i = 0; i < reverse.length; i++) {
-            System.out.println(" ");
-            for (int j = 0; j < reverse[i].length; j++) {
-                System.out.print(" " + reverse[i][j]);
-            }
-        }
-    }
+//    public static void main(String[] args) {
+//        double[][] d = new double[3][2];
+//        double[][] reverse = reverse(d);
+//        for (int i = 0; i < reverse.length; i++) {
+//            System.out.println(" ");
+//            for (int j = 0; j < reverse[i].length; j++) {
+//                System.out.print(" " + reverse[i][j]);
+//            }
+//        }
+//    }
     private double[][] resultDPL;
     private double[][] resultsData;
     private double[] resultData;
@@ -67,10 +67,14 @@ public class SizeChange {
     public double[][] ResultAfterChange2() {
         int size = 0;
         for (int i = 0; i < resultData.length; i++) {
+            if (i == resultData.length - 1) {
+                size = resultData.length;
+                break;
+            }
             Double re1 = resultData[i];
             Double re2 = resultData[i+1];
-            if ((re1 == 0.0&&re2 == 0.0) || re1.isNaN()) {
-                size = i;
+            if ((re1 == 0.0 && re2 == 0.0) || re1.isNaN()) {
+                size = i + 1;
                 break;
             }
         }

@@ -18,7 +18,7 @@ public class ResultDHL {
     private String _id;
     private Integer segments;
     private Double singleLength;
-//    private String projectId;
+    private Double timeFrame;
     private double[][] dHL;
     private double[][] lz;
     private Map<Double, double[]> dHLMap;

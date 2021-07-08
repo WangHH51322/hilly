@@ -161,10 +161,10 @@ public class RabbitmqConfig {
     public Object declareDirectQueue() {
         List<String> receiveQueueNames = new ArrayList<>();
         String receive3 = "queue_pushmsg3";
-        declare(receive3, directExchange(), "rk_recivemsg3");
+        declare(receive3, directExchange(), "rk_recivemsg");
         receiveQueueNames.add(receive3);
         String receive2 = "queue_pushmsg2";
-        declare(receive2, directExchange(), "rk_recivemsg2");
+        declare(receive2, directExchange(), "rk_recivemsg");
         receiveQueueNames.add(receive2);
         String receive = "queue_pushmsg";
         declare(receive, directExchange(), "rk_recivemsg");

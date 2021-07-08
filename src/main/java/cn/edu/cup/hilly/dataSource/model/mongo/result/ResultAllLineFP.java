@@ -23,8 +23,10 @@ import java.util.Map;
 public class ResultAllLineFP {
     @Id
     private String _id;
+    private String projectId;
     private Integer segments;
     private Double singleLength;
+    private Double timeFrame;
     private double[][] aLineFP;
     private double[][] lz;
     private Map<Double, double[]> allLineFPMap;
