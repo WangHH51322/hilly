@@ -43,16 +43,17 @@ public class ResultALFPService {
             Update update = Update.update("allLineFPMap",allLineFPMap);
             mongoTemplate.upsert(query,update, ResultAllLineFP.class,"resultAllLineFP");
         } else if (allLineFPMap.size() <= 1200) {
-            Map<Double, double[]> newAllLineFPMap = new HashMap<>();
+            Map<Double, double[]> allLineFPMap1 = new HashMap<>();
+            Map<Double, double[]> allLineFPMap2 = new HashMap<>();
             for (Map.Entry<Double, double[]> entry : allLineFPMap.entrySet()) {
                 Double key = entry.getKey();
                 double[] value = entry.getValue();
                 if (key > 6000.00) {
-                    newAllLineFPMap.put(key,value);
+                    allLineFPMap2.put(key,value);
                 }
             }
             Query query = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(200.00));
-            Update update = Update.update("allLineFPMap",newAllLineFPMap);
+            Update update = Update.update("allLineFPMap",allLineFPMap2);
             mongoTemplate.upsert(query,update, ResultAllLineFP.class,"resultAllLineFP");
         } else if (allLineFPMap.size() <= 1800) {
             Map<Double, double[]> newAllLineFPMap = new HashMap<>();

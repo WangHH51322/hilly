@@ -238,7 +238,7 @@ public class ThreadController {
                     Map<Double, double[]> allLineFPAfterChange = allLineFPChange.ResultAfterChange(4,2.5);
                     resultAllLineFP.setAllLineFPMap(allLineFPAfterChange);
                     msg.setName("allLineFP");
-                    msg.setRoutingKey("rk_pushmsg");
+                    msg.setRoutingKey("curve_allLineFP");
                     msg.setMsg("这是一条来自后端的resultAllLineFP");
                     msg.setObject(resultAllLineFP);
                     resultALFPService.updateMap(resultAllLineFP);
@@ -248,7 +248,7 @@ public class ThreadController {
                     Map<Double, double[]> dPLAfterChange = dPLChange.ResultAfterChange(4,2.5);
                     resultDPL.setDPLMap(dPLAfterChange);
                     msg2.setName("dPL");
-                    msg2.setRoutingKey("rk_pushmsg2");
+                    msg2.setRoutingKey("curve_dPL");
                     msg2.setMsg("这是一条来自后端的resultDPL");
                     msg2.setObject(resultDPL);
 //                        resultDPLService.updateMap(resultDPL);
@@ -260,7 +260,7 @@ public class ThreadController {
                     Map<Double, double[]> dHLAfterChange = dHLChange.ResultAfterChange(4, 2.5);
                     resultDHL.setDHLMap(dHLAfterChange);
                     msg3.setName("dHL");
-                    msg3.setRoutingKey("rk_pushmsg3");
+                    msg3.setRoutingKey("curve_dHL");
                     msg3.setMsg("这是一条来自后端的resultDHL");
                     msg3.setObject(resultDHL);
 //                        resultDHLService.updateMap(resultDHL);
