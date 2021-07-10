@@ -68,13 +68,13 @@ public class SizeChange {
         int size = 0;
         for (int i = 0; i < resultData.length; i++) {
             if (i == resultData.length - 1) {
-                size = resultData.length;
+                size = i;
                 break;
             }
             Double re1 = resultData[i];
             Double re2 = resultData[i+1];
             if ((re1 == 0.0 && re2 == 0.0) || re1.isNaN()) {
-                size = i + 1;
+                size = i;
                 break;
             }
         }

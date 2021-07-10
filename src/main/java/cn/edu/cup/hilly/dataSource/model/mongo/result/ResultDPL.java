@@ -16,6 +16,7 @@ public class ResultDPL {
 
     @Id
     private String _id;
+    private String projectId;
     private Integer segments;
     private Double singleLength;
     private Double timeFrame;

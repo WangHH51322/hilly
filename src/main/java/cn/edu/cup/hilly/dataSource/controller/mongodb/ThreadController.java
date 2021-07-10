@@ -181,17 +181,21 @@ public class ThreadController {
             /**
              * 数据存储,输出
              */
+            // 首先清空数据库
+            resultALFPService.clear(id);
+            resultDPLService.clear(id);
+            resultDHLService.clear(id);
 
             ResultULocation resultULocation = new ResultULocation();
             resultULocation.setHillyId(id);
 
             ResultDPL resultDPL = new ResultDPL();
-            resultDPL.set_id(id);
+            resultDPL.setProjectId(id);
 //            resultDPL.setLz(lz_out);
 //            resultDPLService.add(resultDPL);
 //
             ResultDHL resultDHL = new ResultDHL();
-            resultDHL.set_id(id);
+            resultDHL.setProjectId(id);
 //            resultDHL.setLz(lz_out);
 //            resultDHLService.add(resultDHL);
 //
@@ -212,13 +216,9 @@ public class ThreadController {
             resultSimple.set_id(id);
             boolean in = true;
             while (thread.isAlive()) {
-                if (!project.isLocked()) {
-                    try {
-                        Thread.sleep(5 * 1000); //设置暂停的时间 1 秒
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
+                try {
+                    Thread.sleep(5 * 1000); //设置暂停的时间 1 秒
+                    if (!project.isLocked()) {
                     //计算过程中的地形,用于数据展示的x轴
 //                        if (in) {
 //                            double[][] lz_out = project.getLz_out();
@@ -233,37 +233,37 @@ public class ThreadController {
 //                                in = false;
 //                            }
 //                        }
-                    double[][] varPara_allLineFP = project.getVarPara_allLineFP();
-                    SizeChange allLineFPChange = new SizeChange(varPara_allLineFP);
-                    Map<Double, double[]> allLineFPAfterChange = allLineFPChange.ResultAfterChange(4,2.5);
-                    resultAllLineFP.setAllLineFPMap(allLineFPAfterChange);
-                    msg.setName("allLineFP");
-                    msg.setRoutingKey("curve_allLineFP");
-                    msg.setMsg("这是一条来自后端的resultAllLineFP");
-                    msg.setObject(resultAllLineFP);
-                    resultALFPService.updateMap(resultAllLineFP);
+                        double[][] varPara_allLineFP = project.getVarPara_allLineFP();
+                        SizeChange allLineFPChange = new SizeChange(varPara_allLineFP);
+                        Map<Double, double[]> allLineFPAfterChange = allLineFPChange.ResultAfterChange(4,2.5);
+                        resultAllLineFP.setAllLineFPMap(allLineFPAfterChange);
+                        msg.setName("allLineFP");
+                        msg.setRoutingKey("curve_allLineFP");
+                        msg.setMsg("这是一条来自后端的resultAllLineFP");
+                        msg.setObject(resultAllLineFP);
+                        resultALFPService.updateMap(resultAllLineFP);
 
-                    double[][] varPara_dPL = project.getVarPara_dPL();
-                    SizeChange dPLChange = new SizeChange(varPara_dPL);
-                    Map<Double, double[]> dPLAfterChange = dPLChange.ResultAfterChange(4,2.5);
-                    resultDPL.setDPLMap(dPLAfterChange);
-                    msg2.setName("dPL");
-                    msg2.setRoutingKey("curve_dPL");
-                    msg2.setMsg("这是一条来自后端的resultDPL");
-                    msg2.setObject(resultDPL);
-//                        resultDPLService.updateMap(resultDPL);
+                        double[][] varPara_dPL = project.getVarPara_dPL();
+                        SizeChange dPLChange = new SizeChange(varPara_dPL);
+                        Map<Double, double[]> dPLAfterChange = dPLChange.ResultAfterChange(4,2.5);
+                        resultDPL.setDPLMap(dPLAfterChange);
+                        msg2.setName("dPL");
+                        msg2.setRoutingKey("curve_dPL");
+                        msg2.setMsg("这是一条来自后端的resultDPL");
+                        msg2.setObject(resultDPL);
+                        resultDPLService.updateMap(resultDPL);
 //                        msg.setObject(resultDPL);
 //                        System.out.println("save data");
 
-                    double[][] varPara_dHL = project.getVarPara_dHL();
-                    SizeChange dHLChange = new SizeChange(varPara_dHL);
-                    Map<Double, double[]> dHLAfterChange = dHLChange.ResultAfterChange(4, 2.5);
-                    resultDHL.setDHLMap(dHLAfterChange);
-                    msg3.setName("dHL");
-                    msg3.setRoutingKey("curve_dHL");
-                    msg3.setMsg("这是一条来自后端的resultDHL");
-                    msg3.setObject(resultDHL);
-//                        resultDHLService.updateMap(resultDHL);
+                        double[][] varPara_dHL = project.getVarPara_dHL();
+                        SizeChange dHLChange = new SizeChange(varPara_dHL);
+                        Map<Double, double[]> dHLAfterChange = dHLChange.ResultAfterChange(4, 2.5);
+                        resultDHL.setDHLMap(dHLAfterChange);
+                        msg3.setName("dHL");
+                        msg3.setRoutingKey("curve_dHL");
+                        msg3.setMsg("这是一条来自后端的resultDHL");
+                        msg3.setObject(resultDHL);
+                        resultDHLService.updateMap(resultDHL);
 
 //
 //                        /**
@@ -300,6 +300,9 @@ public class ThreadController {
                     sender.send(msg);
                     sender.send(msg2);
                     sender.send(msg3);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             /**

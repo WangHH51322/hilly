@@ -1,6 +1,7 @@
 package cn.edu.cup.hilly.dataSource.service.mongo.result;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultALFPDao;
+import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultAllLineFP;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultLgHis;
@@ -26,12 +27,7 @@ public class ResultALFPService {
     ResultALFPDao resultALSPDao;
     @Autowired
     MongoTemplate mongoTemplate;
-    public void add(ResultAllLineFP result,double timeFrame) {
-        result.setTimeFrame(100.00);
-        resultALSPDao.save(result);
-        result.setTimeFrame(200.00);
-        resultALSPDao.save(result);
-        result.setTimeFrame(300.00);
+    public void add(ResultAllLineFP result) {
         resultALSPDao.save(result);
     }
 
@@ -39,34 +35,63 @@ public class ResultALFPService {
         String projectId = resultAllLineFP.getProjectId();
         Map<Double, double[]> allLineFPMap = resultAllLineFP.getAllLineFPMap();
         if (allLineFPMap.size() <= 600) {
-            Query query = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(100.00));
+            Query query1 = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(100.00));
             Update update = Update.update("allLineFPMap",allLineFPMap);
-            mongoTemplate.upsert(query,update, ResultAllLineFP.class,"resultAllLineFP");
+            mongoTemplate.upsert(query1,update, ResultAllLineFP.class,"resultAllLineFP");
+
+//            Query query2 = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(200.00));
+//            mongoTemplate.remove(query2, ResultAllLineFP.class,"resultAllLineFP");
+//            Query query3 = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(300.00));
+//            mongoTemplate.remove(query3, ResultAllLineFP.class,"resultAllLineFP");
         } else if (allLineFPMap.size() <= 1200) {
             Map<Double, double[]> allLineFPMap1 = new HashMap<>();
             Map<Double, double[]> allLineFPMap2 = new HashMap<>();
             for (Map.Entry<Double, double[]> entry : allLineFPMap.entrySet()) {
                 Double key = entry.getKey();
                 double[] value = entry.getValue();
-                if (key > 6000.00) {
+                if (key <= 6000.00) {
+                    allLineFPMap1.put(key,value);
+                } else {
                     allLineFPMap2.put(key,value);
                 }
             }
-            Query query = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(200.00));
-            Update update = Update.update("allLineFPMap",allLineFPMap2);
-            mongoTemplate.upsert(query,update, ResultAllLineFP.class,"resultAllLineFP");
+            Query query1 = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(100.00));
+            Update update1 = Update.update("allLineFPMap",allLineFPMap1);
+            mongoTemplate.upsert(query1,update1, ResultAllLineFP.class,"resultAllLineFP");
+
+            Query query2 = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(200.00));
+            Update update2 = Update.update("allLineFPMap",allLineFPMap2);
+            mongoTemplate.upsert(query2,update2, ResultAllLineFP.class,"resultAllLineFP");
+
+//            Query query3 = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(300.00));
+//            mongoTemplate.remove(query3, ResultAllLineFP.class,"resultAllLineFP");
+
         } else if (allLineFPMap.size() <= 1800) {
-            Map<Double, double[]> newAllLineFPMap = new HashMap<>();
+            Map<Double, double[]> allLineFPMap1 = new HashMap<>();
+            Map<Double, double[]> allLineFPMap2 = new HashMap<>();
+            Map<Double, double[]> allLineFPMap3 = new HashMap<>();
             for (Map.Entry<Double, double[]> entry : allLineFPMap.entrySet()) {
                 Double key = entry.getKey();
                 double[] value = entry.getValue();
-                if (key > 12000.00) {
-                    newAllLineFPMap.put(key,value);
+                if (key <= 6000.00) {
+                    allLineFPMap1.put(key,value);
+                } else if(key <= 12000.00) {
+                    allLineFPMap2.put(key,value);
+                } else {
+                    allLineFPMap3.put(key,value);
                 }
             }
-            Query query = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(300.00));
-            Update update = Update.update("allLineFPMap",newAllLineFPMap);
-            mongoTemplate.upsert(query,update, ResultAllLineFP.class,"resultAllLineFP");
+            Query query1 = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(100.00));
+            Update update1 = Update.update("allLineFPMap",allLineFPMap1);
+            mongoTemplate.upsert(query1,update1, ResultAllLineFP.class,"resultAllLineFP");
+
+            Query query2 = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(200.00));
+            Update update2 = Update.update("allLineFPMap",allLineFPMap2);
+            mongoTemplate.upsert(query2,update2, ResultAllLineFP.class,"resultAllLineFP");
+
+            Query query3 = Query.query(Criteria.where("projectId").is(projectId).and("timeFrame").is(300.00));
+            Update update3 = Update.update("allLineFPMap",allLineFPMap3);
+            mongoTemplate.upsert(query3,update3, ResultAllLineFP.class,"resultAllLineFP");
         }
     }
 
@@ -79,10 +104,36 @@ public class ResultALFPService {
     }
 
     public Map<Double, List<ResultAllLineFP.outPut>> find2(String id) {
-//        ResultAllLineFP resultAllLineFP = resultALSPDao.findById(id).get();
-        Query query = new Query(Criteria.where("_id").is(id));
-        ResultAllLineFP resultAllLineFP = mongoTemplate.findOne(query, ResultAllLineFP.class,"resultAllLineFP");
-        Map<Double, List<ResultAllLineFP.outPut>> doubleListMap = resultAllLineFP.convertALFP(248.0);
-        return doubleListMap;
+//        Query query = new Query(Criteria.where("_id").is(id));
+//        Hilly hilly = mongoTemplate.findOne(query, Hilly.class, "hilly");
+//        String value = hilly.getVariableParameter().getTotalTime().getValue();
+//        double totalTime = Double.parseDouble(value);
+
+        Query query2 = new Query(Criteria.where("projectId").is(id));
+        List<ResultAllLineFP> resultAllLineFPs = mongoTemplate.find(query2, ResultAllLineFP.class, "resultAllLineFP");
+        ResultAllLineFP resultAllLineFP = new ResultAllLineFP();
+        Map<Double, double[]> allLineFPMaps = new HashMap<>();
+
+        for (int i = 0; i < resultAllLineFPs.size(); i++) {
+            allLineFPMaps.putAll(resultAllLineFPs.get(i).getAllLineFPMap());
+        }
+//
+//            if (totalTime <= 100.00) {
+//                allLineFPMaps.putAll(resultAllLineFPs.get(0).getAllLineFPMap());
+//            } else if (totalTime <= 200.00) {
+//                allLineFPMaps.putAll(resultAllLineFPs.get(0).getAllLineFPMap());
+//                allLineFPMaps.putAll(resultAllLineFPs.get(1).getAllLineFPMap());
+//            } else {
+//                allLineFPMaps.putAll(resultAllLineFPs.get(0).getAllLineFPMap());
+//                allLineFPMaps.putAll(resultAllLineFPs.get(1).getAllLineFPMap());
+//                allLineFPMaps.putAll(resultAllLineFPs.get(2).getAllLineFPMap());
+//            }
+        resultAllLineFP.setAllLineFPMap(allLineFPMaps);
+        return resultAllLineFP.convertALFP(0.0);
+    }
+
+    public void clear(String id) {
+        Query query = new Query(Criteria.where("projectId").is(id));
+        mongoTemplate.remove(query,ResultAllLineFP.class, "resultAllLineFP");
     }
 }
