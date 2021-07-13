@@ -50,16 +50,16 @@ public class SizeChange {
 
     public double[][] ResultAfterChange3() {
         int size = 0;
-        for (int i = 0; i < resultsData.length; i++) {
-            if (i != 0 && resultsData[i][1] == 0) {
+        for (int i = 0; i < resultsData[1].length; i++) {
+            if (i != 0 && resultsData[1][i] == 0) {
                 size = i;
                 break;
             }
         }
         double[][] results = new double[size][2];
         for (int i = 0; i < size; i++) {
-            results[i][0] = resultsData[i][0];
-            results[i][1] = resultsData[i][1];
+            results[i][0] = i * 2.5;
+            results[i][1] = resultsData[1][i];
         }
         return results;
     }

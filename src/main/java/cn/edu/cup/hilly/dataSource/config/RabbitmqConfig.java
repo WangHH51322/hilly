@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -27,7 +28,7 @@ import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class RabbitmqConfig {
     private static final Logger logger = LoggerFactory.getLogger(RabbitmqConfig.class);
 
@@ -43,6 +44,8 @@ public class RabbitmqConfig {
         connectionFactory.setCacheMode(CachingConnectionFactory.CacheMode.CHANNEL);
         connectionFactory.setUsername("guest");
         connectionFactory.setPassword("guest");
+//        connectionFactory.setUsername("root");
+//        connectionFactory.setPassword("newpassword");
         connectionFactory.addConnectionListener(new ConnectionListener() {
             @Override
             public void onCreate(Connection connection) {
@@ -158,20 +161,31 @@ public class RabbitmqConfig {
      * 创建一个ReceivePushMsgListener，监听routingKey为“rk_recivemsg”的队列实现客户端收到消息后向此队列发送确认收到消息
      */
     @Bean
-    public Object declareDirectQueue() {
+    public SimpleMessageListenerContainer declareDirectQueue() {
         List<String> receiveQueueNames = new ArrayList<>();
         String receive3 = "queue_pushmsg3";
-        declare(receive3, directExchange(), "rk_recivemsg");
+        declare(receive3, directExchange(), "curve_allLineFP");
         receiveQueueNames.add(receive3);
         String receive2 = "queue_pushmsg2";
-        declare(receive2, directExchange(), "rk_recivemsg");
+        declare(receive2, directExchange(), "curve_dPL");
         receiveQueueNames.add(receive2);
         String receive = "queue_pushmsg";
-        declare(receive, directExchange(), "rk_recivemsg");
+        declare(receive, directExchange(), "curve_dHL");
         receiveQueueNames.add(receive);
-        newListenerContainer(new ReceivePushMsgListener(), receiveQueueNames.toArray(new String[receiveQueueNames.size()]));
+        String receive0 = "queue_pushmsg0";
+        declare(receive0, directExchange(), "curve_lz");
+        receiveQueueNames.add(receive0);
+        SimpleMessageListenerContainer listenerContainer = newListenerContainer(new ReceivePushMsgListener(), receiveQueueNames.toArray(new String[receiveQueueNames.size()]));
         return null;
     }
+
+//    @Bean
+//    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+//        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+//        factory.setConnectionFactory(connectionFactory);
+//        factory.setMessageConverter(jsonMessageConverter());
+//        return factory;
+//    }
 
     private void declare(String queueName, DirectExchange exchange, String routingKey) {
         RabbitAdmin admin = rabbitAdmin();

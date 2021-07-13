@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  * @date 2021-07-09 11:09
  * @description WebMvcConfig
  */
-@Configuration
+//@Configuration
 public class WebMvcConfig extends WebMvcConfigurationSupport{
     @Override
     public void configureAsyncSupport(final AsyncSupportConfigurer configurer) {

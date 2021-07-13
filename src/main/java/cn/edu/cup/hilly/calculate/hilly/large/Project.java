@@ -508,11 +508,12 @@ public class Project extends Thread {
             varPara.dHL[varPara.dHL.length-2][x]=getZ(varPara.line_l, varPara.line_d,varPara.dHL[0][x]*1000);
             lz_new[x][1]= varPara.dHL[varPara.dHL.length-2][x];
         }
-        //System.out.println("lz_new = " + lz_new);
+        System.out.println("lz_new = " + Arrays.deepToString(lz_new));
+        System.out.println("lz_new = " + (lz_new == null));
         /**
          * 输出lz_new
          */
-        setLz_out(lz_new);
+        this.lz_out = lz_new;
 
         varPara.waterHeadLocation[0]=varPara.line_l[1][1];   //水头初始位置等于首个下坡段低点
 
@@ -764,6 +765,7 @@ public class Project extends Thread {
 //                        Map<Double, double[]> dHLAfterChange = dHLChange.ResultAfterChange(2, 2.5);
 //                        setDHL(dHLAfterChange);
                         this.varPara_dHL = varPara.dHL;
+
                         ff = 0;
                         startPump(varPara.num, varPara.dHL[varPara.num],varPara.waterL[varPara.num]);
                             if (varPara.waterL[varPara.num]>=248100){
@@ -779,7 +781,7 @@ public class Project extends Thread {
                             //停泵
                             stopPump1(varPara.num, varPara.waterL[varPara.num]);
                             //静压
-                            staticP_new(n, varPara.waterL[varPara.num], varPara.deltaX);
+//                            staticP_new(n, varPara.waterL[varPara.num], varPara.deltaX);
                             varPara.kkstop=kk;//停输时刻记录
                             varPara.numstop=varPara.num;//停输时刻记录
                             varPara.rrstop=rr;//停输时刻记录
@@ -3166,26 +3168,86 @@ public class Project extends Thread {
             System.out.println("静压计算 水头位置判定异常");
         }
     }
+
     public void staticP_new(int n, double waterL,double dx) {
         Oil oil= oils.get(0);
-        int i,ii=1; //
-        double Lx = waterL; //累计里程
-        varPara.allLineStaticP[0][(int)((waterL-varPara.line_l[1][1])/dx)]=(2520-getZ(varPara.line_l, varPara.line_d,waterL))*oil.getDensity()*9.81;
-        varPara.allLineStaticP[1][(int)((waterL-varPara.line_l[1][1])/dx)]=getZ(varPara.line_l, varPara.line_d,waterL);
+        double Lx;
+        double []MaxZ=new double[50]; //
+        List<Double> maxZ = new ArrayList();
+        List<Double> max0 = new ArrayList();
+        List<Double> sta = new ArrayList();
 
-
-
+        for (int s=0;s<varPara.pumpSta.size()-1;s++){        //改变站点压力值
+            if ((double)varPara.pumpSta.get(s)!=0.0){
+                sta.add((double)varPara.pumpSta.get(s));
+                System.out.println(stations.get(s).getStationName());
+                maxZ.add(0.0);
+                max0.add(0.0);
+            }
+        }
 
         //从水头至首站，依次计算静压
-        for (int x = (int) ((waterL - varPara.line_l[1][1]) / dx); x >= 1; x--)//遍历水头前的各点,从后往前
+        for (int x = 0;x< (int) ((waterL - varPara.line_l[1][1]) / dx +1 );  x++)//遍历水头前的各点,从后往前
         {
             Lx = varPara.line_l[1][1] + x * dx;
+            for (int s=0;s<sta.size()-1;s++){        //改变站点压力值
+                if (Lx>=sta.get(s) && Lx <=sta.get(s+1)){
+                    max0.set(s,varPara.dHL[varPara.dHL.length-2][x]+10);
+                    if (max0.get(s)>maxZ.get(s)){
+                        maxZ.set(s,max0.get(s));
+                    }
+                }else if (Lx<sta.get(s)&&s==0){
+                    max0.set(s,varPara.dHL[varPara.dHL.length-2][x]+10);
+                    if (max0.get(s)>maxZ.get(s)){
+                        maxZ.set(s,max0.get(s));
+                    }
+                }else if (Lx>sta.get(s+1)&&s==sta.size()-2){
+                    max0.set(s,varPara.dHL[varPara.dHL.length-2][x]+10);
+                    if (max0.get(s)>maxZ.get(s)){
+                        maxZ.set(s,max0.get(s));
+                    }
+                }
+            }
+        }
+        for (int s = 0; s < maxZ.size(); s++) {
+            System.out.println("s = " + s);
+            System.out.println("maxZ = " + maxZ.get(s));
+        }
 
-            varPara.allLineStaticP[0][x] = (2520 - getZ(varPara.line_l, varPara.line_d, Lx)) * oil.getDensity() * 9.81;
-
-
+        for (int x = 0;x< (int) ((waterL - varPara.line_l[1][1]) / dx +1 );  x++)//遍历水头前的各点,从后往前
+        {
+            Lx = varPara.line_l[1][1] + x * dx;
+            for (int s=0;s<sta.size()-1;s++){        //改变站点压力值
+                if (Lx>=sta.get(s) && Lx <=sta.get(s+1)){
+                    varPara.allLineStaticP[0][x] = (maxZ.get(s) - getZ(varPara.line_l, varPara.line_d, Lx)) * oil.getDensity() * 9.81;
+                }else if (Lx<sta.get(s)&&s==0){
+                    varPara.allLineStaticP[0][x] = (maxZ.get(s) - getZ(varPara.line_l, varPara.line_d, Lx)) * oil.getDensity() * 9.81;
+                }else if (Lx>sta.get(s+1)&&s==sta.size()-2){
+                    varPara.allLineStaticP[0][x] = (maxZ.get(s) - getZ(varPara.line_l, varPara.line_d, Lx)) * oil.getDensity() * 9.81;
+                }
+            }
         }
     }
+//    public void staticP_new(int n, double waterL,double dx) {
+//        Oil oil= oils.get(0);
+//        int i,ii=1; //
+//        double Lx = waterL; //累计里程
+//        varPara.allLineStaticP[0][(int)((waterL-varPara.line_l[1][1])/dx)]=(2520-getZ(varPara.line_l, varPara.line_d,waterL))*oil.getDensity()*9.81;
+//        varPara.allLineStaticP[1][(int)((waterL-varPara.line_l[1][1])/dx)]=getZ(varPara.line_l, varPara.line_d,waterL);
+//
+//
+//
+//
+//        //从水头至首站，依次计算静压
+//        for (int x = (int) ((waterL - varPara.line_l[1][1]) / dx); x >= 1; x--)//遍历水头前的各点,从后往前
+//        {
+//            Lx = varPara.line_l[1][1] + x * dx;
+//
+//            varPara.allLineStaticP[0][x] = (2520 - getZ(varPara.line_l, varPara.line_d, Lx)) * oil.getDensity() * 9.81;
+//
+//
+//        }
+//    }
     /**
      * 求排气的质量和排气后的气段压力、长度变化
      * @param i 管段数

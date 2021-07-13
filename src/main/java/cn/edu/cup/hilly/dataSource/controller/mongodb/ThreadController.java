@@ -161,6 +161,7 @@ public class ThreadController {
 
     @GetMapping("/run2")
     public RespBean run2(@RequestParam("id") String id){
+        WiselyMessage msg0 = new WiselyMessage();
         WiselyMessage msg = new WiselyMessage();
         WiselyMessage msg2 = new WiselyMessage();
         WiselyMessage msg3 = new WiselyMessage();
@@ -220,19 +221,26 @@ public class ThreadController {
                     Thread.sleep(5 * 1000); //设置暂停的时间 1 秒
                     if (!project.isLocked()) {
                     //计算过程中的地形,用于数据展示的x轴
-//                        if (in) {
-//                            double[][] lz_out = project.getLz_out();
-//                            if (lz_out != null) {
+                        if (in) {
+                            double[][] lz_out = project.getLz_out();
+                            System.out.println("lz_out = " + Arrays.deepToString(lz_out));
+                            if (lz_out != null) {
+                                msg0.setName("lz");
+                                msg0.setRoutingKey("curve_lz");
+                                msg0.setMsg("这是一条来自后端的lz");
+                                msg0.setObject(lz_out);
 //                                resultDPL.setLz(lz_out);
 //                                resultDPLService.add(resultDPL);
 //                                resultDHL.setLz(lz_out);
 //                                resultDHLService.add(resultDHL);
 //                                resultAllLineFP.setLz(lz_out);
 ////                                resultALFPService.add(resultAllLineFP,100.00);   // 每隔100h存一个collection
-//                                System.out.println("进入成功!!!");
-//                                in = false;
-//                            }
-//                        }
+
+//                                sender.send(msg0);
+                                System.out.println("进入成功!!!");
+                                in = false;
+                            }
+                        }
                         double[][] varPara_allLineFP = project.getVarPara_allLineFP();
                         SizeChange allLineFPChange = new SizeChange(varPara_allLineFP);
                         Map<Double, double[]> allLineFPAfterChange = allLineFPChange.ResultAfterChange(4,2.5);
@@ -242,6 +250,7 @@ public class ThreadController {
                         msg.setMsg("这是一条来自后端的resultAllLineFP");
                         msg.setObject(resultAllLineFP);
                         resultALFPService.updateMap(resultAllLineFP);
+//                        System.out.println("resultAllLineFP.getAllLineFPMap().size() = " + resultAllLineFP.getAllLineFPMap().size());
 
                         double[][] varPara_dPL = project.getVarPara_dPL();
                         SizeChange dPLChange = new SizeChange(varPara_dPL);
@@ -252,8 +261,8 @@ public class ThreadController {
                         msg2.setMsg("这是一条来自后端的resultDPL");
                         msg2.setObject(resultDPL);
                         resultDPLService.updateMap(resultDPL);
-//                        msg.setObject(resultDPL);
-//                        System.out.println("save data");
+//                        System.out.println("resultDPL.getDPLMap().size() = " + resultDPL.getDPLMap().size());
+
 
                         double[][] varPara_dHL = project.getVarPara_dHL();
                         SizeChange dHLChange = new SizeChange(varPara_dHL);
@@ -263,6 +272,7 @@ public class ThreadController {
                         msg3.setRoutingKey("curve_dHL");
                         msg3.setMsg("这是一条来自后端的resultDHL");
                         msg3.setObject(resultDHL);
+//                        System.out.println("resultDHL.getDPLMap().size() = " + resultDHL.getDHLMap().size());
                         resultDHLService.updateMap(resultDHL);
 
 //
@@ -297,9 +307,11 @@ public class ThreadController {
 //                        resultALFPService.updateMap(resultAllLineFP);
 //
 ////                        System.out.println("save data");
-                    sender.send(msg);
-                    sender.send(msg2);
-                    sender.send(msg3);
+
+
+//                    sender.send(msg);
+//                    sender.send(msg2);
+//                    sender.send(msg3);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -339,6 +351,10 @@ public class ThreadController {
             double[][] aLSP = project.getaLSP();
             resultSimple.setALSP(aLSP);
             resultSimpleService.updateALSP(resultSimple);
+
+            System.out.println("resultAllLineFP.getAllLineFPMap().size() = " + resultAllLineFP.getAllLineFPMap().size());
+            System.out.println("resultDPL.getDPLMap().size() = " + resultDPL.getDPLMap().size());
+            System.out.println("resultDHL.getDPLMap().size() = " + resultDHL.getDHLMap().size());
 
             return RespBean.ok("开始计算");
         } catch (Exception e) {
