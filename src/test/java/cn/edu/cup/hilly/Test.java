@@ -12,19 +12,7 @@ import java.util.List;
  */
 public class Test {
     public void main(String[] args) {
-        double[] doubles = new double[5];
-        List<test> tests = new ArrayList<>();
-        for (int i = 0; i < doubles.length; i++) {
-            test test = new test();
-            test.setStart(i*0.5);
-            test.setEnd((i+1)*0.5);
-            test.setType(doubles[i]);
-            tests.add(test);
-        }
 
-        for (int i = 0; i < tests.size(); i++) {
-            System.out.println(tests.get(i).toString());
-        }
     }
 
     class test {

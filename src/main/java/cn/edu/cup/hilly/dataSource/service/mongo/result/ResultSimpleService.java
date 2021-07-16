@@ -26,6 +26,12 @@ public class ResultSimpleService {
 //        mongoTemplate.upsert()
 //    }
 
+    public void updateLZ(ResultSimple resultSimple) {
+        String id = resultSimple.get_id();
+        Query query = Query.query(Criteria.where("_id").is(id));
+        Update update = Update.update("lz",resultSimple.getLz());
+        mongoTemplate.upsert(query,update, ResultSimple.class,"resultSimple");
+    }
     public void updateMG(ResultSimple resultSimple) {
         String id = resultSimple.get_id();
         Query query = Query.query(Criteria.where("_id").is(id));

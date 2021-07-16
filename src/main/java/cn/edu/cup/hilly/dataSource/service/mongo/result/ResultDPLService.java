@@ -2,6 +2,7 @@ package cn.edu.cup.hilly.dataSource.service.mongo.result;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultDPLDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultAllLineFP;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDHL;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,5 +111,21 @@ public class ResultDPLService {
     public void clear(String id) {
         Query query = new Query(Criteria.where("projectId").is(id));
         mongoTemplate.remove(query,ResultDPL.class,"resultDPL");
+    }
+
+    public ResultDPL findLast(String id) {
+        Query query = Query.query(Criteria.where("projectId").is(id));
+        List<ResultDPL> resultDPLs = mongoTemplate.find(query, ResultDPL.class, "resultDPL");
+
+        ResultDPL resultDPL = new ResultDPL();
+        Map<Double, double[]> dplMap = resultDPLs.get(resultDPLs.size() - 1).getDPLMap();
+        List<Double> mapKey = new ArrayList<>(dplMap.keySet());
+        Double lastKey = mapKey.get(mapKey.size() - 1);
+        double[] lastDPL = dplMap.get(lastKey);
+        Map<Double, double[]> lastDPLMap = new HashMap<>();
+        lastDPLMap.put(lastKey,lastDPL);
+
+        resultDPL.setDPLMap(lastDPLMap);
+        return resultDPL;
     }
 }

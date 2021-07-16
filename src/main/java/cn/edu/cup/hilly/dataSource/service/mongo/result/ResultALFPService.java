@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,11 +105,6 @@ public class ResultALFPService {
     }
 
     public Map<Double, List<ResultAllLineFP.outPut>> find2(String id) {
-//        Query query = new Query(Criteria.where("_id").is(id));
-//        Hilly hilly = mongoTemplate.findOne(query, Hilly.class, "hilly");
-//        String value = hilly.getVariableParameter().getTotalTime().getValue();
-//        double totalTime = Double.parseDouble(value);
-
         Query query2 = new Query(Criteria.where("projectId").is(id));
         List<ResultAllLineFP> resultAllLineFPs = mongoTemplate.find(query2, ResultAllLineFP.class, "resultAllLineFP");
         ResultAllLineFP resultAllLineFP = new ResultAllLineFP();
@@ -117,18 +113,34 @@ public class ResultALFPService {
         for (int i = 0; i < resultAllLineFPs.size(); i++) {
             allLineFPMaps.putAll(resultAllLineFPs.get(i).getAllLineFPMap());
         }
-//
-//            if (totalTime <= 100.00) {
-//                allLineFPMaps.putAll(resultAllLineFPs.get(0).getAllLineFPMap());
-//            } else if (totalTime <= 200.00) {
-//                allLineFPMaps.putAll(resultAllLineFPs.get(0).getAllLineFPMap());
-//                allLineFPMaps.putAll(resultAllLineFPs.get(1).getAllLineFPMap());
-//            } else {
-//                allLineFPMaps.putAll(resultAllLineFPs.get(0).getAllLineFPMap());
-//                allLineFPMaps.putAll(resultAllLineFPs.get(1).getAllLineFPMap());
-//                allLineFPMaps.putAll(resultAllLineFPs.get(2).getAllLineFPMap());
-//            }
+
         resultAllLineFP.setAllLineFPMap(allLineFPMaps);
+        return resultAllLineFP.convertALFP(0.0);
+    }
+
+    public Map<Double, List<ResultAllLineFP.outPut>> findLast(String id) {
+        Query query2 = new Query(Criteria.where("projectId").is(id));
+        List<ResultAllLineFP> resultAllLineFPs = mongoTemplate.find(query2, ResultAllLineFP.class, "resultAllLineFP");
+        ResultAllLineFP resultAllLineFP = new ResultAllLineFP();
+        Map<Double, double[]> allLineFPMaps = new HashMap<>();
+        Map<Double, double[]> allLineFPMap = new HashMap<>();
+
+        for (int i = 0; i < resultAllLineFPs.size(); i++) {
+            allLineFPMaps.putAll(resultAllLineFPs.get(i).getAllLineFPMap());
+        }
+
+        List<Double> mapKeys = new ArrayList<>(allLineFPMaps.keySet());
+        double totalTime = mapKeys.get(mapKeys.size() - 1);
+        double startTime = 0.0;
+        while (startTime < totalTime) {
+            allLineFPMap.put(startTime,allLineFPMaps.get(startTime));
+            startTime += 60.0;
+        }
+        if ( totalTime % 60.0 != 0.0) {   // 将最后一时刻的值存入map
+            allLineFPMap.put(totalTime,allLineFPMaps.get(totalTime));
+        }
+        resultAllLineFP.setAllLineFPMap(allLineFPMap);
+
         return resultAllLineFP.convertALFP(0.0);
     }
 

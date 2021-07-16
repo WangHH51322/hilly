@@ -49,11 +49,30 @@ public class ResultController {
             return RespBean.error("查询出错",e.getMessage());
         }
     }
+    @GetMapping("/DPL/Last")
+    public RespBean getDPLLast(@RequestParam("id") String id) {
+        try {
+            ResultDPL resultDPL = resultDPLService.findLast(id);
+            return RespBean.ok("查询成功",resultDPL);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
 
     @GetMapping("/DHL")
     public RespBean getDHL(@RequestParam("id") String id) {
         try {
             ResultDHL resultDHL = resultDHLService.find(id);
+            return RespBean.ok("查询成功",resultDHL);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+
+    @GetMapping("/DHL/Last")
+    public RespBean getDHLLats(@RequestParam("id") String id) {
+        try {
+            ResultDHL resultDHL = resultDHLService.findLast(id);
             return RespBean.ok("查询成功",resultDHL);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getMessage());
@@ -83,6 +102,16 @@ public class ResultController {
     public RespBean getALFP2 (@RequestParam("id") String id) {
         try {
             Map<Double, List<ResultAllLineFP.outPut>> resultAllLineFP = resultALFPService.find2(id);
+            return RespBean.ok("查询成功",resultAllLineFP);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+
+    @GetMapping("/ALFP/Last")
+    public RespBean getALFPLast (@RequestParam("id") String id) {
+        try {
+            Map<Double, List<ResultAllLineFP.outPut>> resultAllLineFP = resultALFPService.findLast(id);
             return RespBean.ok("查询成功",resultAllLineFP);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getMessage());

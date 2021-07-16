@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +105,33 @@ public class ResultDHLService {
         }
 
         resultDHL.setDHLMap(resultDHLMaps);
+        return resultDHL;
+    }
+
+
+    public ResultDHL findLast(String id) {
+        Query query = Query.query(Criteria.where("projectId").is(id));
+        List<ResultDHL> resultDHLs = mongoTemplate.find(query, ResultDHL.class, "resultDHL");
+
+        ResultDHL resultDHL = new ResultDHL();
+        Map<Double, double[]> resultDHLMaps = new HashMap<>();
+        Map<Double, double[]> resultDHLMap = new HashMap<>();
+
+        for (int i = 0; i < resultDHLs.size(); i++) {
+            resultDHLMaps.putAll(resultDHLs.get(i).getDHLMap());
+        }
+
+        List<Double> mapKeys = new ArrayList<>(resultDHLMaps.keySet());
+        double totalTime = mapKeys.get(mapKeys.size() - 1);
+        double startTime = 0.0;
+        while (startTime < totalTime) {
+            resultDHLMap.put(startTime,resultDHLMaps.get(startTime));
+            startTime += 60.0;
+        }
+        if ( totalTime % 60.0 != 0.0) {   // 将最后一时刻的值存入map
+            resultDHLMap.put(totalTime,resultDHLMaps.get(totalTime));
+        }
+        resultDHL.setDHLMap(resultDHLMap);
         return resultDHL;
     }
 

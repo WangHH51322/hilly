@@ -166,11 +166,11 @@ public class ThreadController {
         WiselyMessage msg2 = new WiselyMessage();
         WiselyMessage msg3 = new WiselyMessage();
         ExcelFile excelFile = fileService.find(id);
-//        double[][] lz = excelFile.getLz();  //三角式地形数据
+        double[][] lz = excelFile.getLz();  //三角式地形数据
         Integer inum = excelFile.getInum();
         try {
             Project project = new Project();
-//            project.setLz(lz);
+            project.setLz(lz);
             project.setInum(inum);
             Thread thread = new Thread(project);
             Map<String, Object> data = dataMap.convertDataMap(id);
@@ -336,6 +336,15 @@ public class ThreadController {
             resultHSS.setHSSMap(hSS);
             resultHSSService.updateMap(resultHSS);
 
+            double[][] lz_out = project.getLz_out();
+            for (int i = 0; i < lz_out.length; i++) {
+                for (int j = 0; j < lz_out[i].length; j++) {
+                    System.out.print(lz_out[i][j] + " ");
+                    System.out.println();
+                }
+            }
+            resultSimple.setLz(lz_out);
+            resultSimpleService.updateLZ(resultSimple);
             double[][] mG = project.getmG();
             resultSimple.setMG(mG);
             resultSimpleService.updateMG(resultSimple);

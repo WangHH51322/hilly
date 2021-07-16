@@ -287,14 +287,14 @@ public class Project extends Thread {
         double A=Math.PI*D*D/4.0;
         double J=0.0246*Math.pow(conPara.Ql,1.75)*Math.pow(1.006e-6,0.25)/Math.pow(D,4.75);
         double F = A*oils.get(0).getDensity()*conPara.g*J;
-        double [][] lz;
-        lz = ExcelData.Graphic();       //运用地形简化程序得到的三点式地形
-        System.out.println("lz : ");
+//        double [][] lz;
+//        lz = ExcelData.Graphic();       //运用地形简化程序得到的三点式地形
+//        System.out.println("lz : ");
         for (int i = 0; i < lz.length; i++) {
-//            System.out.println();
             for (int i1 = 0; i1 < lz[i].length; i1++) {
                 System.out.print(lz[i][i1] + " ");
             }
+            System.out.println();
         }
         //varPara.i= 33;
         varPara.stationListZ.add(0);
@@ -340,7 +340,7 @@ public class Project extends Thread {
         //////////////////////0402   lz = ExcelData.Graphic();       //运用地形简化程序得到的三点式地形
         //加入固定地形点位
 
-        for (num2 = 1; num2 < ExcelData.inum/2+1; num2++) {     //原管道地形的所有管段
+        for (num2 = 1; num2 < inum/2+1; num2++) {     //原管道地形的所有管段
             for (int b=0;b<4;b++){
                 varPara.line_lll[num2][b] = lz[num2][b];
                 varPara.line_ddd[num2][b] = lz[num2][b+4];
@@ -348,7 +348,7 @@ public class Project extends Thread {
         }
         for (int num=1;num<=varPara.stationListZ.size()-1;num++) {      //插入点数量    、、、、、、、、、、、、插入点限制，两点间距不小于10km
 
-            for (num0 = num1-1; num0 < ExcelData.inum/2+1; num0++) {     //原管道地形的所有管段
+            for (num0 = num1-1; num0 < inum/2+1; num0++) {     //原管道地形的所有管段
                 if (lz[num0][1] < (double)varPara.stationListL.get(num) && lz[num0][2] > (double)varPara.stationListL.get(num)) {//插入点在下坡段
                     num0=num0+num-1;
                     varPara.line_lll[num0][1] = lz[num0-num+1][1];
@@ -378,9 +378,9 @@ public class Project extends Thread {
                     varPara.line_ddd[num0 + 1][2] = lz[num0-num+1][6];
                     varPara.line_ddd[num0 + 1][3] = lz[num0-num+1][7];
                     num1=num0;
-                    for (num2 = num0+2; num2 < ExcelData.inum/2+1; num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
+                    for (num2 = num0+2; num2 < inum/2+1; num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
                         for (int b=0;b<4;b++){
-                            if (num2-num<ExcelData.inum/2+1){
+                            if (num2-num<inum/2+1){
                                 varPara.line_lll[num2][b] = lz[num2-num][b];
                                 varPara.line_ddd[num2][b] = lz[num2-num][b+4];
                             }
@@ -406,9 +406,9 @@ public class Project extends Thread {
                     varPara.line_ddd[num0 + 1][2] = (double)varPara.stationListZ.get(num) - 50;
                     varPara.line_ddd[num0 + 1][3] = lz[num0-num+1][7];
                     num1=num0;
-                    for (num2 = num0+2; num2 < (ExcelData.inum/2+(double)varPara.stationListZ.size()); num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
+                    for (num2 = num0+2; num2 < (inum/2+(double)varPara.stationListZ.size()); num2++) {     //插入点后，将位于插入点后的原管道地形的所有管段位置进行更新
                         for (int b=0;b<4;b++){
-                            if (num2-num<ExcelData.inum/2+1){
+                            if (num2-num<inum/2+1){
                                 varPara.line_lll[num2][b] = lz[num2-num][b];
                                 varPara.line_ddd[num2][b] = lz[num2-num][b+4];
                             }

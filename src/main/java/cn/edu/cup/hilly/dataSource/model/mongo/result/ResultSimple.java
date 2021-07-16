@@ -19,6 +19,7 @@ import java.util.Map;
 public class ResultSimple {
     @Id
     private String _id;
+    private double[][] lz;
     private double[][] pigV;
     private double[][] pigL;
     private double[][] aLSP;
