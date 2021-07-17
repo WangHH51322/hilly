@@ -4,10 +4,7 @@ import cn.edu.cup.hilly.dataSource.model.mongo.result.*;
 import cn.edu.cup.hilly.dataSource.service.mongo.result.*;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -39,6 +36,8 @@ public class ResultController {
     ResultSimpleService resultSimpleService;
     @Autowired
     ResultULService resultULService;
+    @Autowired
+    ResultKeyPoints resultKeyPoints;
 
     @GetMapping("/DPL")
     public RespBean getDPL(@RequestParam("id") String id) {
@@ -165,6 +164,59 @@ public class ResultController {
             return RespBean.ok("查询成功",resultULocation);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+
+    @GetMapping("/KeyPoints/Data")
+    public RespBean getKeyPointsData(@RequestParam("id") String id) {
+        try {
+            List<KeyPoint> keyPoints = resultKeyPoints.getAllData(id);
+            return RespBean.ok("查询成功",keyPoints);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+
+    @GetMapping("/KeyPoints")
+    public RespBean getKeyPoints(@RequestParam("id") String id) {
+        try {
+            List<KeyPoint> keyPoints = resultKeyPoints.getAll(id);
+            return RespBean.ok("查询成功",keyPoints);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+
+    @PostMapping("/KeyPoints")
+    public RespBean insertKeyPoint(@RequestParam("id") String id, @RequestBody KeyPoint keyPoint) {
+        try {
+            keyPoint.setProjectId(id);
+            KeyPoint key = resultKeyPoints.insert(keyPoint);
+            return RespBean.ok("添加成功",key);
+        } catch (Exception e) {
+            return RespBean.error("添加出错",e.getMessage());
+        }
+    }
+
+    @PutMapping("/KeyPoints")
+    public RespBean updateKeyPoint(@RequestBody KeyPoint keyPoint) {
+        try {
+            KeyPoint key = resultKeyPoints.update(keyPoint);
+            return RespBean.ok("修改成功",key);
+        } catch (Exception e) {
+            return RespBean.error("修改出错",e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/KeyPoints")
+    public RespBean deleteKeyPoint(@RequestParam("id") String id) {
+        try {
+            if (resultKeyPoints.delete(id) == 1) {
+                return RespBean.ok("删除成功");
+            }
+            return RespBean.error("未删除数据");
+        } catch (Exception e) {
+            return RespBean.error("删除出错",e.getMessage());
         }
     }
 

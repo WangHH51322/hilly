@@ -2,7 +2,7 @@ package cn.edu.cup.hilly.dataSource.service.mongo.result;
 
 import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultDPLDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultAllLineFP;
-import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDHL;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -118,14 +118,24 @@ public class ResultDPLService {
         List<ResultDPL> resultDPLs = mongoTemplate.find(query, ResultDPL.class, "resultDPL");
 
         ResultDPL resultDPL = new ResultDPL();
-        Map<Double, double[]> dplMap = resultDPLs.get(resultDPLs.size() - 1).getDPLMap();
-        List<Double> mapKey = new ArrayList<>(dplMap.keySet());
-        Double lastKey = mapKey.get(mapKey.size() - 1);
-        double[] lastDPL = dplMap.get(lastKey);
-        Map<Double, double[]> lastDPLMap = new HashMap<>();
-        lastDPLMap.put(lastKey,lastDPL);
+        Map<Double, double[]> resultDPLMaps = new HashMap<>();
+        Map<Double, double[]> resultDPLMap = new HashMap<>();
 
-        resultDPL.setDPLMap(lastDPLMap);
+        for (int i = 0; i < resultDPLs.size(); i++) {
+            resultDPLMaps.putAll(resultDPLs.get(i).getDPLMap());
+        }
+
+        List<Double> mapKeys = new ArrayList<>(resultDPLMaps.keySet());
+        double totalTime = mapKeys.get(mapKeys.size() - 1);
+        double startTime = 0.0;
+        while (startTime < totalTime) {
+            resultDPLMap.put(startTime,resultDPLMaps.get(startTime));
+            startTime += 60.0;
+        }
+        if ( totalTime % 60.0 != 0.0) {   // 将最后一时刻的值存入map
+            resultDPLMap.put(totalTime,resultDPLMaps.get(totalTime));
+        }
+        resultDPL.setDPLMap(resultDPLMap);
         return resultDPL;
     }
 }

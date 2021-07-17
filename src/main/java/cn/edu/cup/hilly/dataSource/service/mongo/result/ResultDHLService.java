@@ -4,7 +4,7 @@ import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultDHLDao;
 import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultDHLDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDHL;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDHL;
-import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDHL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -108,30 +108,19 @@ public class ResultDHLService {
         return resultDHL;
     }
 
-
     public ResultDHL findLast(String id) {
         Query query = Query.query(Criteria.where("projectId").is(id));
         List<ResultDHL> resultDHLs = mongoTemplate.find(query, ResultDHL.class, "resultDHL");
 
         ResultDHL resultDHL = new ResultDHL();
-        Map<Double, double[]> resultDHLMaps = new HashMap<>();
-        Map<Double, double[]> resultDHLMap = new HashMap<>();
+        Map<Double, double[]> dHlMap = resultDHLs.get(resultDHLs.size() - 1).getDHLMap();
+        List<Double> mapKey = new ArrayList<>(dHlMap.keySet());
+        Double lastKey = mapKey.get(mapKey.size() - 1);
+        double[] lastDHL = dHlMap.get(lastKey);
+        Map<Double, double[]> lastDHLMap = new HashMap<>();
+        lastDHLMap.put(lastKey,lastDHL);
 
-        for (int i = 0; i < resultDHLs.size(); i++) {
-            resultDHLMaps.putAll(resultDHLs.get(i).getDHLMap());
-        }
-
-        List<Double> mapKeys = new ArrayList<>(resultDHLMaps.keySet());
-        double totalTime = mapKeys.get(mapKeys.size() - 1);
-        double startTime = 0.0;
-        while (startTime < totalTime) {
-            resultDHLMap.put(startTime,resultDHLMaps.get(startTime));
-            startTime += 60.0;
-        }
-        if ( totalTime % 60.0 != 0.0) {   // 将最后一时刻的值存入map
-            resultDHLMap.put(totalTime,resultDHLMaps.get(totalTime));
-        }
-        resultDHL.setDHLMap(resultDHLMap);
+        resultDHL.setDHLMap(lastDHLMap);
         return resultDHL;
     }
 
