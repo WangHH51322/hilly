@@ -71,6 +71,10 @@ public class ResultSimpleService {
         return resultSimple;
     }
 
-
-
+    public void update(ResultSimple resultSimple) {
+        String id = resultSimple.get_id();
+        Query query = Query.query(Criteria.where("_id").is(id));
+        mongoTemplate.remove(query,ResultSimple.class, "resultSimple");
+        resultSimpleDao.save(resultSimple);
+    }
 }

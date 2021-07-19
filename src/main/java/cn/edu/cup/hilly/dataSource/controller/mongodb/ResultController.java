@@ -169,12 +169,12 @@ public class ResultController {
 
     @GetMapping("/KeyPoints/Data")
     public RespBean getKeyPointsData(@RequestParam("id") String id) {
-        try {
+//        try {
             List<KeyPoint> keyPoints = resultKeyPoints.getAllData(id);
             return RespBean.ok("查询成功",keyPoints);
-        } catch (Exception e) {
-            return RespBean.error("查询出错",e.getMessage());
-        }
+//        } catch (Exception e) {
+//            return RespBean.error("查询出错",e.getMessage());
+//        }
     }
 
     @GetMapping("/KeyPoints")

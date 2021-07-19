@@ -121,6 +121,25 @@ public class Project extends Thread {
     }
 
     /**
+     * line_l dMg_out_his
+     */
+    private double[][] Line_L;
+    public double[][] getLine_L() {
+        return Line_L;
+    }
+    public void setLine_L(double[][] line_L) {
+        Line_L = line_L;
+    }
+
+    private Map<Double, double[]> dMgHis;
+    public Map<Double, double[]> getdMgHis() {
+        return dMgHis;
+    }
+    public void setdMgHis(Map<Double, double[]> dMgHis) {
+        this.dMgHis = dMgHis;
+    }
+
+    /**
      * lg_his
      */
     private Map<Double, double[]> lgHis;
@@ -439,6 +458,7 @@ public class Project extends Thread {
                 System.out.println();
             }
         }
+
         //varPara.line_d[1][1]=varPara.line_d[1][1]-603.1529;//固定402.4的高程值
         /**
          * 存储U型管段位置并返回前端
@@ -1127,6 +1147,7 @@ public class Project extends Thread {
             Output.OutToTXTL(varPara.dPL, "dPL");
             Output.OutToTXTFP(varPara.allLineFP, "allLineFP");
             Output.OutToTXT1(varPara.lg_his, "lg_his");
+            Output.OutToTXT1(varPara.dMg_out_his, "dMg_out_his");
             Output.OutToTXT1(varPara.M_his, "M_his");
             Output.OutToTXTLLL(varPara.pigL[0], "pigL", flagpigT[0]);
             Output.OutToTXT123(varPara.dMg_p, "dMg_p");
@@ -1141,7 +1162,7 @@ public class Project extends Thread {
         }
 
         /**
-         * 循环结束,存储lg_his pg_his mg_his
+         * 循环结束,存储lg_his pg_his mg_his line_l dMg_out_his
          */
         double[][] lgHisReverse = SizeChange.reverse(varPara.lg_his);
         SizeChange lgHisChange = new SizeChange(lgHisReverse);
@@ -1155,6 +1176,14 @@ public class Project extends Thread {
         SizeChange mHisChange = new SizeChange(mHisReverse);
         Map<Double, double[]> mHisAfterChange = mHisChange.ResultAfterChange(10,0.5);
         setmHis(mHisAfterChange);
+
+        double[][] dMgHisReverse = SizeChange.reverse(varPara.dMg_out_his);
+        SizeChange dMgHisChange = new SizeChange(dMgHisReverse);
+        Map<Double, double[]> dMgHisAfterChange = dMgHisChange.ResultNoChange(10,0.5);
+        setdMgHis(dMgHisAfterChange);
+
+        setLine_L(varPara.line_l);
+
 
         /**
          * 存储Hss
@@ -2761,7 +2790,7 @@ public class Project extends Thread {
      * @param l
      * @return 管段编号，从1开始
      */
-    public int getI(double [][]arrL,double l){
+    public int getI(double[][] arrL,double l){
         int z=0;
         for(int i=1;i<arrL.length;i++){
             if(l<arrL[i][2] && l>=arrL[i][1]){

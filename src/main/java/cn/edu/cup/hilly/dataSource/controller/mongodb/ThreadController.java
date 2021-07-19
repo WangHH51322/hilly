@@ -46,6 +46,8 @@ public class ThreadController {
     @Autowired
     ResultLgHisService resultLgHisService;
     @Autowired
+    ResultDmgHisService resultDmgHisService;
+    @Autowired
     ResultPgHisService resultPgHisService;
     @Autowired
     ResultMHisService resultMHisService;
@@ -207,6 +209,8 @@ public class ThreadController {
 
             ResultLgHis resultLgHis = new ResultLgHis();
             resultLgHis.set_id(id);
+            ResultDmgHis resultDmgHis = new ResultDmgHis();
+            resultDmgHis.set_id(id);
             ResultPgHis resultPgHis = new ResultPgHis();
             resultPgHis.set_id(id);
             ResultMHis resultMHis = new ResultMHis();
@@ -324,6 +328,10 @@ public class ThreadController {
             resultLgHis.setLgHisMap(lgHis);
             resultLgHisService.updateMap(resultLgHis);
 
+            Map<Double, double[]> dMgHis = project.getdMgHis();
+            resultDmgHis.setDMgHisMap(dMgHis);
+            resultDmgHisService.updateMap(resultDmgHis);
+
             Map<Double, double[]> pgHis = project.getPgHis();
             resultPgHis.setPgHisMap(pgHis);
             resultPgHisService.updateMap(resultPgHis);
@@ -337,6 +345,7 @@ public class ThreadController {
             resultHSSService.updateMap(resultHSS);
 
             double[][] lz_out = project.getLz_out();
+            double[][] lineL = project.getLine_L();
             for (int i = 0; i < lz_out.length; i++) {
                 for (int j = 0; j < lz_out[i].length; j++) {
                     System.out.print(lz_out[i][j] + " ");
@@ -344,26 +353,26 @@ public class ThreadController {
                 }
             }
             resultSimple.setLz(lz_out);
-            resultSimpleService.updateLZ(resultSimple);
+            resultSimple.setLineL(lineL);
+//            resultSimpleService.updateLZ(resultSimple);
             double[][] mG = project.getmG();
             resultSimple.setMG(mG);
-            resultSimpleService.updateMG(resultSimple);
+//            resultSimpleService.updateMG(resultSimple);
             double[][] pigV = project.getPigV();
             resultSimple.setPigV(pigV);
-            resultSimpleService.updatePigV(resultSimple);
+//            resultSimpleService.updatePigV(resultSimple);
             double[][] pigL = project.getPigL();
             resultSimple.setPigL(pigL);
-            resultSimpleService.updatePigL(resultSimple);
+//            resultSimpleService.updatePigL(resultSimple);
             double[][] dMgP = project.getDMgP();
             resultSimple.setDMgP(dMgP);
-            resultSimpleService.updateDMgP(resultSimple);
+//            resultSimpleService.updateDMgP(resultSimple);
             double[][] aLSP = project.getaLSP();
             resultSimple.setALSP(aLSP);
-            resultSimpleService.updateALSP(resultSimple);
+//            resultSimpleService.updateALSP(resultSimple);
 
-            System.out.println("resultAllLineFP.getAllLineFPMap().size() = " + resultAllLineFP.getAllLineFPMap().size());
-            System.out.println("resultDPL.getDPLMap().size() = " + resultDPL.getDPLMap().size());
-            System.out.println("resultDHL.getDPLMap().size() = " + resultDHL.getDHLMap().size());
+            // 直接更新一整个 resultSimple
+            resultSimpleService.update(resultSimple);
 
             return RespBean.ok("开始计算");
         } catch (Exception e) {

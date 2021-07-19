@@ -50,4 +50,17 @@ public class KeyPoint {
         return numb;
     }
 
+    public int getI(double[][] arrL){
+        double mileageAfter = mileage * 1000.00;
+        int z=0;
+        for(int i=1;i<arrL.length;i++){
+            if(mileageAfter < arrL[i][2] && mileageAfter >= arrL[i][1]){
+                z=i;
+            }else if(mileageAfter < arrL[i][3] && mileageAfter >= arrL[i][2]){
+                z=i;
+            }
+        }
+        if (z == 0) System.out.println("获取段数失败");
+        return z;
+    }
 }

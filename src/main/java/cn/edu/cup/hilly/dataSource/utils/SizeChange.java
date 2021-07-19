@@ -214,6 +214,28 @@ public class SizeChange {
         return new TreeMap(results);
     }
 
+    public Map<Double,double[]> ResultNoChange(int skip, double multiple) throws NoSuchFieldException, IllegalAccessException {
+
+        Map<Double,double[]> results = new HashMap<>();
+
+        int count = 0;
+        for (int i = 0; i < resultsData.length; i+=skip) {
+            double[] result = new double[resultsData[i].length - 1];
+            for (int j = 1; j < resultsData[i].length; j++) {
+                result[j - 1] = resultsData[i][j];
+            }
+            results.put(count*skip*multiple,result);
+            count ++;
+        }
+        /**
+         * 将Map排序并输出
+         */
+        return new TreeMap(results);
+    }
+
+
+
+
     public Map<String,Map<Double,double[]>> ResultAfterChange(int skip, double multiple, List<String> stationName) throws NoSuchFieldException, IllegalAccessException {
         /**
          * 中间参数

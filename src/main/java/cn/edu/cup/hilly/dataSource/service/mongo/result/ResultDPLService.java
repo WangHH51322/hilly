@@ -11,10 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ResultDPLService {
@@ -126,6 +123,7 @@ public class ResultDPLService {
         }
 
         List<Double> mapKeys = new ArrayList<>(resultDPLMaps.keySet());
+
         double totalTime = mapKeys.get(mapKeys.size() - 1);
         double startTime = 0.0;
         while (startTime < totalTime) {
