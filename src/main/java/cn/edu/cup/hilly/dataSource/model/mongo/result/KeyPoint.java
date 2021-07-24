@@ -26,6 +26,7 @@ public class KeyPoint {
     private double mileage; //关键点里程
     private double mileageAfter;    //离关键点最近的里程点
     private int numb;   //关键点在第几列
+    private int z;  //关键点在第几个U型管段上
     private double[][] value1;  //关键点输出数据1 --> 关键点随时间的压力变化
     private double[][] value2;  //关键点输出数据2 --> 关键点随时间的流量变化
     private double[][] value3;  //关键点输出数据3 --> 关键点随时间的排气量变化
@@ -61,6 +62,7 @@ public class KeyPoint {
             }
         }
         if (z == 0) System.out.println("获取段数失败");
+        this.z = z;
         return z;
     }
 }
