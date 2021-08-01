@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <property name="patternDefine" value="[%-5level] %d{yyyy-MM-dd HH:mm:ss.sss} %thread %M %m%n"/>
+
+    <!--配置控制台appender-->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <!--表示对于日志输出目标的配置-->
+        <target>
+            System.out
+        </target>
+
+        <!--配置日志的输出格式-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式引用通用属性配置-->
+            <pattern>${patternDefine}</pattern>
+        </encoder>
+    </appender>
+
+    <!--配置异步日志-->
+    <appender name="asyncAppender" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="consoleAppender"/>
+    </appender>
+
+    <!--
+        additivity="false" 表示不继承rootlogger
+    -->
+    <logger name="cn.edu.cup.hilly" level="DEBUG" additivity="false">
+        <!--在自定义logger中配置appender-->
+        <appender-ref ref="asyncAppender"/>
+    </logger>
+
+    <!--日志记录器
+        配置root logger
+    -->
+    <root level="DEBUG">
+        <!--引入appender-->
+        <appender-ref ref="consoleAppender"/>
+    </root>
+</configuration>
