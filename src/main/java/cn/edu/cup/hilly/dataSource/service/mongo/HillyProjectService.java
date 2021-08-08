@@ -34,18 +34,25 @@ public class HillyProjectService {
         return hillyProjectDao.findAll();
     }
 
+    public List<HillyProject> getAllByUserId(String id) {
+        Query query = new Query(Criteria.where("userId").is(id));
+        List<HillyProject> hillyProject = mongoTemplate.find(query, HillyProject.class, "hillyProject");
+        return hillyProject;
+    }
+
     public HillyProject getById(String id) {
         HillyProject hillyProject = hillyProjectDao.findById(id).get();
         return hillyProject;
     }
 
-    public HillyProject add(HillyProject hillyProject) {
+    public HillyProject add(HillyProject hillyProject,String id) {
         Hilly hilly = new Hilly();
         hilly.setName(hillyProject.getProjectName());
         String _id = hillyService.addHilly(hilly);    //新建hilly对象并返回他的id
         hillyProject.setCreateDate(new Date());
         hillyProject.setChangeDate(new Date());
         hillyProject.setHillyId(_id);   //给hillyProject对象的hillyId属性赋值
+        hillyProject.setUserId(id);
         HillyProject save = hillyProjectDao.save(hillyProject);
         return save;
     }

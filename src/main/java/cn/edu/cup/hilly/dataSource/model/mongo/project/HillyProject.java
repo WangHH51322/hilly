@@ -18,6 +18,8 @@ public class HillyProject {
 
     @Id
     private String _id;
+
+    private String userId;
     private String projectName;
     private Date createDate;
     private Date changeDate;

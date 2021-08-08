@@ -32,6 +32,17 @@ public class HillyProjectController {
         }
     }
 
+    @GetMapping("/getAllByUser")
+    public RespBean getAllByUser(@RequestParam("id") String id) {
+        System.out.println("执行了查询方法");
+        try {
+            List<HillyProject> all = hillyProjectService.getAllByUserId(id);
+            return RespBean.ok("查询成功",all);
+        } catch (Exception e) {
+            return RespBean.error("查询失败",e.getClass().getName());
+        }
+    }
+
     /**
      * 根据id查询单条项目信息
      * @param id
@@ -53,9 +64,9 @@ public class HillyProjectController {
      * @return
      */
     @PostMapping("/insert")
-    public RespBean addProject(@RequestBody HillyProject hillyProject) {
+    public RespBean addProject(@RequestBody HillyProject hillyProject,@RequestParam("id") String id) {
         try {
-            HillyProject add = hillyProjectService.add(hillyProject);
+            HillyProject add = hillyProjectService.add(hillyProject,id);
             if (add != null) {
                 return RespBean.ok("添加成功",add);
             }
