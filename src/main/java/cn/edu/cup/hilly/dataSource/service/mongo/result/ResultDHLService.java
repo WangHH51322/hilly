@@ -5,6 +5,7 @@ import cn.edu.cup.hilly.dataSource.mapper.mongo.ResultDHLDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDHL;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDHL;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDHL;
+import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultSimple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -24,6 +25,8 @@ public class ResultDHLService {
     ResultDHLDao resultDHLDao;
     @Autowired
     MongoTemplate mongoTemplate;
+    @Autowired
+    ResultSimpleService resultSimpleService;
 
     public void add(ResultDHL resultDHL) {
         resultDHLDao.save(resultDHL);
@@ -94,18 +97,24 @@ public class ResultDHLService {
             mongoTemplate.upsert(query3,update3, ResultDHL.class,"resultDHL");
         }
     }
-    public ResultDHL find(String id) {
+    public Map<String,Object> find(String id) {
         Query query = Query.query(Criteria.where("projectId").is(id));
         List<ResultDHL> resultDHLs = mongoTemplate.find(query, ResultDHL.class, "resultDHL");
-
         ResultDHL resultDHL = new ResultDHL();
         Map<Double, double[]> resultDHLMaps = new HashMap<>();
         for (int i = 0; i < resultDHLs.size(); i++) {
             resultDHLMaps.putAll(resultDHLs.get(i).getDHLMap());
         }
-
         resultDHL.setDHLMap(resultDHLMaps);
-        return resultDHL;
+
+        ResultSimple resultSimple = resultSimpleService.find(id);
+        double[][] lz = resultSimple.getLz();
+
+        Map<String,Object> result = new HashMap<>();
+        result.put("lz",lz);
+        result.put("dhl",resultDHLMaps);
+
+        return result;
     }
 
     public ResultDHL findLast(String id) {

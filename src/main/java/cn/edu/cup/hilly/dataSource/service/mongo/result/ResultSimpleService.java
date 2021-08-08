@@ -147,4 +147,61 @@ public class ResultSimpleService {
         }
         return results;
     }
+
+    public HashMap<String, List<double[]>> findPigL(String id) {
+        HashMap<String, List<double[]>> results = new HashMap<>();
+
+        List<Station> stations = stationService.getStationList(id);
+        ResultSimple resultSimple = find(id);
+        double[][] pigV = resultSimple.getPigV();
+        double[][] pigL = resultSimple.getPigL();
+
+        int stationNumb = 0;
+
+        Station startStation = new Station();
+        String startStationName = "start";
+        double startStationMileage = 0.0;
+        Station endStation = new Station();
+        String endStationName = "end";
+        double endStationMileage = 0.0;
+        String between = startStationName + "-" + endStationName;
+        List<double[]> result = new ArrayList<>();
+
+        for (int i = 0; i < pigV.length; i++) {
+            double time = pigV[i][0];
+            double speed = pigV[i][1];
+            double mileage = pigL[i][1];
+
+            if (i == 0) {
+                startStation = stations.get(stationNumb);
+                startStationName = startStation.getStationName().getValue();
+                startStationMileage = Double.parseDouble(startStation.getStationL().getValue());
+                endStation = stations.get(stationNumb+1);
+                endStationName = endStation.getStationName().getValue();
+                endStationMileage = Double.parseDouble(endStation.getStationL().getValue());
+                between = startStationName + "-" + endStationName;
+            }
+
+            if (startStationMileage <= mileage && endStationMileage >= mileage) {
+                result.add(pigL[i]);
+                results.put(between,result);
+            } else if (endStationMileage < mileage) {
+                stationNumb ++;
+                if (stationNumb == stations.size() - 1) {
+                    break;
+                }
+                startStation = stations.get(stationNumb);
+                startStationName = startStation.getStationName().getValue();
+                startStationMileage = Double.parseDouble(startStation.getStationL().getValue());
+                endStation = stations.get(stationNumb+1);
+                endStationName = endStation.getStationName().getValue();
+                endStationMileage = Double.parseDouble(endStation.getStationL().getValue());
+                between = startStationName + "-" + endStationName;
+
+                result = new ArrayList<>();
+            }
+
+        }
+        return results;
+    }
 }

@@ -62,7 +62,7 @@ public class ResultController {
     @GetMapping("/DHL")
     public RespBean getDHL(@RequestParam("id") String id) {
         try {
-            ResultDHL resultDHL = resultDHLService.find(id);
+            Map<String,Object> resultDHL = resultDHLService.find(id);
             return RespBean.ok("查询成功",resultDHL);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getMessage());
@@ -163,6 +163,16 @@ public class ResultController {
         try {
             HashMap<String, List<double[]>> pigV = resultSimpleService.findPigV(id);
             return RespBean.ok("查询成功", pigV);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+
+    @GetMapping("/Simple/pigL")
+    public RespBean getSimplePigL (@RequestParam("id") String id) {
+        try {
+            HashMap<String, List<double[]>> pigL = resultSimpleService.findPigL(id);
+            return RespBean.ok("查询成功", pigL);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getMessage());
         }
