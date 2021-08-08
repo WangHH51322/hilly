@@ -24,6 +24,9 @@ public class ResultSimple {
     private double[][] pigL;
     private double[][] aLSP;
     private double[][] dMgP;
+    private Map<String,double[][]> dMgPK;
     private double[][] mG;
+    private double[][] gasRa;
     private double[][] lineL;
+    private double[][] Q;
 }

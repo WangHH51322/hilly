@@ -11,6 +11,7 @@ public class Valve {
     private ValveId valveId;
     private ValveD valveD;
     private ValveK valveK;
+    private ValveKv valveKv;
     private ValveT valveT;
     private ValveName valveName;
     private ValveType valveType;
@@ -21,6 +22,7 @@ public class Valve {
         this.valveId = new ValveId();
         this.valveD = new ValveD();
         this.valveK = new ValveK();
+        this.valveKv = new ValveKv();
         this.valveT = new ValveT();
         this.valveName = new ValveName();
         this.valveType = new ValveType();

@@ -11,6 +11,8 @@ public class Station implements Comparable {
     private StationId stationId;
     private StationName stationName;
     private OffLoadFlow OffLoadFlow;
+    private AppointOutletPressure appointOutletPressure;
+    private MaxOutletPressure maxOutletPressure;
     private StationType stationType;
     private StationPumps stationPumps;
     private StationValves stationValves;
@@ -22,6 +24,8 @@ public class Station implements Comparable {
         this.stationName = new StationName();
         this.OffLoadFlow = new OffLoadFlow();
         this.stationType = new StationType();
+        this.appointOutletPressure = new AppointOutletPressure();
+        this.maxOutletPressure = new MaxOutletPressure();
 //        this.stationPumps = new StationPumps();
 //        this.stationValves = new StationValves();
         this.stationL = new StationL();

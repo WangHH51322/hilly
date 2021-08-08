@@ -346,12 +346,12 @@ public class ThreadController {
 
             double[][] lz_out = project.getLz_out();
             double[][] lineL = project.getLine_L();
-            for (int i = 0; i < lz_out.length; i++) {
-                for (int j = 0; j < lz_out[i].length; j++) {
-                    System.out.print(lz_out[i][j] + " ");
-                    System.out.println();
-                }
-            }
+            // for (int i = 0; i < lz_out.length; i++) {
+            //     for (int j = 0; j < lz_out[i].length; j++) {
+            //         System.out.print(lz_out[i][j] + " ");
+            //         System.out.println();
+            //     }
+            // }
             resultSimple.setLz(lz_out);
             resultSimple.setLineL(lineL);
 //            resultSimpleService.updateLZ(resultSimple);
@@ -366,10 +366,16 @@ public class ThreadController {
 //            resultSimpleService.updatePigL(resultSimple);
             double[][] dMgP = project.getDMgP();
             resultSimple.setDMgP(dMgP);
+            Map<String,double[][]> dMgPK = project.getDMgPK();
+            resultSimple.setDMgPK(dMgPK);
 //            resultSimpleService.updateDMgP(resultSimple);
             double[][] aLSP = project.getaLSP();
             resultSimple.setALSP(aLSP);
 //            resultSimpleService.updateALSP(resultSimple);
+            double[][] q = project.getQ();
+            resultSimple.setQ(q);
+            double[][] gasRa = project.getGasRa();
+            resultSimple.setGasRa(gasRa);
 
             // 直接更新一整个 resultSimple
             resultSimpleService.update(resultSimple);

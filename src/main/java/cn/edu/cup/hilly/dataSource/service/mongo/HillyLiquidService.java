@@ -6,6 +6,7 @@ import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.Medium;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumId;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
+import cn.edu.cup.hilly.dataSource.model.mongo.stationList.Station;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.BasicDBObject;
@@ -16,6 +17,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -114,6 +117,7 @@ public class HillyLiquidService {
          * 然后将更新后的medium添加进去
          */
         values.add(medium);
+        sortMediums(values);
         MediumList mediumList = new MediumList();
         mediumList.setValue(values);
         /**
@@ -124,6 +128,21 @@ public class HillyLiquidService {
         update.set("mediumList",mediumList);
         UpdateResult updateFirst = mongoTemplate.updateFirst(query, update, Hilly.class, "hilly");
         return updateFirst.getModifiedCount();
+    }
+
+    /**
+     * 对全部的流体进行排序
+     * @param mediums
+     */
+    private void sortMediums(List<Medium> mediums) {
+        mediums.sort(new Comparator<Medium>() {
+            @Override
+            public int compare(Medium medium1, Medium medium2) {
+                String string1 = medium1.getMediumId().getValue();
+                String string2 = medium2.getMediumId().getValue();
+                return string1.compareTo(string2);
+            }
+        });
     }
 
 

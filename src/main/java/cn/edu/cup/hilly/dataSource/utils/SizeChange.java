@@ -24,10 +24,25 @@ public class SizeChange {
     private double[] resultData;
     private double startTime;
     private double delta;
+    private List<Double> list;
 
 //    public SizeChange(double[][] resultDPL) {
 //        this.resultDPL = resultDPL;
 //    }
+
+
+    public SizeChange(List list) {
+        this.list = list;
+    }
+
+    public double[][] List2Array() {
+        double[][] arr = new double[list.size()][2];
+        for (int i = 0; i < list.size(); i++) {
+            arr[i][0] = i / 24.0;
+            arr[i][1] = list.get(i);
+        }
+        return arr;
+    }
 
     public SizeChange(double[][] resultsData) {
         this.resultsData = resultsData;
@@ -50,8 +65,8 @@ public class SizeChange {
 
     public double[][] ResultAfterChange3() {
         int size = 0;
-        for (int i = 0; i < resultsData[1].length; i++) {
-            if (i != 0 && resultsData[1][i] == 0) {
+        for (int i = 0; i < resultsData[2].length; i++) {
+            if (i != 0 && resultsData[2][i] == 0) {
                 size = i;
                 break;
             }
@@ -59,10 +74,45 @@ public class SizeChange {
         double[][] results = new double[size][2];
         for (int i = 0; i < size; i++) {
             results[i][0] = i * 2.5;
-            results[i][1] = resultsData[1][i];
+            for (int j = 1; j < resultsData[1].length; j++) {
+                results[i][1] = resultsData[1][i];
+            }
+
         }
         return results;
     }
+
+    public Map<String,double[][]> ResultAfterChange4() {
+        int size = 0;
+        List<Integer> numbOfRow = new ArrayList<>();
+        for (int i = 1; i < resultsData.length; i++) {
+            double sum = 0.0;
+            for (int j = 1; j < resultsData[i].length; j++) {
+                if (resultsData[i][j] == 0 || j == resultsData[i].length - 1) {
+                    numbOfRow.add(j+1);
+                    break;
+                }
+                sum += resultsData[i][j];
+            }
+            if (sum == 0) {
+                size = i;
+                break;
+            }
+        }
+
+        Map<String,double[][]> results = new HashMap<>();
+        for (int i = 1; i < size; i++) {
+            double[][] result = new double[numbOfRow.get(i - 1)][2];
+            for (int j = 0; j < result.length; j++) {
+                result[j][0] = j;
+                result[j][1] = resultsData[i][j];
+            }
+            results.put("第"+i+"个排气点",result);
+        }
+        return results;
+    }
+
+
 
     public double[][] ResultAfterChange2() {
         int size = 0;
@@ -80,6 +130,15 @@ public class SizeChange {
         }
         double[][] results = new double[size][2];
         for (int i = 0; i < size; i++) {
+            results[i][0] = startTime;
+            results[i][1] = resultData[i];
+            startTime += delta;
+        }
+        return results;
+    }
+    public double[][] ResultAfterChange2(double[][] temp) {
+        double[][] results = new double[temp.length][2];
+        for (int i = 0; i < results.length; i++) {
             results[i][0] = startTime;
             results[i][1] = resultData[i];
             startTime += delta;

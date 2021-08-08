@@ -6,6 +6,7 @@ import cn.edu.cup.hilly.dataSource.utils.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -152,6 +153,16 @@ public class ResultController {
         try {
             ResultSimple resultSimple = resultSimpleService.find(id);
             return RespBean.ok("查询成功",resultSimple);
+        } catch (Exception e) {
+            return RespBean.error("查询出错",e.getMessage());
+        }
+    }
+
+    @GetMapping("/Simple/pigV")
+    public RespBean getSimplePigV (@RequestParam("id") String id) {
+        try {
+            HashMap<String, List<double[]>> pigV = resultSimpleService.findPigV(id);
+            return RespBean.ok("查询成功", pigV);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getMessage());
         }

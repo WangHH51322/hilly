@@ -8,6 +8,7 @@ import cn.edu.cup.hilly.dataSource.model.mongo.Pipe.PipeList;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.Medium;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumId;
 import cn.edu.cup.hilly.dataSource.model.mongo.mediumList.MediumList;
+import cn.edu.cup.hilly.dataSource.model.mongo.pigList.Pig;
 import cn.edu.cup.hilly.dataSource.model.mongo.pigList.PigList;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -20,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -116,6 +118,7 @@ public class HillyPipeService {
          * 然后将更新后的medium添加进去
          */
         values.add(pipe);
+        sortPiPes(values);
         PipeList pipeList = new PipeList();
         pipeList.setValue(values);
         /**
@@ -126,6 +129,20 @@ public class HillyPipeService {
         update.set("pipeList",pipeList);
         UpdateResult updateFirst = mongoTemplate.updateFirst(query, update, Hilly.class, "hilly");
         return updateFirst.getModifiedCount();
+    }
+    /**
+     * 对全部的管段进行排序
+     * @param values
+     */
+    private void sortPiPes(List<Pipe> values) {
+        values.sort(new Comparator<Pipe>() {
+            @Override
+            public int compare(Pipe medium1, Pipe medium2) {
+                String string1 = medium1.getPipeId().getValue();
+                String string2 = medium2.getPipeId().getValue();
+                return string1.compareTo(string2);
+            }
+        });
     }
 
     /**

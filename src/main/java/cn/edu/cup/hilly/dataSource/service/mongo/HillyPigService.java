@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -120,6 +121,7 @@ public class HillyPigService {
          * 然后将更新后的medium添加进去
          */
         values.add(pig);
+        sortPigs(values);
         PigList pigList = new PigList();
         pigList.setValue(values);
         /**
@@ -130,6 +132,20 @@ public class HillyPigService {
         update.set("pigList",pigList);
         UpdateResult updateFirst = mongoTemplate.updateFirst(query, update, Hilly.class, "hilly");
         return updateFirst.getModifiedCount();
+    }
+    /**
+     * 对全部的清管器进行排序
+     * @param values
+     */
+    private void sortPigs(List<Pig> values) {
+        values.sort(new Comparator<Pig>() {
+            @Override
+            public int compare(Pig medium1, Pig medium2) {
+                String string1 = medium1.getPigId().getValue();
+                String string2 = medium2.getPigId().getValue();
+                return string1.compareTo(string2);
+            }
+        });
     }
 
     /**

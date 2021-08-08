@@ -318,10 +318,29 @@ public class ExcelData {
 //        return lz;
 //    }
 
+    public static void writeArrayToExcel(double[][] data, String string) {
+        int rowNum = data.length;
+        int columnNum = data[0].length;
+        try {
+            FileWriter fw = new FileWriter(string);
+            for (int i = 0; i < rowNum; i++) {
+                for (int j = 0; j < columnNum; j++)
+                    fw.write(data[i][j] + "\t"); // tab 间隔
+                fw.write("\n"); // 换行
+            }
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static double[][] Graphic() {
 
 
-        ExcelData sheet1 = new ExcelData("config/dxsj.xlsx", "Sheet1");
+//        ExcelData sheet1 = new ExcelData("config/dxsj_new.xlsx", "Sheet1");//安保线
+//        ExcelData sheet1 = new ExcelData("config/dxsj_new.xlsx", "Sheet2");//西部
+        ExcelData sheet1 = new ExcelData("config/dxsj.xlsx", "Sheet4");//中缅
 
         //创建储存里程高程数据的数组
         double[][] lll = new double[sheet1.sheet.getPhysicalNumberOfRows()][2];
@@ -370,7 +389,7 @@ public class ExcelData {
                 l_st[i] = i;
             }
         }
-        int k = 1, jjj, j = 1;//l和l_st的首末值相同，中间值不同，因此计数和遍历从1开始
+        int k = 1, jjj, j = 0;//l和l_st的首末值相同，中间值不同，因此计数和遍历从1开始
         double zzz = 0;
 
         //原始地形高程点密集的处理，1km取平均
@@ -446,7 +465,7 @@ public class ExcelData {
 
         lll_new1[0][0] = lll_new[0][0];//首点里程保留
         lll_new1[0][1] = lll_new[0][1];//首点高程保留
-        int num1 = 1, num2 = 0, kkk = 1;
+        int num1 = 1, num2 = 0, kkk = 1 ;
         do {
             if (lll_new[kkk][2] * lll_new[kkk - 1][2] < 0) {//存在转折处
                 lll_new1[num1][0] = lll_new[kkk - 1][0];//里程保留
@@ -471,21 +490,30 @@ public class ExcelData {
             }
         }
 
-        for (int iii = 1; iii < lll_new1.length - 2; iii++) {
-            if (lj[iii-1][0] != 0 && lj[iii][0] == 0)
-            {
-                break;
+
+        if (lll_new1[0][1]-lll_new1[1][1]<0) { //起始段为上坡段时的操作
+            /**
+             * 20210721  更新地形处理模块1，判断首段是上坡还是下坡，如果是上坡，则需要从第二点起向后移位，补充一个低点，否则不用
+             */
+            System.out.println("00000000000000000000000000000000000000000");
+            for (int iii = 1; iii < lll_new1.length - 2; iii++) {
+                if (lj[iii - 1][0] != 0 && lj[iii][0] == 0) {
+                    break;
+                }
+                lll_new1[iii + 1][0] = lj[iii][0];//从第二点起，各自向后移动一位，里程
+                lll_new1[iii + 1][1] = lj[iii][1];//从第二点起，各自向后移动一位，高程
             }
-            lll_new1[iii+1][0] = lj[iii][0];//从第二点起，各自向后移动一位，里程
-            lll_new1[iii+1][1] = lj[iii][1];//从第二点起，各自向后移动一位，高程
-        }
-        lll_new1[1][0] = 0.5*(lll_new1[0][0]+lll_new1[2][0]);
-        if (0.5*(lll_new1[0][1]+lll_new1[2][1])-20>0){
-            lll_new1[1][1] = 0.5*(lll_new1[0][1]+lll_new1[2][1])-20;//插入首点至第二点间的点的高程
-        }else if(0.5*(lll_new1[0][1]+lll_new1[2][1])-5>0){
-            lll_new1[1][1] = 0.5*(lll_new1[0][1]+lll_new1[2][1])-5;//插入首点至第二点间的点的高程,防止地形高程变为负值
-        }else if(0.5*(lll_new1[0][1]+lll_new1[2][1])-1>0){
-            lll_new1[1][1] = 0.5*(lll_new1[0][1]+lll_new1[2][1])-1;//插入首点至第二点间的点的高程
+            lll_new1[1][0] = 0.5 * (lll_new1[0][0] + lll_new1[2][0]);
+
+            if (0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 20 < lll_new1[0][1]) {
+                lll_new1[1][1] = 0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 20;//插入首点至第二点间的点的高程
+            } else if (0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 20 > lll_new1[0][1]) {
+                if(lll_new1[0][1] - 20>0){
+                    lll_new1[1][1] = lll_new1[0][1] - 20;//插入首点至第二点间的点的高程,防止地形高程变为负值
+                }else{
+                    lll_new1[1][1] = lll_new1[0][1]*0.95;
+                }
+            }
         }
 
 
@@ -500,20 +528,42 @@ public class ExcelData {
         for (int iii = 0; iii < lll_new1.length - 1; iii++) {
             if (lll_new1[iii][0] != 0 && lll_new1[iii + 1][0] == 0)
             {
+                if (lll_new1[iii][1]>lll_new1[iii-1][1]){
+                    inum = iii;
+                    break;
+                }
                 inum = iii+1;
                 //System.out.println("ggggg");
                 lll_new1[iii+1][0]=lll_new1[iii][0];
                 lll_new1[iii+1][1]=lll_new1[iii][1];
-                lll_new1[iii][0]=0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0]);
-                if (0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20>0){
-                    lll_new1[iii][1]=0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20;
-                }else if(0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-5>0){
-                    lll_new1[iii][1]=0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-5;//插入首点至第二点间的点的高程,防止地形高程变为负值
-                }else if(0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-1>0){
-                    lll_new1[iii][1]=0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-1;//插入首点至第二点间的点的高程
+
+                if (0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20<lll_new1[iii+1][1] && 0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20<lll_new1[iii-1][1]){
+                    if (0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20>0){
+                        lll_new1[iii][0]=0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0]);
+                        lll_new1[iii][1]=0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20;
+                    }else if(0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-5>0){
+                        lll_new1[iii][0]=0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0]);
+                        lll_new1[iii][1]=0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-5;//插入首点至第二点间的点的高程,防止地形高程变为负值
+                    }else if(0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-1>0){
+                        lll_new1[iii][0]=0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0]);
+                        lll_new1[iii][1]=0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-1;//插入首点至第二点间的点的高程
+                    }else{
+                        System.out.println("地形高程可能出现了负值");
+                    }
+                }else if (lll_new1[iii+1][1]>lll_new1[iii-1][1]){
+                    if (0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0])>lll_new1[iii-1][0]+0.5){
+                        lll_new1[iii][0]=lll_new1[iii-1][0]+0.5;
+                    }
+
+                    lll_new1[iii][1]=lll_new1[iii-1][1]-20;
                 }else{
-                    System.out.println("地形高程可能出现了负值");
+                    System.out.println("ggggggggggggggg");
+                    if (0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0])<lll_new1[iii+1][0]-0.5){
+                        lll_new1[iii][0]=lll_new1[iii+1][0]-0.5;
+                    }
+                    lll_new1[iii][1]=lll_new1[iii+1][1]-20;
                 }
+
 
                 break;
             }
@@ -536,10 +586,10 @@ public class ExcelData {
 
 
 //        //导出到excel中
-//        writeArrayToExcel(lll_st, "config/lll_st.xls");
-////        writeArrayToExcel(lll_stb, "config/lll_stb.xls");
-//        writeArrayToExcel(lll_new, "config/lll_new.xls");
-//        writeArrayToExcel(lll_new1, "config/lll_new1.xls");
+        writeArrayToExcel(lll_st, "config/lll_st.xls");
+//        writeArrayToExcel(lll_stb, "config/lll_stb.xls");
+        writeArrayToExcel(lll_new, "config/lll_new.xls");
+        writeArrayToExcel(lll_new1, "config/lll_new1.xls");
 
         if(inum%2==1) inum++;
 
@@ -585,7 +635,9 @@ public class ExcelData {
     }
 
     public double[][] Graphic(File file, String sheetName) {
+
         ExcelData sheet1 = new ExcelData(file, sheetName);
+
         //创建储存里程高程数据的数组
         double[][] lll = new double[sheet1.sheet.getPhysicalNumberOfRows()][2];
         double[] l = new double[sheet1.sheet.getPhysicalNumberOfRows()];
@@ -599,30 +651,31 @@ public class ExcelData {
             z[i] = lll[i][1];
         }
 
-        double[] l_st = new double[((int) l[l.length - 1] - (int) l[0]) + 2];   //*****当原始地形首末点为整数时，l_st倒数第二个数空值
-        double[] z_st = new double[((int) l[l.length - 1] - (int) l[0]) + 2];   //*****当原始地形首末点为整数时，z_st倒数第二个数空值
-        double[] j_st = new double[((int) l[l.length - 1] - (int) l[0]) + 2];   //坡度，当前点与前一点的
-        double[] jj_st = new double[((int) l[l.length - 1] - (int) l[0]) + 2];   //坡度差
-        double[][] lll_st = new double[((int) l[l.length - 1] - (int) l[0]) + 2][2];   //*****当原始地形首末点为整数时，z_st倒数第二个数空值
-        double[][] lll_new = new double[((int) l[l.length - 1] - (int) l[0]) * 20][4];   //*****初次简化，剔除千分之五坡度的段
-        double[][] lll_new1 = new double[((int) l[l.length - 1] - (int) l[0]) + 5][4];   //*****二次简化
-
+        double[] l_st = new double[((int)l[l.length - 1] - (int)l[0])+2];   //*****当原始地形首末点为整数时，l_st倒数第二个数空值
+        double[] z_st = new double[((int)l[l.length - 1] - (int)l[0])+2];   //*****当原始地形首末点为整数时，z_st倒数第二个数空值
+        double[] j_st = new double[((int)l[l.length - 1] - (int)l[0])+2];   //坡度，当前点与前一点的
+        double[] jj_st = new double[((int)l[l.length - 1] - (int)l[0])+2];   //坡度差
+        double[][] lll_st = new double[((int)l[l.length - 1] - (int)l[0])+2][2];   //*****当原始地形首末点为整数时，z_st倒数第二个数空值
+        double[][] lll_new = new double[((int)l[l.length - 1] - (int)l[0])*20][4];   //*****初次简化，剔除千分之五坡度的段
+        double[][] lll_new1 = new double[((int)l[l.length - 1] - (int)l[0])+5][4];   //*****二次简化
         l_st[0] = l[0];
         z_st[0] = z[0];
-        if ((int) l[l.length - 1] - l[l.length - 1] != 0.0) {      //末点不是整数
-            l_st[(int) (l[l.length - 1] - l[0]) + 1] = l[l.length - 1];
-            z_st[(int) (l[l.length - 1] - l[0]) + 1] = z[z.length - 1];
-        } else {
+        if ((int) l[l.length - 1]-l[l.length - 1]!=0.0){      //末点不是整数
+            l_st[(int) (l[l.length - 1] - l[0]) +1] = l[l.length - 1];
+            z_st[(int) (l[l.length - 1] - l[0]) +1] = z[z.length - 1];
+        }else{
             l_st[(int) (l[l.length - 1] - l[0])] = l[l.length - 1];
             z_st[(int) (l[l.length - 1] - l[0])] = z[z.length - 1];
         }
 
+
+        //}
         if (l[l.length - 1] - l[0] > 0) {
             for (int i = (int) l[0] + 1; i < l[l.length - 1] - l[0]; i++) {
                 l_st[i] = i;
             }
         }
-        int k = 1, jjj, j = 1;//l和l_st的首末值相同，中间值不同，因此计数和遍历从1开始
+        int k = 1, jjj, j = 0;//l和l_st的首末值相同，中间值不同，因此计数和遍历从1开始
         double zzz = 0;
 
         //原始地形高程点密集的处理，1km取平均
@@ -644,31 +697,19 @@ public class ExcelData {
                     z_st[k] = z_st[k - 1] + (z[i] - z[i - 1]) / (l[i] - l[i - 1]);
                     k++;
                 }
+
                 //给空点赋值
-                if (z_st[k] == 0) {
+                if(z_st[k]==0){
                     z_st[k] = z_st[k - 1] + (z[i] - z[i - 1]) / (l[i] - l[i - 1]);
                 }
             }
         }
 
-
         for (int kkk = 0; kkk < z_st.length; kkk++) {
             lll_st[kkk][0] = l_st[kkk];
             lll_st[kkk][1] = z_st[kkk];
-        }
-        double[][] data = new double[lll_st.length][2];
-        for (int i = 0; i < lll_st.length; i++) {
-            data[i][0] = lll_st[i][0];
-            System.out.print("data[i][0] = " + data[i][0] + " ");
-            data[i][1] = lll_st[i][1];
-            System.out.print("data[i][1] = " + data[i][1]);
-            System.out.println();
-        }
-        /**
-         * 存储地形数据
-         */
-        setTerrainData(data);
 
+        }
         for (int kkk = 1; kkk < z_st.length; kkk++) {//计算坡度
             j_st[kkk] = (z_st[kkk] - z_st[kkk - 1]) / (l_st[kkk] - l_st[kkk - 1]);
         }
@@ -685,7 +726,7 @@ public class ExcelData {
                 lll_new[num][0] = l_st[kkk];//里程
                 lll_new[num][1] = z_st[kkk];//高程
                 num++;
-            } else if (kkk % 5 == 0 || kkk == z_st.length - 1) {
+            }else if ( kkk%5==0 || kkk==z_st.length-1 ){
                 lll_new[num][0] = l_st[kkk];//里程
                 lll_new[num][1] = z_st[kkk];//高程
                 num++;
@@ -699,7 +740,7 @@ public class ExcelData {
 
         lll_new1[0][0] = lll_new[0][0];//首点里程保留
         lll_new1[0][1] = lll_new[0][1];//首点高程保留
-        int num1 = 1, num2 = 0, kkk = 1;
+        int num1 = 1, num2 = 0, kkk = 1 ;
         do {
             if (lll_new[kkk][2] * lll_new[kkk - 1][2] < 0) {//存在转折处
                 lll_new1[num1][0] = lll_new[kkk - 1][0];//里程保留
@@ -709,62 +750,93 @@ public class ExcelData {
                 num1 = num1 + 1;
             }
             kkk++;
-            if (lll_new[kkk][2] == 0 && lll_new[kkk - 1][2] != 0) {
-                lll_new1[num1][0] = lll_new[kkk - 1][0];//里程保留
-                lll_new1[num1][1] = lll_new[kkk - 1][1];//高程保留
+            if (lll_new[kkk][2]==0 && lll_new[kkk - 1][2] != 0){
+                lll_new1[num1][0] = lll_new[kkk-1][0];//里程保留
+                lll_new1[num1][1] = lll_new[kkk-1][1];//高程保留
             }
-        } while (lll_new[kkk][0] != 0 && lll_new[kkk][1] != 0);
+        }
+        while (lll_new[kkk][0] != 0 && lll_new[kkk][1] != 0);
 
-        double[][] lj = new double[lll_new1.length][lll_new1[0].length];
-        for (int ui = 0; ui < lll_new1.length; ui++) {
-            for (int uii = 0; uii < lll_new1[0].length; uii++) {
-                lj[ui][uii] = lll_new1[ui][uii];
+        double [][]lj=new double[lll_new1.length][lll_new1[0].length];
+        for (int ui=0;ui<lll_new1.length;ui++){
+            for (int uii=0;uii<lll_new1[0].length;uii++){
+                lj[ui][uii]=lll_new1[ui][uii];
             }
         }
 
-        for (int iii = 1; iii < lll_new1.length - 2; iii++) {
-            if (lj[iii - 1][0] != 0 && lj[iii][0] == 0) {
-                break;
+        if (lll_new1[0][1]-lll_new1[1][1]<0) { //起始段为上坡段时的操作
+            /**
+             * 20210721  更新地形处理模块1，判断首段是上坡还是下坡，如果是上坡，则需要从第二点起向后移位，补充一个低点，否则不用
+             */
+            System.out.println("00000000000000000000000000000000000000000");
+            for (int iii = 1; iii < lll_new1.length - 2; iii++) {
+                if (lj[iii - 1][0] != 0 && lj[iii][0] == 0) {
+                    break;
+                }
+                lll_new1[iii + 1][0] = lj[iii][0];//从第二点起，各自向后移动一位，里程
+                lll_new1[iii + 1][1] = lj[iii][1];//从第二点起，各自向后移动一位，高程
             }
-            lll_new1[iii + 1][0] = lj[iii][0];//从第二点起，各自向后移动一位，里程
-            lll_new1[iii + 1][1] = lj[iii][1];//从第二点起，各自向后移动一位，高程
-        }
-        lll_new1[1][0] = 0.5 * (lll_new1[0][0] + lll_new1[2][0]);
-        if (0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 20 > 0) {
-            lll_new1[1][1] = 0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 20;//插入首点至第二点间的点的高程
-        } else if (0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 5 > 0) {
-            lll_new1[1][1] = 0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 5;//插入首点至第二点间的点的高程,防止地形高程变为负值
-        } else if (0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 1 > 0) {
-            lll_new1[1][1] = 0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 1;//插入首点至第二点间的点的高程
+            lll_new1[1][0] = 0.5 * (lll_new1[0][0] + lll_new1[2][0]);
+
+            if (0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 20 < lll_new1[0][1]) {
+                lll_new1[1][1] = 0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 20;//插入首点至第二点间的点的高程
+            } else if (0.5 * (lll_new1[0][1] + lll_new1[2][1]) - 20 > lll_new1[0][1]) {
+                if(lll_new1[0][1] - 20>0){
+                    lll_new1[1][1] = lll_new1[0][1] - 20;//插入首点至第二点间的点的高程,防止地形高程变为负值
+                }else{
+                    lll_new1[1][1] = lll_new1[0][1]*0.95;
+                }
+            }
         }
 
         inum = 1;
         for (int iii = 0; iii < lll_new1.length - 1; iii++) {
-            if (lll_new1[iii][0] != 0 && lll_new1[iii + 1][0] == 0) {
-                inum = iii + 1;
-                //System.out.println("ggggg");
-                lll_new1[iii + 1][0] = lll_new1[iii][0];
-                lll_new1[iii + 1][1] = lll_new1[iii][1];
-                lll_new1[iii][0] = 0.5 * (lll_new1[iii + 1][0] + lll_new1[iii - 1][0]);
-                if (0.5 * (lll_new1[iii + 1][1] + lll_new1[iii - 1][1]) - 20 > 0) {
-                    lll_new1[iii][1] = 0.5 * (lll_new1[iii + 1][1] + lll_new1[iii - 1][1]) - 20;
-                } else if (0.5 * (lll_new1[iii + 1][1] + lll_new1[iii - 1][1]) - 5 > 0) {
-                    lll_new1[iii][1] = 0.5 * (lll_new1[iii + 1][1] + lll_new1[iii - 1][1]) - 5;//插入首点至第二点间的点的高程,防止地形高程变为负值
-                } else if (0.5 * (lll_new1[iii + 1][1] + lll_new1[iii - 1][1]) - 1 > 0) {
-                    lll_new1[iii][1] = 0.5 * (lll_new1[iii + 1][1] + lll_new1[iii - 1][1]) - 1;//插入首点至第二点间的点的高程
-                } else {
-                    System.out.println("地形高程可能出现了负值");
+            if (lll_new1[iii][0] != 0 && lll_new1[iii + 1][0] == 0)
+            {
+                if (lll_new1[iii][1]>lll_new1[iii-1][1]){
+                    inum = iii;
+                    break;
                 }
+                inum = iii+1;
+                //System.out.println("ggggg");
+                lll_new1[iii+1][0]=lll_new1[iii][0];
+                lll_new1[iii+1][1]=lll_new1[iii][1];
 
+                if (0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20<lll_new1[iii+1][1] && 0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20<lll_new1[iii-1][1]){
+                    if (0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20>0){
+                        lll_new1[iii][0]=0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0]);
+                        lll_new1[iii][1]=0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-20;
+                    }else if(0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-5>0){
+                        lll_new1[iii][0]=0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0]);
+                        lll_new1[iii][1]=0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-5;//插入首点至第二点间的点的高程,防止地形高程变为负值
+                    }else if(0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-1>0){
+                        lll_new1[iii][0]=0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0]);
+                        lll_new1[iii][1]=0.5*(lll_new1[iii+1][1]+lll_new1[iii-1][1])-1;//插入首点至第二点间的点的高程
+                    }else{
+                        System.out.println("地形高程可能出现了负值");
+                    }
+                }else if (lll_new1[iii+1][1]>lll_new1[iii-1][1]){
+                    if (0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0])>lll_new1[iii-1][0]+0.5){
+                        lll_new1[iii][0]=lll_new1[iii-1][0]+0.5;
+                    }
+
+                    lll_new1[iii][1]=lll_new1[iii-1][1]-20;
+                }else{
+                    System.out.println("ggggggggggggggg");
+                    if (0.5*(lll_new1[iii+1][0]+lll_new1[iii-1][0])<lll_new1[iii+1][0]-0.5){
+                        lll_new1[iii][0]=lll_new1[iii+1][0]-0.5;
+                    }
+                    lll_new1[iii][1]=lll_new1[iii+1][1]-20;
+                }
                 break;
             }
         }
 
-        if (inum % 2 == 1) inum++;
+        if(inum%2==1) inum++;
 
-        double[][] ll = new double[(inum) / 2 + 1][4];
-        double[][] zz = new double[(inum) / 2 + 1][4];
-        double[][] lz = new double[(inum) / 2 + 1][8];
+        double[][] ll = new double[(inum) / 2+1][4];
+        double[][] zz = new double[(inum) / 2+1][4];
+        double[][] lz = new double[(inum) / 2+1][8];
 
         ll[1][1] = lll_new1[0][0];
         zz[1][1] = lll_new1[0][1];
@@ -773,7 +845,7 @@ public class ExcelData {
             ll[num2 + 1][3] = lll_new1[kk + 2][0];
             zz[num2 + 1][2] = lll_new1[kk + 1][1];
             zz[num2 + 1][3] = lll_new1[kk + 2][1];
-            if (num2 + 2 < (inum / 2) + 1) {
+            if (num2 + 2 < (inum / 2)+1) {
                 ll[num2 + 2][1] = lll_new1[kk + 2][0];
                 zz[num2 + 2][1] = lll_new1[kk + 2][1];
             }
@@ -796,7 +868,6 @@ public class ExcelData {
             }
             //System.out.println();
         }
-
         return lz;
     }
 }

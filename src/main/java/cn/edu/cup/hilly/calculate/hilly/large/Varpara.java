@@ -1,6 +1,5 @@
 package cn.edu.cup.hilly.calculate.hilly.large;
 
-
 import cn.edu.cup.base.IOElement;
 import cn.edu.cup.base.InputField;
 
@@ -13,16 +12,24 @@ public class Varpara {
 
     double deltaT=0.2;     //压缩时间步长0.2s
 
-    @InputField(name = "totalTime", unit = "h")
-    double T;           //模拟总时长，h
+    double T=300;           //模拟总时长，h
 
     @InputField(name = "designFlow", unit = "m3/h")
     double Qh;           //设计投产流量，m3/h
 
-    @InputField(name = "putPigFlag", unit = "")
-    int pigFlag;        //投放清管器的标记,0是不投放,1是投放
+    @InputField(name = "waterFillingLength", unit = "km")
+    double waterLength;           //充水长度，m3/h
 
-    double deltaX = 500;    //其他流动时的空间步长1000m
+    @InputField(name = "pressureMode", unit = "")
+    int Pm;           //压力模式，0，不开启指定压力，1，开启指定压力
+
+    @InputField(name = "highOpen", unit = "")
+    int highOpen;           //高点排气模式，0，不开启，1，开启
+
+    @InputField(name = "putPigFlag", unit = "")
+    int pigFlag;        //投放清管器的标记
+
+    double deltaX = 500;    //其他流动时的空间步长1300m
     double hl;    //
 
     int i;                 //大落差段数,实际段数加一，再加上固定点数，因为数组从零开始，需要与高程、里程数组配合
@@ -39,6 +46,7 @@ public class Varpara {
 
     int kt;            //模拟总时步的计算
     double Lt;            //压降计算的水头标计长度
+    double Lt_new;            //压降计算的水头标计长度
 
     double sumTest;
     double[][] Y;          //矩阵计算历史数据存储
@@ -102,6 +110,7 @@ public class Varpara {
     double[][] slopeU;      //上坡段高程里程比的绝对值
 
     double[] waterHeadLocation;     //水头位置,在不同时刻水头所到达的位置，用里程表示，单位m
+    double[] oilHeadLocation;     //水头位置,在不同时刻水头所到达的位置，用里程表示，单位m
     double[] lf;     //分层流长度
     double[] lfk;     //各段的分层流长度
     double[] lp;     //气泡流长度
@@ -116,24 +125,37 @@ public class Varpara {
 
     double[] f_i;         //相间摩阻系数
     double[] f_l;         //液壁摩阻系数
-
+    int numV=0;//
     double[][] dMg_p;         //排气参数存储
+    double[][] dMg_pk;         //排气参数存储
+    double[][] dMg_p_stop;    //排气参数存储
     double dMg_sum=0;         //清管器推气量
     double[][] maxThree;         //最长的三个积气段数据存储
 
     double[] Hf_f;         //各段的分层流的摩阻水力损失
     double[] Hf_j;          //各段的局部摩阻损失
     double[] Hfk_f;         //各段分层流的摩阻水力损失
-    double[] Hfk_f1;         //各段分层流的摩阻水力损失
+    double[] Hfk_f_oil;         //各段分层流的摩阻水力损失,油段
+    double[] Hfk_f1;         //各段分层流的摩阻水力损失，不包含位能
+    double[] Hfk_f1_oil;         //各段分层流的摩阻水力损失，不包含位能,油段
     double[] Hgbk;         //各段分层流的摩阻水力损失
     double[] Hf_b;         //气泡流的摩阻水力损失
     double[][] HFB;         //
+    double[][] HFB1;         //
     double[][] HFBU;         //
+    double[][] HFBU1;         //
     double[][] HFF;         //
+    double[][] HFF1;         //
     double[] Hfk_b;         //各段气泡流的摩阻水力损失
-    double[] Hfk_b1;         //各段气泡流的摩阻水力损失
+    double[] Hfk_lbz_U;         //满管上坡的摩阻水力损失
+    double[] Hfk_lbz_D;         //满管下坡的摩阻水力损失
+    double[] Hfk_b_oil;         //各段气泡流的摩阻水力损失,油段
+    double[] Hfk_b1;         //各段气泡流的摩阻水力损失，不包含位能
+    double[] Hfk_b1_oil;         //各段气泡流的摩阻水力损失，不包含位能,油段
     double[] Hfk_bU;         //各段气泡流的摩阻水力损失
-    double[] Hfk_bU1;         //各段气泡流的摩阻水力损失
+    double[] Hfk_bU_oil;         //各段气泡流的摩阻水力损失，油段
+    double[] Hfk_bU1;         //各段气泡流的摩阻水力损失，不包含位能
+    double[] Hfk_bU1_oil;         //各段气泡流的摩阻水力损失，不包含位能,油段
     double[] Hfk_dU;         //各段段塞流的摩阻水力损失
     double[] Hf;           //全线总摩阻水力损失
     double[] Hfk;           //各段总摩阻水力损失
@@ -143,6 +165,7 @@ public class Varpara {
 
     double[][] dPL;             //全线压力，pressure
     double[][] dHL;             //全线水头，Head
+    double[][] dHL_new;             //全线水头，Head
     double checkP=0;             //监测超压的标记
 
     double[][] lg_f;
@@ -152,17 +175,21 @@ public class Varpara {
     double[] l0;         //积气段尾部长度
     int[] flag00;        //水力排气结束的标志
     int[] flag01;        //清管器导致水力紊乱的标志
-
+    double wL=0;  //全线泵站总扬程
     int num;        //
-    int []pigNum;        //清管器计数
+    int []pigNum;        //清管器时间计数
+
+
 
     int pigflag1 = 0;        //清管器1标记
-    int []pigflag2;        //清管器1标记
-    int []pigTflag;        //清管器1标记
-    int flag0,flag1;        //
+    int Vflag1 = 0;        //排气阀1标记
+    int []pigflag2;        //清管器1停留的标记
+    int []pigTflag;        //清管器1停留的标记
+    int flag0,flag1,flag11;        //
     double ipj;        //
 
     int startPumpFlag=0;        //启泵的标志
+    int startPumpFlag111=0;        //启泵的标志
     int stopPumpFlag=0;        //停泵的标志
     int [][]startPumpFlag1;        //调整变频泵的标志
     double [][]pumpRev;        //调整变频泵的标志,起始变频泵转速
@@ -171,6 +198,7 @@ public class Varpara {
     double []Hpump;
     double []stationLLL;
     int times=0;
+    int ok=0;
     double []Hd;
     //清管器相关参数
     double [][]pigV;//清管器速度
@@ -180,64 +208,78 @@ public class Varpara {
     double [][]allLine;//全线参数储存输出
     double [][]allLineFP;//全线流型随时间变化曲线
     double [][]allLineDP;//全线摩阻压降
+    double [][]allLineQ;//里程和流量对应的数组，用于分输
     double [][]allLineLbz;//全线反算列宾宗系数b
 
     double [][] allLineStaticP;//全线静压
+//    double []staV={164.2,251.2,280.2,300.2,328.2,378.2};   //安保排气点位置
+//    double []staV={175.2,225.2,262.2,315.2,370.2,478.2};   //中缅排气点位置
+//    double []staV;   //中缅排气点位置
 
+    double []Kv={1.75,3.83,8.38,18.32,40.1,87.62,192.6,419,916.2,2003.4,2000000};   //对应开度，0-100%
     //double [] stationListL;//站点列表里程
     //double [] stationListZ;//站点列表高程
 
     List stationListL = new ArrayList();
     List stationListZ = new ArrayList();
     List allLineLbzBs;
-    List allQ;
-    List pumpSta;
-    int p1=0;
-    int p=0;//水头过泵站的记录
-
+    List staV  = new ArrayList();
+    List allQ;//流量随时间变化曲线
+    List pumpSta;//泵站列表
+    int p1=0;//,水头过泵站的过站记录
+    int p=0;//,水头过泵站的过站记录
 
     //泵相关
     double Hs;//随启泵条件变化的出站压力，压降计算处使用
 
 
 
+
     double [][]lg_fff;//300s一步的时步分层流长度数据
     double []waterL;//300s一步的水头位置
+    double []gasRa;//气体比例
+    double []oilL;//300s一步的油头位置
     double []L;//地形数据，0.5km一段
 
     public void setArr(){
 
-        this.k = (int)(T*2*5*3600/300)+2002;      //300步一输出的存储序号
+        this.k = (int)(T*2*5*3600/300)+2202;      //300步一输出的存储序号
         this.kt = (int) Math.rint(T*2* 3600 / deltaT);            //模拟总时步的计算
 
         this.pigV = new double[10][getK()];
         this.pigNum = new int[10];
         this.pigTflag = new int[10];
         this.pigflag2 = new int[10];
-        this.dMg_p = new double[5][getK()+1];
+        this.dMg_p = new double[15][(int)T*12*2+2+1];
+        this.dMg_pk = new double[15][k];
+        this.dMg_p_stop = new double[15][(int)T*12*2+2+1];
         this.maxThree = new double[3][2];
         this.flag01 = new int[getI()];
 
 
         this.pigL = new double[10][getK()];
         this.Mg = new double[getK()];
+        this.gasRa = new double[getK()];
         this.pigZ = new double[10][getK()];
         this.allLine = new double[5][getK()];
-        this.allLineFP = new double[(int)T*24+2+1][1300];
-        this.allLineStaticP = new double[(int)T*12+2+1][1300];
-        this.allLineLbz = new double[(int)T*24+2+1][1300];
-        this.allLineDP = new double[(int)T*24+2+1][1300];
+        this.allLineFP = new double[(int)T*12*2+3000+2+1][1300];
+        this.allLineStaticP = new double[(int)T*12*2+2+1][1300];
+        this.allLineLbz = new double[(int)T*12*2+2+1][1300];
+        this.allLineDP = new double[(int)T*12*2+2+1][1300];
         this.allLineLbzBs = new ArrayList<List<Double>>();
+        this.staV = new ArrayList<List<Double>>();
         this.allQ = new ArrayList<List<Double>>();
+        this.allLineQ = new double[10][2];//一个分输点，对应一个新流量，此处为小时流量
         this.pumpSta = new ArrayList<List<Double>>();
 
-
         this.Hss=new double[getK()][100];
-        this.Hs=50*9.81*1000;//初始值为首站进站压力
+        this.Hs=80*9.81*1000;//初始值为首站进站压力
         this.a= new double[100][3];
         this.Hpump=new double[100];
         this.Hd=new double[100];
         this.stationLLL=new double[100];
+
+
 
 
 
@@ -302,6 +344,7 @@ public class Varpara {
         this.slopeU = new double[i][1];      //下坡段的气体质量，，??排气后
 
         this.waterHeadLocation = new double[k];     //水头位置,在不同时刻水头所到达的位置，用里程表示，单位m
+        this.oilHeadLocation = new double[k];     //水头位置,在不同时刻水头所到达的位置，用里程表示，单位m
         this.lf = new double[k];     //分层流长度
         this.lfk = new double[k];     //各段的分层流长度
         this.lp = new double[k];     //气泡流长度
@@ -321,16 +364,27 @@ public class Varpara {
         this.f_l = new double[i];         //液壁摩阻系数
         this.Hf_f = new double[k];         //分层流的摩阻水力损失
         this.HFB = new double[i][k];         //分层流的摩阻水力损失
+        this.HFB1 = new double[i][k];         //分层流的摩阻水力损失
         this.HFBU = new double[i][k];         //分层流的摩阻水力损失
+        this.HFBU1 = new double[i][k];         //分层流的摩阻水力损失
         this.HFF = new double[i][k];         //分层流的摩阻水力损失
+        this.HFF1 = new double[i][k];         //分层流的摩阻水力损失
         this.Hfk_f = new double[i];         //各段分层流的摩阻水力损失
+        this.Hfk_lbz_D = new double[i];         //各段的摩阻水力损失
+        this.Hfk_lbz_U = new double[i];         //各段的摩阻水力损失
+        this.Hfk_f_oil = new double[i];         //各段分层流的摩阻水力损失
+        this.Hfk_f1_oil = new double[i];         //各段分层流的摩阻水力损失
         this.Hfk_f1 = new double[i];         //各段分层流的摩阻水力损失
         this.Hgbk = new double[i];         //各段分层流的摩阻水力损失
         this.Hf_b = new double[k];         //气泡流的摩阻水力损失
         this.Hfk_bU = new double[i];         //
+        this.Hfk_bU1_oil = new double[i];         //
+        this.Hfk_bU_oil = new double[i];         //
         this.Hfk_bU1 = new double[i];         //
         this.Hfk_dU = new double[i];         //
         this.Hfk_b = new double[i];         //各段气泡流的摩阻水力损失
+        this.Hfk_b1_oil = new double[i];         //各段气泡流的摩阻水力损失
+        this.Hfk_b_oil = new double[i];         //各段气泡流的摩阻水力损失
         this.Hfk_b1 = new double[i];         //各段气泡流的摩阻水力损失
         this.Hf = new double[k];           //全线总摩阻水力损失
         this.Hfk = new double[i];           //各段总摩阻水力损失
@@ -340,49 +394,20 @@ public class Varpara {
         this.Hfk_jj = new double[i];
         this.Hf_j = new double[k];              //局部阻力
 
-        this.dPL=new double[(int)T*24+2+1][1300];       //全局压力
-        this.dHL=new double[(int)T*24+2+1][1300];       //全局压力
+        this.dPL=new double[(int)T*12*2+2+1][1300];       //全局压力
+        this.dHL=new double[(int)T*12*2+2+1][1300];       //全局压力
+        this.dHL_new=new double[(int)T*12*2+2+1][1300];       //全局压力
         this.lg_f = new double[i][k];   //各段分层流实时长度
         this.lp_b = new double[i][k];   //气泡流和气团流实时长度，下坡段部分
         this.lp_bU = new double[i][k];  //气泡流和气团流实时长度，上坡段部分
         this.lg_fff = new double[i][(int)T*2*12+2];//3000s一步的时步分层流长度数据
-        this.waterL = new double[(int)T*2*12+2];//3000s一步的水头位置
+        this.waterL = new double[(int)T*2*12+3000+2];//
+        this.oilL = new double[(int)T*2*12+3000+2];//
 
         this.l0 = new double[i + 1];      //积气段尾部长度
         this.flag00 = new int[i];        //水力排气结束的标志
     }
 
-    public double getDeltaT() {
-        return deltaT;
-    }
-
-    public void setDeltaT(double deltaT) {
-        this.deltaT = deltaT;
-    }
-
-    public double getT() {
-        return T;
-    }
-
-    public void setT(double t) {
-        T = t;
-    }
-
-    public double getDeltaX() {
-        return deltaX;
-    }
-
-    public void setDeltaX(double deltaX) {
-        this.deltaX = deltaX;
-    }
-
-    public double getHl() {
-        return hl;
-    }
-
-    public void setHl(double hl) {
-        this.hl = hl;
-    }
 
     public int getI() {
         return i;
