@@ -4,6 +4,8 @@ import cn.edu.cup.hilly.dataSource.mapper.mongo.HillyProjectDao;
 import cn.edu.cup.hilly.dataSource.model.mongo.Hilly;
 import cn.edu.cup.hilly.dataSource.model.mongo.project.HillyProject;
 import cn.edu.cup.hilly.dataSource.model.mongo.stationList.StationPumps;
+import cn.edu.cup.hilly.dataSource.utils.MongoUtil;
+import cn.edu.cup.hilly.dataSource.utils.PageHelper;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -29,6 +32,8 @@ public class HillyProjectService {
     HillyService hillyService;
     @Autowired
     MongoTemplate mongoTemplate;
+    @Autowired
+    MongoUtil mongoUtil;
 
     public List<HillyProject> getAll() {
         return hillyProjectDao.findAll();
@@ -97,5 +102,14 @@ public class HillyProjectService {
         mongoTemplate.remove(query2, Hilly.class, "hilly");
 
         return deletedCount;
+    }
+
+    public PageHelper getAllByPage(String id, Integer currentPage, Integer pageSize) {
+        Query query = new Query(Criteria.where("userId").is(id));
+        mongoUtil.start(currentPage, pageSize, query);
+        List<HillyProject> projects = mongoTemplate.find(query, HillyProject.class);
+        long count = mongoTemplate.count(query, HillyProject.class);
+        PageHelper pageHelper = mongoUtil.pageHelper(count, projects);
+        return pageHelper;
     }
 }

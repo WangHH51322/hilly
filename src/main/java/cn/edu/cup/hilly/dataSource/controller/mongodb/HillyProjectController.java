@@ -3,6 +3,7 @@ package cn.edu.cup.hilly.dataSource.controller.mongodb;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyProjectService;
 import cn.edu.cup.hilly.dataSource.service.mongo.HillyService;
 import cn.edu.cup.hilly.dataSource.model.mongo.project.HillyProject;
+import cn.edu.cup.hilly.dataSource.utils.PageHelper;
 import cn.edu.cup.hilly.dataSource.utils.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,18 @@ public class HillyProjectController {
         System.out.println("执行了查询方法");
         try {
             List<HillyProject> all = hillyProjectService.getAll();
+            return RespBean.ok("查询成功",all);
+        } catch (Exception e) {
+            return RespBean.error("查询失败",e.getClass().getName());
+        }
+    }
+
+    @GetMapping("/getAllByPage")
+    public RespBean getAll(@RequestParam("id") String id, @RequestParam("currentPage") Integer currentPage,
+                           @RequestParam("pageSize") Integer pageSize) {
+        System.out.println("执行了查询方法");
+        try {
+            PageHelper all = hillyProjectService.getAllByPage(id, currentPage, pageSize);
             return RespBean.ok("查询成功",all);
         } catch (Exception e) {
             return RespBean.error("查询失败",e.getClass().getName());
