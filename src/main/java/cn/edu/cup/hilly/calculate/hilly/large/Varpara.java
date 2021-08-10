@@ -12,7 +12,7 @@ public class Varpara {
 
     double deltaT=0.2;     //压缩时间步长0.2s
 
-    double T=150;           //模拟总时长，h
+    double T=300;           //模拟总时长，h
 
     @InputField(name = "designFlow", unit = "m3/h")
     double Qh;           //设计投产流量，m3/h

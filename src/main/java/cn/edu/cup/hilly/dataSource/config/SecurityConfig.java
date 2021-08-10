@@ -69,8 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         out.flush();
                         out.close();
                     }
-
-
                 })
                 .failureHandler(new AuthenticationFailureHandler() {
                     @Override

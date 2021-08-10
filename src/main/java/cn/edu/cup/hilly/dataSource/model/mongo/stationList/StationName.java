@@ -15,7 +15,7 @@ public class StationName {
 
     public StationName() {
         this.name = "站点名称";
-        this.unit = "m";
+        this.unit = "";
         this.value = "demo字符串";
     }
 }
