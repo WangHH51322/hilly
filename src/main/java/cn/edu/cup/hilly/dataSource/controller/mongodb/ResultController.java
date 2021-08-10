@@ -150,12 +150,12 @@ public class ResultController {
 
     @GetMapping("/Simple")
     public RespBean getSimple (@RequestParam("id") String id) {
-        try {
+        // try {
             ResultSimple resultSimple = resultSimpleService.find(id);
             return RespBean.ok("查询成功",resultSimple);
-        } catch (Exception e) {
-            return RespBean.error("查询出错",e.getMessage());
-        }
+        // } catch (Exception e) {
+        //     return RespBean.error("查询出错",e.getMessage());
+        // }
     }
 
     @GetMapping("/Simple/pigV")

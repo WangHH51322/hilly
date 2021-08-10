@@ -16,9 +16,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ResultSimpleService {
@@ -78,6 +76,23 @@ public class ResultSimpleService {
     public ResultSimple find(String id) {
         Query query = Query.query(Criteria.where("_id").is(id));
         ResultSimple resultSimple = mongoTemplate.findOne(query, ResultSimple.class, "resultSimple");
+        // Map<String, double[][]> dMgPK = resultSimple.getDMgPK();
+        // Map<String, double[][]> dMgPKNew = new HashMap<>();
+        // List<Station> stationList = stationService.getStationList(id);
+        // List<String> stationName = new ArrayList<>();
+        // for (int i = 0; i < stationList.size(); i++) {
+        //     Station station = stationList.get(i);
+        //     String type = station.getStationType().getValue();
+        //     if (type.equals("2")) {
+        //         stationName.add(station.getStationName().getValue());
+        //     }
+        // }
+        // int count = 0;
+        // for (Map.Entry<String, double[][]> entry : dMgPK.entrySet()) {
+        //     dMgPKNew.put(stationName.get(count),entry.getValue());
+        //     count ++;
+        // }
+        // resultSimple.setDMgPK(new TreeMap<>(dMgPKNew));
         return resultSimple;
     }
 
@@ -85,6 +100,24 @@ public class ResultSimpleService {
         Logger logger = LoggerFactory.getLogger("cn.edu.cup.hilly.dataSource.service.mongo.result.ResultSimpleService");
         logger.info("执行了ResultSimpleService的update...");
         String id = resultSimple.get_id();
+        Map<String, double[][]> dMgPK = resultSimple.getDMgPK();
+        Map<String, double[][]> dMgPKNew = new HashMap<>();
+        List<Station> stationList = stationService.getStationList(id);
+        List<String> stationName = new ArrayList<>();
+        for (int i = 0; i < stationList.size(); i++) {
+            Station station = stationList.get(i);
+            String type = station.getStationType().getValue();
+            if (type.equals("2")) {
+                stationName.add(station.getStationName().getValue());
+            }
+        }
+        int count = 0;
+        for (Map.Entry<String, double[][]> entry : dMgPK.entrySet()) {
+            dMgPKNew.put(stationName.get(count),entry.getValue());
+            count ++;
+        }
+        resultSimple.setDMgPK(new TreeMap<>(dMgPKNew));
+
         Query query = Query.query(Criteria.where("_id").is(id));
         mongoTemplate.remove(query,ResultSimple.class, "resultSimple");
         resultSimpleDao.save(resultSimple);

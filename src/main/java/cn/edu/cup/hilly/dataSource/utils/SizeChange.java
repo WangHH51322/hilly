@@ -88,7 +88,7 @@ public class SizeChange {
             double sum = 0.0;
             for (int j = 1; j < resultsData[i].length; j++) {
                 if (resultsData[i][j] == 0 || j == resultsData[i].length - 1) {
-                    numbOfRow.add(j+1);
+                    numbOfRow.add(j);
                     break;
                 }
                 sum += resultsData[i][j];
@@ -108,7 +108,8 @@ public class SizeChange {
             }
             results.put("第"+i+"个排气点",result);
         }
-        return results;
+        TreeMap<String, double[][]> treeMap = new TreeMap<>(results);
+        return treeMap;
     }
 
 
