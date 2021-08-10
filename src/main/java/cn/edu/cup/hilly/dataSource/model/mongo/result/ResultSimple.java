@@ -28,5 +28,5 @@ public class ResultSimple {
     private double[][] mG;
     private double[][] gasRa;
     private double[][] lineL;
-    private double[][] Q;
+    private double[] Q;
 }

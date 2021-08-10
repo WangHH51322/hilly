@@ -179,7 +179,7 @@ public class Project extends Thread {
     private Map<String,double[][]> dMgPK;
     private double[][] mG;
     private double[][] gasRa;
-    private double[][] Q;
+    private double[] Q;
     public double[][] getmG() {
         return mG;
     }
@@ -219,10 +219,10 @@ public class Project extends Thread {
     public void setaLSP(double[][] aLSP) {
         this.aLSP = aLSP;
     }
-    public double[][] getQ() {
+    public double[] getQ() {
         return Q;
     }
-    public void setQ(double[][] q) {
+    public void setQ(double[] q) {
         Q = q;
     }
     public double[][] getGasRa() {
@@ -1387,7 +1387,7 @@ public class Project extends Thread {
         double[][] aLSPAfterChange = aLSPChange.ResultAfterChange2();
         setaLSP(aLSPAfterChange);
         SizeChange qChange = new SizeChange(varPara.allQ);
-        double[][] arr = qChange.List2Array();
+        double[] arr = qChange.List2Array();
         setQ(arr);
 
         end1 = System.currentTimeMillis();

@@ -430,6 +430,8 @@ public class ExcelData {
             lll_st[kkk][1] = z_st[kkk];
 
         }
+
+
         for (int kkk = 1; kkk < z_st.length; kkk++) {//计算坡度
             j_st[kkk] = (z_st[kkk] - z_st[kkk - 1]) / (l_st[kkk] - l_st[kkk - 1]);
         }
@@ -710,6 +712,20 @@ public class ExcelData {
             lll_st[kkk][1] = z_st[kkk];
 
         }
+
+        double[][] data = new double[lll_st.length][2];
+        for (int i = 0; i < lll_st.length; i++) {
+            data[i][0] = lll_st[i][0];
+            System.out.print("data[i][0] = " + data[i][0] + " ");
+            data[i][1] = lll_st[i][1];
+            System.out.print("data[i][1] = " + data[i][1]);
+            System.out.println();
+        }
+        /**
+         * 存储地形数据
+         */
+        setTerrainData(data);
+
         for (int kkk = 1; kkk < z_st.length; kkk++) {//计算坡度
             j_st[kkk] = (z_st[kkk] - z_st[kkk - 1]) / (l_st[kkk] - l_st[kkk - 1]);
         }

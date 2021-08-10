@@ -372,7 +372,7 @@ public class ThreadController {
             double[][] aLSP = project.getaLSP();
             resultSimple.setALSP(aLSP);
 //            resultSimpleService.updateALSP(resultSimple);
-            double[][] q = project.getQ();
+            double[] q = project.getQ();
             resultSimple.setQ(q);
             double[][] gasRa = project.getGasRa();
             resultSimple.setGasRa(gasRa);

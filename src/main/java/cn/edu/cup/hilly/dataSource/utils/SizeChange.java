@@ -35,11 +35,10 @@ public class SizeChange {
         this.list = list;
     }
 
-    public double[][] List2Array() {
-        double[][] arr = new double[list.size()][2];
+    public double[] List2Array() {
+        double[] arr = new double[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            arr[i][0] = i / 24.0;
-            arr[i][1] = list.get(i);
+            arr[i] = list.get(i);
         }
         return arr;
     }
