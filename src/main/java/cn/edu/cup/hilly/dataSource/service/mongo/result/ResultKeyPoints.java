@@ -49,7 +49,7 @@ public class ResultKeyPoints {
         return keyPointDao.save(keyPoint);
     }
 
-    public KeyPoint updateAll(List<KeyPoint> keyPoints) {
+    public List<KeyPoint> updateAll(String id, List<KeyPoint> keyPoints) {
         List<KeyPoint> update = new ArrayList<>();
         List<KeyPoint> insert = new ArrayList<>();
         for (int i = 0; i < keyPoints.size(); i++) {
@@ -57,6 +57,7 @@ public class ResultKeyPoints {
             if (keyPoint.get_id() != null) {
                 update.add(keyPoint);
             } else {
+                keyPoint.setProjectId(id);
                 insert.add(keyPoint);
             }
         }
@@ -67,7 +68,7 @@ public class ResultKeyPoints {
             update(keyPoint);
         }
 
-        return null;
+        return getAll(id);
     }
 
     public int delete(String id) {

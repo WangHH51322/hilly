@@ -230,9 +230,9 @@ public class ResultController {
     }
 
     @PutMapping("/KeyPoints/All")
-    public RespBean updateKeyPointAll(@RequestBody List<KeyPoint> keyPoint) {
+    public RespBean updateKeyPointAll(@RequestParam("id") String id, @RequestBody List<KeyPoint> keyPoint) {
         try {
-            KeyPoint key = resultKeyPoints.updateAll(keyPoint);
+            List<KeyPoint> key = resultKeyPoints.updateAll(id, keyPoint);
             return RespBean.ok("修改成功",key);
         } catch (Exception e) {
             return RespBean.error("修改出错",e.getMessage());
