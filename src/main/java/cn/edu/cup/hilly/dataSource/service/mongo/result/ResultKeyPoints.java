@@ -49,6 +49,27 @@ public class ResultKeyPoints {
         return keyPointDao.save(keyPoint);
     }
 
+    public KeyPoint updateAll(List<KeyPoint> keyPoints) {
+        List<KeyPoint> update = new ArrayList<>();
+        List<KeyPoint> insert = new ArrayList<>();
+        for (int i = 0; i < keyPoints.size(); i++) {
+            KeyPoint keyPoint = keyPoints.get(i);
+            if (keyPoint.get_id() != null) {
+                update.add(keyPoint);
+            } else {
+                insert.add(keyPoint);
+            }
+        }
+        for (KeyPoint keyPoint : insert) {
+            insert(keyPoint);
+        }
+        for (KeyPoint keyPoint : update) {
+            update(keyPoint);
+        }
+
+        return null;
+    }
+
     public int delete(String id) {
         keyPointDao.deleteById(id);
         Query query = Query.query(Criteria.where("_id").is(id));
@@ -106,4 +127,5 @@ public class ResultKeyPoints {
         }
         return KeyPoints;
     }
+
 }

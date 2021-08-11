@@ -220,9 +220,19 @@ public class ResultController {
     }
 
     @PutMapping("/KeyPoints")
-    public RespBean updateKeyPoint(@RequestBody KeyPoint keyPoint) {
+    public RespBean updateKeyPoint(@RequestBody KeyPoint keyPoints) {
         try {
-            KeyPoint key = resultKeyPoints.update(keyPoint);
+            KeyPoint key = resultKeyPoints.update(keyPoints);
+            return RespBean.ok("修改成功",key);
+        } catch (Exception e) {
+            return RespBean.error("修改出错",e.getMessage());
+        }
+    }
+
+    @PutMapping("/KeyPoints/All")
+    public RespBean updateKeyPointAll(@RequestBody List<KeyPoint> keyPoint) {
+        try {
+            KeyPoint key = resultKeyPoints.updateAll(keyPoint);
             return RespBean.ok("修改成功",key);
         } catch (Exception e) {
             return RespBean.error("修改出错",e.getMessage());
