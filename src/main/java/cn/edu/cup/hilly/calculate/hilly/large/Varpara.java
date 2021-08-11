@@ -12,7 +12,7 @@ public class Varpara {
 
     double deltaT=0.2;     //压缩时间步长0.2s
 
-    double T=50;           //模拟总时长，h
+    double T=300;           //模拟总时长，h
 
     @InputField(name = "designFlow", unit = "m3/h")
     double Qh;           //设计投产流量，m3/h
@@ -395,8 +395,8 @@ public class Varpara {
         this.Hf_j = new double[k];              //局部阻力
 
         this.dPL=new double[(int)T*12*2+2+1][1300];       //全局压力
-        this.dHL=new double[(int)T*12*2+2+1][1300];       //全局压力
-        this.dHL_new=new double[(int)T*12*2+2+1][1300];       //全局压力
+        this.dHL=new double[(int)T*12*2+2+5][1300];       //全局压力
+        this.dHL_new=new double[(int)T*12*2+2+5][1300];       //全局压力
         this.lg_f = new double[i][k];   //各段分层流实时长度
         this.lp_b = new double[i][k];   //气泡流和气团流实时长度，下坡段部分
         this.lp_bU = new double[i][k];  //气泡流和气团流实时长度，上坡段部分

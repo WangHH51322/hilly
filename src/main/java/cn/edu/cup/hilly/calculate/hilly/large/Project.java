@@ -1269,10 +1269,16 @@ public class Project extends Thread {
             varPara.allLineFP[0][x]=0.5+varPara.allLineFP[0][x-1];
         }
         dHL_static(varPara.num, varPara.deltaX, varPara.waterL);//水力坡降线的修正
+
+        this.varPara_dHL = varPara.dHL;
+
+
+
         try {
             Output.OutToTXT1(varPara.Pg_his, "Pg_his");
             Output.OutToTXTL(varPara.Hss,"Hss");
             Output.OutToTXTDHL(varPara.dHL,"dHL");
+            Output.OutToTXTDHL(this.varPara_dHL,"_dHL");
             Output.OutToTXTDHL(varPara.dHL_new,"dHL_new");
             Output.OutToTXTLLL(varPara.Mg,"Mg",0);
             Output.OutToTXTL(varPara.dPL, "dPL");
@@ -2907,7 +2913,9 @@ public class Project extends Thread {
                 }
             }
         }
-        this.varPara_dHL = varPara.dHL;
+        varPara.dHL[num+2]=varPara.dHL[num+1];
+        varPara.dHL[num+3]=varPara.dHL[num+1];
+        varPara.dHL[num+4]=varPara.dHL[num+1];
     }
 
     public void dHL_new(int n,double T,int num,double dx,double[] waterHeadLocation,double[] dpb,double[] dpbU,double[] dpf,double [][]lg_f,double []vll,List stationL,double []stationP){

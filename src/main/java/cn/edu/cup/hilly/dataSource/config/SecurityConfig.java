@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         PrintWriter out = resp.getWriter();
                         User user = (User) authentication.getPrincipal();
                         user.setPassword(null); //将登陆成功以后返回给前端的用户信息中的密码给抹去,避免信息泄露
-                        RespBean ok = RespBean.ok("登陆成功!", user);
+                        RespBean ok = RespBean.ok("登录成功!", user);
                         String s = new ObjectMapper().writeValueAsString(ok);
                         out.write(s);
                         out.flush();

@@ -13,10 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ResultDHLService {
@@ -105,14 +102,15 @@ public class ResultDHLService {
         for (int i = 0; i < resultDHLs.size(); i++) {
             resultDHLMaps.putAll(resultDHLs.get(i).getDHLMap());
         }
-        resultDHL.setDHLMap(resultDHLMaps);
+        TreeMap<Double, double[]> resultDHLTreeMaps = new TreeMap<>(resultDHLMaps);
+        resultDHL.setDHLMap(resultDHLTreeMaps);
 
         ResultSimple resultSimple = resultSimpleService.find(id);
         double[][] lz = resultSimple.getLz();
 
         Map<String,Object> result = new HashMap<>();
         result.put("lz",lz);
-        result.put("dhl",resultDHLMaps);
+        result.put("dhl",resultDHLTreeMaps);
 
         return result;
     }
