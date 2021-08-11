@@ -5,7 +5,9 @@ import cn.edu.cup.hilly.dataSource.model.mongo.result.KeyPoint;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDPL;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultDmgHis;
 import cn.edu.cup.hilly.dataSource.model.mongo.result.ResultSimple;
+import com.mongodb.bulk.BulkWriteResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -58,26 +60,20 @@ public class ResultKeyPoints {
     }
 
     public List<KeyPoint> updateAll(String id, List<KeyPoint> keyPoints) {
-        List<KeyPoint> update = new ArrayList<>();
-        List<KeyPoint> insert = new ArrayList<>();
-        for (int i = 0; i < keyPoints.size(); i++) {
-            KeyPoint keyPoint = keyPoints.get(i);
-            if (keyPoint.get_id() != null) {
-                update.add(keyPoint);
-            } else {
+        for (KeyPoint keyPoint : keyPoints) {
+            if (keyPoint.get_id() == null) {
                 keyPoint.setProjectId(id);
-                insert.add(keyPoint);
             }
         }
-        for (KeyPoint keyPoint : insert) {
-            insert(keyPoint);
-        }
-        for (KeyPoint keyPoint : update) {
-            update(keyPoint);
-        }
+        Query query = Query.query(Criteria.where("projectId").is(id));
+        mongoTemplate.findAllAndRemove(query,KeyPoint.class, "keyPoint");
 
-        List<KeyPoint> all = getAll(id);
-        all.sort(new Comparator<KeyPoint>() {
+        BulkOperations operations = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, "keyPoint");
+        operations.insert(keyPoints);
+        operations.execute();
+
+        List<KeyPoint> points = getAll(id);
+        points.sort(new Comparator<KeyPoint>() {
             @Override
             public int compare(KeyPoint o1, KeyPoint o2) {
                 Double d1 = new Double(o1.getMileage());
@@ -85,7 +81,7 @@ public class ResultKeyPoints {
                 return d1.compareTo(d2);
             }
         });
-        return all;
+        return points;
     }
 
     public int delete(String id) {

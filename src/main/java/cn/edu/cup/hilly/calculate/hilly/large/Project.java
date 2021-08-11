@@ -2907,7 +2907,7 @@ public class Project extends Thread {
                 }
             }
         }
-
+        this.varPara_dHL = varPara.dHL;
     }
 
     public void dHL_new(int n,double T,int num,double dx,double[] waterHeadLocation,double[] dpb,double[] dpbU,double[] dpf,double [][]lg_f,double []vll,List stationL,double []stationP){
