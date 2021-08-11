@@ -36,6 +36,14 @@ public class ResultKeyPoints {
     public List<KeyPoint> getAll(String id) {
         Query query = Query.query(Criteria.where("projectId").is(id));
         List<KeyPoint> keyPoints = mongoTemplate.find(query, KeyPoint.class, "keyPoint");
+        keyPoints.sort(new Comparator<KeyPoint>() {
+            @Override
+            public int compare(KeyPoint o1, KeyPoint o2) {
+                Double d1 = new Double(o1.getMileage());
+                Double d2 = new Double(o2.getMileage());
+                return d1.compareTo(d2);
+            }
+        });
         return keyPoints;
     }
 
@@ -68,7 +76,16 @@ public class ResultKeyPoints {
             update(keyPoint);
         }
 
-        return getAll(id);
+        List<KeyPoint> all = getAll(id);
+        all.sort(new Comparator<KeyPoint>() {
+            @Override
+            public int compare(KeyPoint o1, KeyPoint o2) {
+                Double d1 = new Double(o1.getMileage());
+                Double d2 = new Double(o2.getMileage());
+                return d1.compareTo(d2);
+            }
+        });
+        return all;
     }
 
     public int delete(String id) {
