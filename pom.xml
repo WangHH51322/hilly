@@ -167,6 +167,7 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+
 <!--            &lt;!&ndash; MyBatis Generator 插件 &ndash;&gt;-->
 <!--            <plugin>-->
 <!--                <groupId>org.mybatis.generator</groupId>-->

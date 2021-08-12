@@ -111,8 +111,13 @@ public class ResultController {
     @GetMapping("/ALFP/Last")
     public RespBean getALFPLast (@RequestParam("id") String id) {
         try {
+            Map<String, Object> result = new HashMap();
+            ResultSimple resultSimple = resultSimpleService.find(id);
+            double[][] lz = resultSimple.getLz();
             Map<Double, List<ResultAllLineFP.outPut>> resultAllLineFP = resultALFPService.findLast(id);
-            return RespBean.ok("查询成功",resultAllLineFP);
+            result.put("lz",lz);
+            result.put("resultAllLineFP",resultAllLineFP);
+            return RespBean.ok("查询成功",result);
         } catch (Exception e) {
             return RespBean.error("查询出错",e.getMessage());
         }

@@ -1268,7 +1268,8 @@ public class Project extends Thread {
 //            varPara.dPL[varPara.num+3][x]=2499.385+varPara.dPL[varPara.num][x]/9.81/1000;
             varPara.allLineFP[0][x]=0.5+varPara.allLineFP[0][x-1];
         }
-        dHL_static(varPara.num, varPara.deltaX, varPara.waterL);//水力坡降线的修正
+        // dHL_static(varPara.num, varPara.deltaX, varPara.waterL);//水力坡降线的修正
+        dHL_static_new(varPara.dPL);//水力坡降线的修正
 
         this.varPara_dHL = varPara.dHL;
 
@@ -2916,7 +2917,38 @@ public class Project extends Thread {
         varPara.dHL[num+2]=varPara.dHL[num+1];
         varPara.dHL[num+3]=varPara.dHL[num+1];
         varPara.dHL[num+4]=varPara.dHL[num+1];
+        varPara.dHL[num+5]=varPara.dHL[num+1];
+        varPara.dHL[num+6]=varPara.dHL[num+1];
     }
+
+
+    public void dHL_static_new(double [][]dPL){
+        Pipeline pipeLine = pipeLines.get(0);
+        double D=pipeLine.getDiameter()-2*pipeLine.getThinkness();
+        double A=Math.PI*D*D/4.0;
+        double J=0.0246*Math.pow(conPara.Ql,1.75)*Math.pow(1.006e-6,0.25)/Math.pow(D,4.75);
+        Oil oil = oils.get(0);
+        double Lx;
+
+        for (int i = 0; i < dPL.length; i++) {
+            if (dPL[i][2]==0 && i>1){
+                for (int j = 0; j < dPL[0].length; j++) {
+                    varPara.dHL[i][j] = varPara.dHL[i-1][j];
+                    varPara.dHL[i+1][j] = varPara.dHL[i-1][j];
+                    varPara.dHL[i+2][j] = varPara.dHL[i-1][j];
+                    varPara.dHL[i+3][j] = varPara.dHL[i-1][j];
+                }
+                break;
+            }
+            for (int j = 0; j < dPL[0].length; j++) {
+                varPara.dHL[i][j] = dPL[i][j] / oil.getDensity() / 9.81 + varPara.dHL[dPL.length-2][j];
+            }
+        }
+
+
+
+    }
+
 
     public void dHL_new(int n,double T,int num,double dx,double[] waterHeadLocation,double[] dpb,double[] dpbU,double[] dpf,double [][]lg_f,double []vll,List stationL,double []stationP){
         Pipeline pipeLine = pipeLines.get(0);

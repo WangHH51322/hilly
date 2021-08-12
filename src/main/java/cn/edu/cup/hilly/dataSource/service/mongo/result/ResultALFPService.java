@@ -141,7 +141,11 @@ public class ResultALFPService {
         }
         resultAllLineFP.setAllLineFPMap(allLineFPMap);
 
-        return resultAllLineFP.convertALFP(0.0);
+        Map<Double, List<ResultAllLineFP.outPut>> convertALFP = resultAllLineFP.convertALFP(0.0);
+
+
+
+        return convertALFP;
     }
 
     public void clear(String id) {
