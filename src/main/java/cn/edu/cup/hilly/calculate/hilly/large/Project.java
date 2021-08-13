@@ -1064,7 +1064,7 @@ public class Project extends Thread {
                                         System.out.println("清管器" +(pigNumber+1)+"在"+(varPara.pigNum[pigNumber])/24.0+"h," + "从"+stations.get(stationNum11).getStationL()+"m处回收");
                                         //System.out.println("清管器在"+(varPara.pigNum[pigNumber+flagpigT)/12.0+"h," + "从"+stations.get(stationNum00+1).getStationL()+"m处回收");
                                         break;
-                                    }else if( stationNum11==varPara.pumpSta.size()-1 && varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>(double)varPara.pumpSta.get(stationNum11)-1000){
+                                    }else if((double)varPara.pumpSta.get(stationNum11)!=0 && stationNum11==varPara.pumpSta.size()-1 && varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]>(double)varPara.pumpSta.get(stationNum11)-1000){
                                         //末站的处理
                                         p[pigNumber]++;
                                         varPara.pigL[pigNumber][varPara.pigNum[pigNumber]]=(double)varPara.pumpSta.get(stationNum11);
